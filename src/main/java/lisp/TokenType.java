@@ -1,0 +1,6 @@
+package lisp;
+
+
+public enum TokenType {
+	LBRACE,RBRACE,LABEL,DQOUTE,STAR,POINT,LFOOT,RFOOT,SUBST,SETQ,INT,FLOAT;
+}
