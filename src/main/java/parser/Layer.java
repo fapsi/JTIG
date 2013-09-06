@@ -1,14 +1,22 @@
+/**
+ * 
+ */
 package parser;
 
 import java.util.Arrays;
 
+/**
+ * 
+ * 
+ * @author Fabian Gallenkamp
+ */
 public class Layer {
 	
 	private Integer[] gornnumber;
 	
-	private Node[] nodes;
+	private Entry[] nodes;
 	
-	public Layer(Integer[] gornnumber,Node[] nodes){
+	public Layer(Integer[] gornnumber,Entry[] nodes){
 		this.nodes = nodes;
 		this.gornnumber = gornnumber;
 	}

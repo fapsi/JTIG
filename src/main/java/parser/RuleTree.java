@@ -1,23 +1,60 @@
+/**
+ * 
+ */
 package parser;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A grammatical rule in the tree insertion grammar. 
+ * Consists of an list of CFG rules (see {@link Layer}), 
+ * an unique index, an lexical anchor,...
+ * @author Fabian Gallenkamp
+ */
 public class RuleTree {
 	
+	/**
+	 * Unique index of the rule tree
+	 */
 	private long index;
 	
+	/**
+	 * CFG-rules extracted of the tree
+	 */
 	private List<Layer> layers;
 	
-	private List<Node> lexicalanchors;
+	/**
+	 * Lexical anchors for this tree.
+	 */
+	private List<Entry> lexicalanchors;
 
-	private int freq;
+	/**
+	 * Frequency in which this tree occurs in language.
+	 */
+	private long freq;
 	
+	/**
+	 * Probability in which this tree occurs in language.
+	 */
 	private double prob;
 	
+	/**
+	 * Gorn-number of the layer with the leaf-node where the adjunction happens.
+	 * Null if the tree isn't an auxiliary tree.
+	 */
 	private Integer[] spine;
 
-	public RuleTree(long index,List<Layer> layers, List<Node> lexicalanchors,int freq, double prob,Integer[] spine){
+	/**
+	 * Constructs a rule tree.
+	 * @param index {@link #index}
+	 * @param layers {@link #layers}
+	 * @param lexicalanchors {@link #lexicalanchors}
+	 * @param freq {@link #freq}
+	 * @param prob {@link #prob}
+	 * @param spine {@link #spine}
+	 */
+	public RuleTree(long index,List<Layer> layers, List<Entry> lexicalanchors,long freq, double prob,Integer[] spine){
 		this.index = index;
 		this.layers = layers;
 		this.lexicalanchors = lexicalanchors;

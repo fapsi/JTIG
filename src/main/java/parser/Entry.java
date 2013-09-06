@@ -1,11 +1,22 @@
+/**
+ * 
+ */
 package parser;
 
-public class Node {
+import xml.NodeType;
+
+/**
+ * 
+ * 
+ * @author Fabian Gallenkamp
+ */
+public class Entry {
 
 	private NodeType nodetype;
+	
 	private String label;
 	
-	public Node (NodeType nodetype,String label){
+	public Entry (NodeType nodetype,String label){
 		this.label = label;
 		this.nodetype = nodetype;
 	}

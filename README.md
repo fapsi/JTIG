@@ -1,4 +1,4 @@
 JTIG
 ====
 
-Java Tree Insertion Grammer
+Java Tree Insertion Grammar
