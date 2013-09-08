@@ -5,4 +5,29 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>JTIG Parser</name>
   <description>A lexicalised tree insertion grammar parser</description>
+  <build>
+  	<directory>bin/</directory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-jar-plugin</artifactId>
+            	<configuration>
+                	<archive>
+                    	<manifest>
+                        	<addClasspath>true</addClasspath>
+                        	<mainClass>xml.XMLParser</mainClass>
+                    	</manifest>
+                	</archive>
+            	</configuration>
+        	</plugin>
+		</plugins>
+	</build>
 </project>

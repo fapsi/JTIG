@@ -89,7 +89,7 @@ public class XMLParser {
 	}
 	
 	public static void main(String[] args) {
-		XMLParser xp = new XMLParser("/home/fapsi/example2.lisp");
+		XMLParser xp = new XMLParser("/home/fapsi/example.lisp");
 		xp.parse();
 	}
 }
