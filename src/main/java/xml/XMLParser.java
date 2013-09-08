@@ -3,9 +3,19 @@
  */
 package xml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.InputSource;
+
 import parser.LeftmostAnchor;
 import parser.RuleTree;
 import lisp.LispParser;
@@ -37,7 +47,14 @@ public class XMLParser {
 	 */
 	private void transformtoXML() {
 		String newinputpath = this.inputpath.replaceAll("\\.lisp", ".xml");
-		LispParser lp = new LispParser(this.inputpath, newinputpath);
+		LispParser lp;
+		try {
+			lp = new LispParser(this.inputpath, newinputpath);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(
+					"Couldn't read file "
+							+ e.getMessage());
+		}
 		this.inputpath = newinputpath;
 		try {
 			lp.parse();
@@ -55,9 +72,13 @@ public class XMLParser {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			
 			XMLHandler handler = new XMLHandler(new LeftmostAnchor());
-			saxParser.parse(inputpath, handler);
+	   	    File file = new File(inputpath);
+    	    InputStream inputStream= new FileInputStream(file);
+    	    Reader reader = new InputStreamReader(inputStream,"UTF-8");
+    	    InputSource is = new InputSource(reader);
+    	    is.setEncoding("UTF-8");
+			saxParser.parse(is, handler);
 			System.out.println("XML-File successfully parsed.");
 			
 			List<RuleTree> rules = handler.getruletrees();
