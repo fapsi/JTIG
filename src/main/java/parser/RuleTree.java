@@ -15,12 +15,12 @@ import java.util.List;
 public class RuleTree {
 	
 	/**
-	 * Unique index of the rule tree
+	 * Unique index of the rule tree.
 	 */
 	private long index;
 	
 	/**
-	 * CFG-rules extracted of the tree
+	 * CFG-rules extracted of the tree.
 	 */
 	private List<Layer> layers;
 	

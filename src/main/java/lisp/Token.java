@@ -1,6 +1,11 @@
+/**
+ * 
+ */
 package lisp;
-
-
+/**
+ * Represents one unit in a Lisp-File.
+ * @author Fabian Gallenkamp
+ */
 public class Token {
 	
 	private TokenType tokentype;

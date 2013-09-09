@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package lisp;
 
 import java.io.BufferedReader;
@@ -12,13 +15,19 @@ import java.util.Map;
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 
-
+/**
+ * Transforms a Lisp-file into a XML-file.
+ * @author Fabian Gallenkamp
+ */
 public class LispParser {
 
 	private String inputpath;
 	
 	private String outputpath ="";
 	
+	/**
+	 * Keywords occuring in Lisp file format.
+	 */
 	private Map<String, TokenType> keywords;
 	
 	private BufferedReader br;

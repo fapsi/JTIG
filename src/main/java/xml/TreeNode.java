@@ -93,7 +93,7 @@ public class TreeNode {
 	 * 
 	 * @return type of this node.
 	 */
-	private NodeType gettype() {
+	public NodeType gettype() {
 		return this.type;
 	}
 
