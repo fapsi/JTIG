@@ -70,6 +70,7 @@ public class XMLParser {
 	 */
 	public void parse() {
 		try {
+			long time1 = System.currentTimeMillis();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			XMLHandler handler = new XMLHandler(new LeftmostAnchor());
@@ -79,17 +80,26 @@ public class XMLParser {
     	    InputSource is = new InputSource(reader);
     	    is.setEncoding("UTF-8");
 			saxParser.parse(is, handler);
-			System.out.println("XML-File successfully parsed.");
 			
 			List<RuleTree> rules = handler.getruletrees();
-			System.out.println(rules);
+			time1 = System.currentTimeMillis() - time1;
+			
+			System.out.println(rules.toString());
+			System.out.println("Parsed "+rules.size()+" rules from XML-file. ("+time1+" ms)");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static void main(String[] args) {
-		XMLParser xp = new XMLParser("/home/fapsi/example.lisp");
-		xp.parse();
+		if (args.length < 1){
+			System.err.println("Please specify a file path with the TIG-rules XML-file.");
+		} else if (args.length > 1){
+			System.err.println("Too many arguments.");
+		} else{
+			XMLParser xp = new XMLParser(args[0]);
+			xp.parse();
+		}
 	}
 }

@@ -45,10 +45,6 @@ public class LispParser {
 	
 	private List<XMLEvent> events;
 
-	private int starts;
-
-	private int ends;
-
 	public LispParser(String inputpath,String outputpath) throws IOException {
 		this.inputpath = inputpath;
 		this.outputpath = outputpath;
@@ -58,7 +54,7 @@ public class LispParser {
 		keywords.put(":lfoot", TokenType.LFOOT);
 		keywords.put(":rfoot", TokenType.RFOOT);
 		keywords.put(":subst", TokenType.SUBST);
-		//keywords.put(":eps", TokenType.EPS);
+		keywords.put(":eps", TokenType.EPS);
 		keywords.put("setq", TokenType.SETQ);
 		
 		br = new BufferedReader(new FileReader(this.inputpath));
@@ -194,7 +190,9 @@ public class LispParser {
 	}
 	
 	public boolean parse() throws XMLStreamException, FileNotFoundException {
-
+		
+	    long time1 = System.currentTimeMillis();
+	    
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		writer = outputFactory.createXMLEventWriter(
 		  new FileOutputStream(outputpath ) );
@@ -219,8 +217,10 @@ public class LispParser {
 		
 		writer.close();
 		
-		System.out.println("Success.");
-		System.out.println("Parsed "+treecount+" trees.");
+		time1 = System.currentTimeMillis() - time1;
+		
+		System.out.println("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
+				+ "Output file: "+outputpath);
 		return true;
 	}
 	
@@ -273,23 +273,27 @@ public class LispParser {
 		Token t = next();
 		switch (t.gettype()){
 		case LABEL:
+			Token tk = next();
+			
 			events.add(eventFactory.createStartElement( "", "", "node" ));
 			events.add(eventFactory.createAttribute("cat", (String) t.getstring()));
-			events.add(eventFactory.createAttribute("type", "nonterm"));
-			Token tk = next();
-			if (tk.gettype() == TokenType.LABEL){
-				events.add(eventFactory.createStartElement( "", "", "node" ));
-				events.add(eventFactory.createAttribute("type", "term"));
-				events.add(eventFactory.createAttribute("label", (String) tk.getstring()));
-				events.add(eventFactory.createEndElement( "", "", "node" ));
-				events.add(eventFactory.createEndElement( "", "", "node" ));
-				expect(TokenType.RBRACE);
-				return;
+			
+			if (tk.gettype() == TokenType.EPS){
+				events.add(eventFactory.createAttribute("type", "eps"));
+				tk = next();
+			} else {
+				events.add(eventFactory.createAttribute("type", "nonterm"));
 			}
 
 			
-			while (tk.gettype() == TokenType.LBRACE){
-				parseTree();
+			while (tk.gettype() != TokenType.RBRACE){
+				if (tk.gettype() == TokenType.LABEL){
+					events.add(eventFactory.createStartElement( "", "", "node" ));
+					events.add(eventFactory.createAttribute("type", "term"));
+					events.add(eventFactory.createAttribute("label", (String) tk.getstring()));
+					events.add(eventFactory.createEndElement( "", "", "node" ));
+				} else
+					parseTree();
 				tk = next();
 			}
 			events.add(eventFactory.createEndElement( "", "", "node" ));
@@ -317,15 +321,7 @@ public class LispParser {
 			events.add(eventFactory.createEndElement( "", "", "node" ));
 			initialtree = false;
 		break;
-		case EPS:
-			t = expect(TokenType.LABEL);
-			events.add(eventFactory.createStartElement( "", "", "node" ));
-			events.add(eventFactory.createAttribute("type", "e"));
-			events.add(eventFactory.createAttribute("cat", (String) t.getstring()));
-			events.add(eventFactory.createEndElement( "", "", "node" ));
-		break;
 		default:
-			System.out.println("nich gut");
 		break;
 		}
 		expect(TokenType.RBRACE);
@@ -351,7 +347,7 @@ public class LispParser {
 	}
 	
 	public static void main(String[] args) throws XMLStreamException, IOException {
-		LispParser lp = new LispParser("/home/fapsi/example3.lisp","/home/fapsi/example3.xml");
+		LispParser lp = new LispParser("/home/fapsi/example2.lisp","/home/fapsi/example2.xml");
 		lp.parse();
 	}
 }

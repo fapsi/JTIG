@@ -8,5 +8,5 @@ package xml;
  * @author Fabian Gallenkamp
  */
 public enum NodeType {
-	RFOOT , LFOOT , TERM , SUBST , NONTERM 
+	RFOOT , LFOOT , TERM , SUBST , NONTERM , EPS
 }
