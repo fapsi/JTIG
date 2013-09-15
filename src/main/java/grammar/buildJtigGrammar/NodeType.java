@@ -1,7 +1,7 @@
 /**
  * 
  */
-package xml;
+package grammar.buildJtigGrammar;
 
 /**
  * Possible types of nodes contained in a grammar rule tree.

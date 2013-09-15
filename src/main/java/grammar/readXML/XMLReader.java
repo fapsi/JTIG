@@ -1,7 +1,12 @@
 /**
  * 
  */
-package xml;
+package grammar.readXML;
+
+import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
+import grammar.buildJtigGrammar.LeftmostAnchor;
+import grammar.buildJtigGrammar.RuleTree;
+import grammar.transform.lisp2xml.LispParser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,15 +21,11 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
 
-import parser.LeftmostAnchor;
-import parser.RuleTree;
-import lisp.LispParser;
-
 /**
  * Parses all lexicalised {@link RuleTree}'s for a tree insertion grammar from a given XML input file. 
  * @author Fabian Gallenkamp
  */
-public class XMLParser {
+public class XMLReader {
 
 	/**
 	 * Location from the input file
@@ -35,7 +36,7 @@ public class XMLParser {
 	 * 
 	 * @param inputpath
 	 */
-	public XMLParser(String inputpath) {
+	public XMLReader(String inputpath) {
 		this.inputpath = inputpath;
 		// if the file is in Lisp Format, transform to XML
 		if (LispParser.isLispFormat(inputpath))
@@ -43,7 +44,7 @@ public class XMLParser {
 	}
 	/**
 	 * If the input file ends with ".lisp" the lisp format is transformed into an xml file.
-	 * See also {@link lisp.LispParser}
+	 * See also {@link grammar.transform.lisp2xml.LispParser}
 	 */
 	private void transformtoXML() {
 		String newinputpath = this.inputpath.replaceAll("\\.lisp", ".xml");
@@ -65,15 +66,15 @@ public class XMLParser {
 		}
 	}
 	/**
-	 * Parses the XML-file with a {@link SAXParser}.
+	 * Reads the XML-file with a {@link SAXParser}.
 	 * Main work is done by the {@link XMLHandler}.
 	 */
-	public void parse() {
+	public void read() {
 		try {
 			long time1 = System.currentTimeMillis();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			XMLHandler handler = new XMLHandler(new LeftmostAnchor());
+			XMLHandler handler = new XMLHandler(new DeepestLeftmostAnchor());
 	   	    File file = new File(inputpath);
     	    InputStream inputStream= new FileInputStream(file);
     	    Reader reader = new InputStreamReader(inputStream,"UTF-8");
@@ -98,8 +99,8 @@ public class XMLParser {
 		} else if (args.length > 1){
 			System.err.println("Too many arguments.");
 		} else{
-			XMLParser xp = new XMLParser(args[0]);
-			xp.parse();
+			XMLReader xp = new XMLReader(args[0]);
+			xp.read();
 		}
 	}
 }

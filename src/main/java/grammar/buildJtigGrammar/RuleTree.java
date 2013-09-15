@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser;
+package grammar.buildJtigGrammar;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +27,7 @@ public class RuleTree {
 	/**
 	 * Lexical anchors for this tree.
 	 */
-	private List<Entry> lexicalanchors;
+	private List<String> lexicalanchors;
 
 	/**
 	 * Frequency in which this tree occurs in language.
@@ -54,7 +54,7 @@ public class RuleTree {
 	 * @param prob {@link #prob}
 	 * @param spine {@link #spine}
 	 */
-	public RuleTree(long index,List<Layer> layers, List<Entry> lexicalanchors,long freq, double prob,Integer[] spine){
+	public RuleTree(long index,List<Layer> layers, List<String> lexicalanchors,long freq, double prob,Integer[] spine){
 		this.index = index;
 		this.layers = layers;
 		this.lexicalanchors = lexicalanchors;
@@ -62,6 +62,11 @@ public class RuleTree {
 		this.prob = prob;
 		this.spine = spine;
 	}
+	
+	public List<String> getlexicalanchors(){
+		return lexicalanchors;
+	}
+	
 	
 	@Override
 	public String toString() {

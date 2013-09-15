@@ -1,7 +1,7 @@
 /**
  * 
  */
-package lisp;
+package grammar.transform.lisp2xml;
 /**
  * All possible symbols occuring in a Lisp-File.
  * @author Fabian Gallenkamp

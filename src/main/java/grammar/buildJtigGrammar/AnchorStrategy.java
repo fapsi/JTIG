@@ -1,10 +1,11 @@
 /**
  * 
  */
-package parser;
+package grammar.buildJtigGrammar;
+
+import grammar.readXML.TreeNode;
 
 import java.util.List;
-import xml.TreeNode;
 
 /**
  * A Strategy to find different anchor elements for a {@link RuleTree}.
@@ -16,5 +17,5 @@ public interface AnchorStrategy {
 	 * @param root
 	 * @return
 	 */
-	public List<Entry> getlexicalanchors(TreeNode root);
+	public List<String> getlexicalanchors(TreeNode root);
 }

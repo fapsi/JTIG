@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser;
+package grammar.buildJtigGrammar;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class Layer {
 
 	@Override
 	public String toString() {
-		return "Layer [gornnumber=" + Arrays.toString(gornnumber) + ", nodes="
+		return "Layer [" + Arrays.toString(gornnumber) + ","
 				+ Arrays.toString(nodes) + "]\n";
 	}
 

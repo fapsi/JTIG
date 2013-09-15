@@ -1,7 +1,9 @@
 /**
  * 
  */
-package lisp;
+package grammar.transform.lisp2xml;
+
+
 /**
  * Defines the different states of the lexer in the {@link LispParser}.
  * @author Fabian Gallenkamp

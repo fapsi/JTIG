@@ -1,9 +1,8 @@
 /**
  * 
  */
-package parser;
+package grammar.buildJtigGrammar;
 
-import xml.NodeType;
 
 /**
  * An Entry of a context free rule, stored in the different {@link Layer}'s.
@@ -35,6 +34,6 @@ public class Entry {
 
 	@Override
 	public String toString() {
-		return "Node (type=" + nodetype + ", label=" + label + ")";
+		return "(" + nodetype + ", '" + label + "')";
 	}
 }

@@ -1,7 +1,11 @@
 /**
  * 
  */
-package xml;
+package grammar.readXML;
+
+import grammar.buildJtigGrammar.AnchorStrategy;
+import grammar.buildJtigGrammar.NodeType;
+import grammar.buildJtigGrammar.RuleTree;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,9 +13,6 @@ import java.util.List;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import parser.AnchorStrategy;
-import parser.RuleTree;
 
 /**
  * Callback Handler for SAX-Parser.
@@ -51,6 +52,8 @@ public class XMLHandler extends DefaultHandler {
 	 */
 	private double treeprob;
 	
+	private int depth;
+	
 	/**
 	 * Strategy for finding anchor elements in a TreeNode.
 	 */
@@ -86,11 +89,13 @@ public class XMLHandler extends DefaultHandler {
 			this.treeid = Long.parseLong(attributes.getValue("id"));
 			this.treefreq = Long.parseLong(attributes.getValue("freq"));
 			this.treeprob = Double.parseDouble(attributes.getValue("prob"));
+			depth = 0;
 		} else if (qName.equals("node") && intree){
 			TreeNode n = createfromXMLNode(this.actnode,attributes);
 			if (this.actnode != null)
 				this.actnode.addchild(n);
 			this.actnode = n;
+			depth++;
 		}
 	}
 	
@@ -116,6 +121,7 @@ public class XMLHandler extends DefaultHandler {
 			TreeNode parent = this.actnode.getparent();
 			if (parent != null)
 				this.actnode = parent;
+			depth--;
 		}
 	}
 	/**
@@ -141,7 +147,7 @@ public class XMLHandler extends DefaultHandler {
 			label = attributes.getValue("label");
 		else
 			label = attributes.getValue("cat");
-		return new TreeNode(parent,treenodetype,label);
+		return new TreeNode(parent,treenodetype,label,depth);
 	}
 	
 	/**

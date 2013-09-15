@@ -1,13 +1,12 @@
 /**
  * 
  */
-package parser;
+package grammar.buildJtigGrammar;
+
+import grammar.readXML.TreeNode;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import xml.NodeType;
-import xml.TreeNode;
 
 /**
  * Concrete strategy for finding a lexical anchor. (See for Description: {@link #getlexicalanchors(TreeNode)})
@@ -15,7 +14,7 @@ import xml.TreeNode;
  */
 public class LeftmostAnchor implements AnchorStrategy {
 
-	private List<Entry> anchors;
+	private List<String> anchors;
 	
 	private boolean interruptedchain;
 	
@@ -24,8 +23,8 @@ public class LeftmostAnchor implements AnchorStrategy {
 	 * @param root root node of the tree to find anchors in
 	 * @return the anchor elements satisfying the specification
 	 */	
-	public List<Entry> getlexicalanchors(TreeNode root) {
-		anchors = new LinkedList<Entry>();
+	public List<String> getlexicalanchors(TreeNode root) {
+		anchors = new LinkedList<String>();
 		interruptedchain = false;
 		findanchors(root);
 		return anchors;
@@ -35,8 +34,9 @@ public class LeftmostAnchor implements AnchorStrategy {
 	 * @param node tree root of the tree to search in.
 	 */
 	private void findanchors(TreeNode node){
+		
 		if (node.gettype() == NodeType.TERM && !interruptedchain){
-			anchors.add(new Entry(node.gettype(),node.getlabel()));
+			anchors.add(node.getlabel());
 		} else if ((node.gettype() == NodeType.SUBST 
 				|| node.gettype() == NodeType.LFOOT 
 				|| node.gettype() == NodeType.RFOOT) && anchors.size() > 0){

@@ -1,16 +1,17 @@
 /**
  * 
  */
-package xml;
+package grammar.readXML;
+
+import grammar.buildJtigGrammar.AnchorStrategy;
+import grammar.buildJtigGrammar.Entry;
+import grammar.buildJtigGrammar.Layer;
+import grammar.buildJtigGrammar.NodeType;
+import grammar.buildJtigGrammar.RuleTree;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-
-import parser.AnchorStrategy;
-import parser.Layer;
-import parser.Entry;
-import parser.RuleTree;
 
 /**
  * Tree structure, needed for parsing efficiently a grammar rule tree in the xml-format.
@@ -39,15 +40,21 @@ public class TreeNode {
 	private List<TreeNode> children;
 	
 	/**
+	 * 
+	 */
+	private int depth;
+	
+	/**
 	 * Creates a tree-node with a parent node and a specific type
 	 * @param parent the parent for this tree node, NULL for root.
 	 * @param label a label for this tree node
 	 */
-	public TreeNode(TreeNode parent,NodeType type, String label){
+	public TreeNode(TreeNode parent,NodeType type, String label, int depth){
 		this.parent = parent;
 		this.type = type;
 		this.children = new LinkedList<TreeNode>();
 		this.label = label;
+		this.depth = depth;
 	}
 	
 	/**
@@ -96,6 +103,13 @@ public class TreeNode {
 	public NodeType gettype() {
 		return this.type;
 	}
+	
+	/**
+	 * @return the depth of this node in the tree.
+	 */
+	public int getdepth() {
+		return this.depth;
+	}
 
 	public RuleTree converttoruletree(long index,long treefreq,double prob,AnchorStrategy strategy){
 		List<Layer> layers = new LinkedList<Layer>();
@@ -103,7 +117,7 @@ public class TreeNode {
 		Stack<Integer> spine = new Stack<Integer>();
 		gornnumbers.push(new Integer(0));
 		
-		parseLayers(layers,gornnumbers,spine);
+		extractlayers(layers,gornnumbers,spine);
 		
 		return new RuleTree(index, layers, 
 				strategy.getlexicalanchors(this), 
@@ -115,7 +129,7 @@ public class TreeNode {
 	 * @param gornnumbers
 	 * @param spine
 	 */
-	private void parseLayers(List<Layer> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
+	private void extractlayers(List<Layer> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
 		if (haschild()){
 			
 			// Add 0th element of CFG Rule
@@ -135,7 +149,7 @@ public class TreeNode {
 			//make recursive calls
 			for (TreeNode tn : this.children){
 				gornnumbers.push(new Integer(i));
-				tn.parseLayers(layers, gornnumbers, spine);
+				tn.extractlayers(layers, gornnumbers, spine);
 				gornnumbers.pop();
 				i++;
 			}
