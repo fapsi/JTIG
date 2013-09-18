@@ -70,8 +70,8 @@ public class RuleTree {
 	
 	@Override
 	public String toString() {
-		return "\nRuleTree {\n index=" + index + ",\n layers=" + layers
-				+ ",\n lexicalanchors=" + lexicalanchors + ",\n freq=" + freq
-				+ ",\n prob=" + prob + ",\n spine=" + Arrays.toString(spine) + "\n}";
+		StringBuilder sb = new StringBuilder();
+		sb.append(index);
+		return sb.toString();
 	}
 }

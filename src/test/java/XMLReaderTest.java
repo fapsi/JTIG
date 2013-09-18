@@ -1,5 +1,11 @@
 import static org.junit.Assert.*;
 
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import javax.imageio.stream.FileCacheImageInputStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +17,6 @@ public class XMLReaderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		System.out.println("Test environement up.");
 	}
 
 	@After
@@ -19,9 +24,16 @@ public class XMLReaderTest {
 	}
 
 	@Test
-	public void testexample1() {
-		System.out.println();
-		String[] s = {"-l",System.getProperty("user.dir") + "/src/test/resources/example.xml","test"};
+	public void testexample() throws URISyntaxException {
+		URL url = getClass().getResource("example.xml");
+		String[] s = {"-l", url.toURI().getPath(),"test"};
+		Parser.main(s);
+	}
+	
+	@Test
+	public void testexample2() throws URISyntaxException {
+		URL url = getClass().getResource("example2.xml");
+		String[] s = {"-l", url.toURI().getPath(),"test"};
 		Parser.main(s);
 	}
 
