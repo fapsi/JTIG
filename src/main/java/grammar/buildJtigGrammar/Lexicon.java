@@ -50,4 +50,13 @@ public class Lexicon {
 	public RuleTree find(List<String> index){
 		return null;
 	}
+
+	public int size() {
+		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return null;
+	}
 }

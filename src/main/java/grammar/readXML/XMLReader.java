@@ -5,6 +5,7 @@ package grammar.readXML;
 
 import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
 import grammar.buildJtigGrammar.LeftmostAnchor;
+import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.RuleTree;
 import grammar.transform.lisp2xml.LispParser;
 
@@ -69,7 +70,8 @@ public class XMLReader {
 	 * Reads the XML-file with a {@link SAXParser}.
 	 * Main work is done by the {@link XMLHandler}.
 	 */
-	public void read() {
+	public Lexicon read() {
+		Lexicon lexicon = null;
 		try {
 			long time1 = System.currentTimeMillis();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -82,25 +84,15 @@ public class XMLReader {
     	    is.setEncoding("UTF-8");
 			saxParser.parse(is, handler);
 			
-			List<RuleTree> rules = handler.getruletrees();
+			lexicon = handler.getruletrees();
 			time1 = System.currentTimeMillis() - time1;
 			
-			System.out.println(rules.toString());
-			System.out.println("Parsed "+rules.size()+" rules from XML-file. ("+time1+" ms)");
+			System.out.println(lexicon.toString());
+			System.out.println("Parsed "+lexicon.size()+" rules from XML-file. ("+time1+" ms)");
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void main(String[] args) {
-		if (args.length < 1){
-			System.err.println("Please specify a file path with the TIG-rules XML-file.");
-		} else if (args.length > 1){
-			System.err.println("Too many arguments.");
-		} else{
-			XMLReader xp = new XMLReader(args[0]);
-			xp.read();
-		}
+		return lexicon;
 	}
 }

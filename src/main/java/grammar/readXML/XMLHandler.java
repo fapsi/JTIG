@@ -4,6 +4,7 @@
 package grammar.readXML;
 
 import grammar.buildJtigGrammar.AnchorStrategy;
+import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.RuleTree;
 
@@ -62,14 +63,14 @@ public class XMLHandler extends DefaultHandler {
 	/**
 	 * Stores a list of {@link RuleTree}'s, found so far.
 	 */
-	private List<RuleTree> ruletrees;
+	private Lexicon lexicon;
 	
 	/**
 	 * Creates a {@link XMLHandler}.
 	 * @param anchorstrategy Strategy for finding anchor elements in a TreeNode.
 	 */
 	public XMLHandler(AnchorStrategy anchorstrategy){
-		ruletrees = new LinkedList<RuleTree>();
+		lexicon = new Lexicon();
 		this.anchorstrategy = anchorstrategy;
 	}
 	
@@ -109,7 +110,7 @@ public class XMLHandler extends DefaultHandler {
 			inltig = false;
 		} else if (qName.equals("tree") && inltig){
 			//store RuleTree
-			this.ruletrees.add(this.actnode.converttoruletree(
+			this.lexicon.add(this.actnode.converttoruletree(
 					treeid,
 					treefreq,
 					treeprob,
@@ -151,10 +152,9 @@ public class XMLHandler extends DefaultHandler {
 	}
 	
 	/**
-	 * 
-	 * @return all extracted rule trees in the grammar.
+	 * @return a lexicon with all extracted rule trees in the grammar.
 	 */
-	public List<RuleTree> getruletrees() {
-		return this.ruletrees;
+	public Lexicon getruletrees() {
+		return this.lexicon;
 	}
 }
