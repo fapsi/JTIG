@@ -3,7 +3,6 @@
  */
 package grammar.buildJtigGrammar;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,6 +67,41 @@ public class RuleTree {
 	}
 	
 	
+	/**
+	 * @return the index
+	 */
+	public long getIndex() {
+		return index;
+	}
+
+	/**
+	 * @return the layers
+	 */
+	public List<Layer> getLayers() {
+		return layers;
+	}
+
+	/**
+	 * @return the freq
+	 */
+	public long getFreq() {
+		return freq;
+	}
+
+	/**
+	 * @return the prob
+	 */
+	public double getProb() {
+		return prob;
+	}
+
+	/**
+	 * @return the spine
+	 */
+	public Integer[] getSpine() {
+		return spine;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

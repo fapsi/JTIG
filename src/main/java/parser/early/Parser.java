@@ -1,7 +1,5 @@
 package parser.early;
 
-import java.util.Arrays;
-
 import parser.lookup.Lookup;
 import grammar.readXML.XMLReader;
 
@@ -9,6 +7,7 @@ public class Parser {
 	
 	
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		boolean debug = false;
 		String lexiconpath = null;
 		String input = null;
