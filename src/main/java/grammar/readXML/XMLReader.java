@@ -63,7 +63,7 @@ public class XMLReader {
 		} catch (Exception e) {
 			throw new IllegalArgumentException(
 					"Couldn't transform LISP-format into XML-format. "
-							+ e.getMessage());
+							+ e.getLocalizedMessage());
 		}
 	}
 	/**

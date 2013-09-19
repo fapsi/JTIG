@@ -1,4 +1,5 @@
 import static org.junit.Assert.*;
+import grammar.transform.lisp2xml.LispParser;
 
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -31,9 +32,9 @@ public class XMLReaderTest {
 	}
 	
 	@Test
-	public void testexample2() throws URISyntaxException {
-		URL url = getClass().getResource("example2.xml");
-		String[] s = {"-l", url.toURI().getPath(),"test"};
+	public void testexample2() throws Exception {
+		URL url = getClass().getResource("example4.lisp");
+		String[] s = {"-l", url.toURI().getPath(),"slowly"};
 		Parser.main(s);
 	}
 	
