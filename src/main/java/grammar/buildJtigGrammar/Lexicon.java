@@ -48,8 +48,14 @@ public class Lexicon {
 		}
 	}
 	
-	public RuleTree find(List<String> index){
-		return null;
+	public List<RuleTree> find(List<String> index,int pos){
+		Lexicon found = this.entrys.get(index.get(pos));
+		if (found == null)
+			return null;
+		if (pos < index.size() - 1){
+			return found.find(index,pos+1);
+		}
+		return found.content;
 	}
 
 	public int size() {

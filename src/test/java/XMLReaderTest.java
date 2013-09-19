@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import parser.Parser;
+import parser.early.Parser;
 
 
 public class XMLReaderTest {
@@ -32,6 +32,13 @@ public class XMLReaderTest {
 	
 	@Test
 	public void testexample2() throws URISyntaxException {
+		URL url = getClass().getResource("example2.xml");
+		String[] s = {"-l", url.toURI().getPath(),"test"};
+		Parser.main(s);
+	}
+	
+	@Test
+	public void testexample2_find() throws URISyntaxException {
 		URL url = getClass().getResource("example2.xml");
 		String[] s = {"-l", url.toURI().getPath(),"test"};
 		Parser.main(s);

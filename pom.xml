@@ -23,7 +23,7 @@
                 	<archive>
                     	<manifest>
                         	<addClasspath>true</addClasspath>
-                        	<mainClass>xml.XMLParser</mainClass>
+                        	<mainClass>parser.early.Parser</mainClass>
                     	</manifest>
                 	</archive>
             	</configuration>

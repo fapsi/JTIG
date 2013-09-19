@@ -1,7 +1,8 @@
-package parser;
+package parser.early;
 
 import java.util.Arrays;
 
+import parser.lookup.Lookup;
 import grammar.readXML.XMLReader;
 
 public class Parser {
@@ -44,7 +45,8 @@ public class Parser {
 		//System.out.println(System.getProperty("user.dir"));
 
 		XMLReader xp = new XMLReader(lexiconpath);
-		xp.read();
+		Lookup l = new Lookup(input , xp.read());
+		System.out.println(l.findlongestmatches());
 	}
 	
 }
