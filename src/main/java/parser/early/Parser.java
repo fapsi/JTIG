@@ -46,7 +46,7 @@ public class Parser {
 
 		XMLReader xp = new XMLReader(lexiconpath);
 		Lookup l = new Lookup(input , xp.read());
-		System.out.println(l.findlongestmatches());
+		System.out.println("Occuring Trees in input: "+l.findlongestmatches());
 	}
 	
 }
