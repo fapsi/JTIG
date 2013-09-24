@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import tools.tokenizer.Token;
+
 /**
  * 
  * @author Fabian Gallenkamp
@@ -48,8 +50,8 @@ public class Lexicon {
 		}
 	}
 	
-	public List<RuleTree> find(List<String> index,int pos){
-		Lexicon found = this.entrys.get(index.get(pos));
+	public List<RuleTree> find(List<Token> index,int pos){
+		Lexicon found = this.entrys.get(index.get(pos).getLabel());
 		if (found == null)
 			return null;
 		if (pos < index.size() - 1){

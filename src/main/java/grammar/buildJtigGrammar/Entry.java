@@ -24,11 +24,11 @@ public class Entry {
 		this.nodetype = nodetype;
 	}
 	
-	public String getlabel() {
+	public String getLabel() {
 		return label;
 	}
 	
-	public NodeType getnodeType() {
+	public NodeType getNodeType() {
 		return nodetype;
 	}
 

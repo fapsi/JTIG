@@ -101,6 +101,16 @@ public class RuleTree {
 	public Integer[] getSpine() {
 		return spine;
 	}
+	
+	public String getRootSymbol() {
+		if (this.layers.size() <= 0)
+			throw new IllegalArgumentException("Rule tree hasn't any layers.");
+		Layer l = this.layers.get(0);
+		Entry e = l.getEntry(0);
+		if (e != null)
+			return e.getLabel();
+		return null;
+	}
 
 	@Override
 	public String toString() {

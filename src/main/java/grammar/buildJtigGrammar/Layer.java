@@ -18,17 +18,26 @@ public class Layer {
 	/**
 	 * CFG-rule represented as a array of {@link Entry}'s.
 	 */
-	private Entry[] nodes;
+	private Entry[] entrys;
 	
-	public Layer(Integer[] gornnumber,Entry[] nodes){
-		this.nodes = nodes;
+	public Layer(Integer[] gornnumber,Entry[] entrys){
+		this.entrys = entrys;
 		this.gornnumber = gornnumber;
 	}
 
+	public Entry[] getEntrys(){
+		return this.entrys;
+	}
+
+	public Entry getEntry(int i) {
+		if (i < this.entrys.length)
+			return this.entrys[i];
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return "Layer [" + Arrays.toString(gornnumber) + ","
-				+ Arrays.toString(nodes) + "]\n";
+				+ Arrays.toString(entrys) + "]\n";
 	}
-
 }

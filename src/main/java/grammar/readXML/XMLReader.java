@@ -85,8 +85,7 @@ public class XMLReader {
 			lexicon = handler.getruletrees();
 			time1 = System.currentTimeMillis() - time1;
 			
-			System.out.println(lexicon.toString());
-			System.out.println("Parsed "+lexicon.size()+" rules from XML-file. ("+time1+" ms)");
+			System.out.println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
 
 		} catch (Exception e) {
 			e.printStackTrace();

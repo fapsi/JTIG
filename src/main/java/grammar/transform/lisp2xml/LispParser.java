@@ -41,7 +41,7 @@ public class LispParser {
 	
 	private StringBuilder actstr;
 	
-	private List<String> initsymbols;
+	//private List<String> initsymbols;
 	
 	private XMLEventWriter writer;
 	
@@ -337,14 +337,19 @@ public class LispParser {
 		expect(TokenType.RBRACE);
 	}
 
-	private void parseStartSymbols() {
-		initsymbols = new LinkedList<String>();
+	private void parseStartSymbols() throws XMLStreamException {
+		//initsymbols = new LinkedList<String>();
 		expect(TokenType.SETQ);
 		expect(TokenType.LBRACE);
+		writer.add(eventFactory.createStartElement( "", "", "start-symbols" ));
 		Token t;
 		while ((t = next()) != null && t.gettype() == TokenType.LABEL){
-			initsymbols.add((String) t.getstring());
+			writer.add(eventFactory.createStartElement( "", "", "symbol" ));
+			writer.add(eventFactory.createAttribute("type", (String) t.getstring()));
+			writer.add(eventFactory.createEndElement( "", "", "symbol" ));
+			//initsymbols.add((String) t.getstring());
 		}
+		writer.add(eventFactory.createEndElement( "", "", "start-symbols" ));
 	}
 
 	private Token expect(TokenType tt){

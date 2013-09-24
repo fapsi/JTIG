@@ -6,6 +6,7 @@ package parser.lookup;
 import java.util.LinkedList;
 import java.util.List;
 
+import tools.tokenizer.Token;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.RuleTree;
 
@@ -15,48 +16,45 @@ import grammar.buildJtigGrammar.RuleTree;
  */
 public class Lookup {
 
-	private String segment;
+	private List<Token> tokens;
 	
 	private Lexicon lexicon;
 	
-	public Lookup(String segment,Lexicon lexicon){
-		this.segment = segment;
+	public Lookup(List<Token> tokens,Lexicon lexicon){
+		this.tokens = tokens;
 		this.lexicon = lexicon;
 	}
 	
-	private String[] tokenize(){
-		//TODO: add tokenizer stuff
-		return segment.split(" ");
-	}
-	
-	public List<RuleTree> findlongestmatches(){
+	public ActivatedLexicon findlongestmatches(){
 		
-		List<RuleTree> results = new LinkedList<RuleTree>();
-		List<String> searchwords = new LinkedList<String>();
+		ActivatedLexicon slexicon = new ActivatedLexicon();
+		List<Token> searchwords = new LinkedList<Token>();
 		
 		int p = 0;
-		List<RuleTree> result;
-		String[] tokens = tokenize();
+		List<RuleTree> results;
 		
-		for (int i = 0; i < tokens.length; i++){
+		for (int i = 0; i < tokens.size(); i++){
 			searchwords.clear();
-			searchwords.add(tokens[i]);
+			searchwords.add(tokens.get(i));
 			p = i + 1;
 			
-			result = lexicon.find(searchwords,0);
-			while ( (result == null || result.size()<=0) && p < tokens.length){
+			results = this.lexicon.find(searchwords,0);
+			while ( (results == null || results.size()<=0) && p < tokens.size()){
 				
-				searchwords.add(tokens[p]);
+				searchwords.add(tokens.get(p));
 				p++;
-				result = lexicon.find(searchwords,0);
+				results = this.lexicon.find(searchwords,0);
 			}
 
-			if (result != null && result.size() > 0){
-				results.addAll(result);
+			if (results != null && results.size() > 0){
+				
+				for (RuleTree result : results){
+					slexicon.add(result.getRootSymbol(), new ActivatedRuleTree(result, i, p));
+				}
 				i = p - 1;
 			}
 			
 		}
-		return results;
+		return slexicon;
 	}
 }
