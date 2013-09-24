@@ -6,7 +6,7 @@ package grammar.readXML;
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.RuleTree;
+import grammar.buildJtigGrammar.TIGRule;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Callback Handler for SAX-Parser.
- * Parses from the XML-File a List of {@link RuleTree} for processing on later in the main parser.
+ * Parses from the XML-File a List of {@link TIGRule} for processing on later in the main parser.
  * @author Fabian Gallenkamp
  */
 
@@ -58,7 +58,7 @@ public class XMLHandler extends DefaultHandler {
 	private AnchorStrategy anchorstrategy;
 
 	/**
-	 * Stores a list of {@link RuleTree}'s, found so far.
+	 * Stores a list of {@link TIGRule}'s, found so far.
 	 */
 	private Lexicon lexicon;
 	
@@ -74,7 +74,7 @@ public class XMLHandler extends DefaultHandler {
 	/**
 	 * Receive notification of the start/end of an element. 
 	 * Builds together with {@link #endElement(String, String, String)} the tree for a grammar rule.
-	 * Those tree rules are converted into {@link RuleTree}- Objects. 
+	 * Those tree rules are converted into {@link TIGRule}- Objects. 
 	 * Then they are added and stored in this object until the document is completely parsed.
 	 */
 	@Override

@@ -5,9 +5,9 @@ package grammar.readXML;
 
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.Layer;
+import grammar.buildJtigGrammar.ProductionRule;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.RuleTree;
+import grammar.buildJtigGrammar.TIGRule;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -111,15 +111,15 @@ public class TreeNode {
 		return this.depth;
 	}
 
-	public RuleTree converttoruletree(long index,long treefreq,double prob,AnchorStrategy strategy){
-		List<Layer> layers = new LinkedList<Layer>();
+	public TIGRule converttoruletree(long index,long treefreq,double prob,AnchorStrategy strategy){
+		List<ProductionRule> layers = new LinkedList<ProductionRule>();
 		Stack<Integer> gornnumbers = new Stack<Integer>();
 		Stack<Integer> spine = new Stack<Integer>();
 		gornnumbers.push(new Integer(0));
 		
 		extractlayers(layers,gornnumbers,spine);
 		
-		return new RuleTree(index, layers, 
+		return new TIGRule(index, layers, 
 				strategy.getlexicalanchors(this), 
 				treefreq, prob, spine.empty()?null:spine.toArray(new Integer[0]));
 	}
@@ -129,7 +129,7 @@ public class TreeNode {
 	 * @param gornnumbers
 	 * @param spine
 	 */
-	private void extractlayers(List<Layer> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
+	private void extractlayers(List<ProductionRule> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
 		if (haschild()){
 			
 			// Add 0th element of CFG Rule
@@ -143,7 +143,7 @@ public class TreeNode {
 			// Create layer out of rules and gornnumber and add to list
 			Entry[] layernodes = ruleentrys.toArray(new Entry[0]);
 			Integer[] layergornnumber = gornnumbers.toArray(new Integer[0]);
-			layers.add(new Layer(layergornnumber,layernodes));
+			layers.add(new ProductionRule(layergornnumber,layernodes));
 						
 			int i = 1;
 			//make recursive calls

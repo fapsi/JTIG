@@ -4,7 +4,7 @@
 package grammar.buildJtigGrammar;
 
 /**
- * Possible types of nodes contained in a grammar rule tree.
+ * Possible types of nodes contained in a production rule.
  * @author Fabian Gallenkamp
  */
 public enum NodeType {

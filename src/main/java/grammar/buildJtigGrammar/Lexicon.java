@@ -11,26 +11,29 @@ import java.util.Map.Entry;
 import tools.tokenizer.Token;
 
 /**
- * 
+ * A recursive data structure for accessing efficiently several {@link TIGRule}'s.
+ * Basically, it consists of a {@link HashMap} where all {@link TIGRule}'s with a given {@link String}-key are
+ * stored. Because the {@link TIGRule}'s can describe a chain of {@link String}'s, 
+ * the value associated  with the first {@link String}-key is again a {@link Lexicon}-object.
  * @author Fabian Gallenkamp
  */
 public class Lexicon {
 
-	private List<RuleTree> content;
+	private List<TIGRule> content;
 	
 	private HashMap<String,Lexicon> entrys;
 	
 	public Lexicon() {
-		content = new LinkedList<RuleTree>();
+		content = new LinkedList<TIGRule>();
 		entrys = new HashMap<String,Lexicon>();
 	}
 	
-	public void add(RuleTree toadd){
+	public void add(TIGRule toadd){
 		List<String> remaining = toadd.getlexicalanchors();
 		add (toadd,remaining);
 	}
 	
-	private void add(RuleTree toadd,List<String> remaining){
+	private void add(TIGRule toadd,List<String> remaining){
 		if (remaining.size() <= 0)
 			return;
 		
@@ -50,7 +53,7 @@ public class Lexicon {
 		}
 	}
 	
-	public List<RuleTree> find(List<Token> index,int pos){
+	public List<TIGRule> find(List<Token> index,int pos){
 		Lexicon found = this.entrys.get(index.get(pos).getLabel());
 		if (found == null)
 			return null;

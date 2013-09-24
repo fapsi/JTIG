@@ -8,7 +8,7 @@ import java.util.List;
 
 import tools.tokenizer.Token;
 import grammar.buildJtigGrammar.Lexicon;
-import grammar.buildJtigGrammar.RuleTree;
+import grammar.buildJtigGrammar.TIGRule;
 
 /**
  * 
@@ -31,7 +31,7 @@ public class Lookup {
 		List<Token> searchwords = new LinkedList<Token>();
 		
 		int p = 0;
-		List<RuleTree> results;
+		List<TIGRule> results;
 		
 		for (int i = 0; i < tokens.size(); i++){
 			searchwords.clear();
@@ -48,7 +48,7 @@ public class Lookup {
 
 			if (results != null && results.size() > 0){
 				
-				for (RuleTree result : results){
+				for (TIGRule result : results){
 					slexicon.add(result.getRootSymbol(), new ActivatedRuleTree(result, i, p));
 				}
 				i = p - 1;

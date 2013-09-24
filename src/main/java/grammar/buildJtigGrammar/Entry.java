@@ -5,7 +5,7 @@ package grammar.buildJtigGrammar;
 
 
 /**
- * An Entry of a context free rule, stored in the different {@link Layer}'s.
+ * An Entry of a context free rule, stored in the different {@link ProductionRule}'s.
  * @author Fabian Gallenkamp
  */
 public class Entry {

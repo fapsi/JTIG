@@ -5,7 +5,7 @@ package grammar.readXML;
 
 import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
 import grammar.buildJtigGrammar.Lexicon;
-import grammar.buildJtigGrammar.RuleTree;
+import grammar.buildJtigGrammar.TIGRule;
 import grammar.transform.lisp2xml.LispParser;
 
 import java.io.File;
@@ -21,7 +21,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 
 /**
- * Parses all lexicalised {@link RuleTree}'s for a tree insertion grammar from a given XML input file. 
+ * Parses all lexicalised {@link TIGRule}'s for a tree insertion grammar from a given XML input file. 
  * @author Fabian Gallenkamp
  */
 public class XMLReader {

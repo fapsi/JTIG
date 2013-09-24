@@ -6,10 +6,11 @@ package grammar.buildJtigGrammar;
 import java.util.Arrays;
 
 /**
- * Stores one rule of a context free grammar with the associated Gorn-number.
+ * Stores a production rule of the context free grammar from a TIG-Rule.
+ * For accessing properly, it also contains a unique Gorn-number.
  * @author Fabian Gallenkamp
  */
-public class Layer {
+public class ProductionRule {
 	/**
 	 * Gorn number.
 	 */
@@ -20,7 +21,7 @@ public class Layer {
 	 */
 	private Entry[] entrys;
 	
-	public Layer(Integer[] gornnumber,Entry[] entrys){
+	public ProductionRule(Integer[] gornnumber,Entry[] entrys){
 		this.entrys = entrys;
 		this.gornnumber = gornnumber;
 	}

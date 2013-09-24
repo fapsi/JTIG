@@ -7,7 +7,7 @@ import org.junit.Test;
 import parser.early.JTIGParser;
 
 
-public class XMLReaderTest {
+public class JTIGParserTest {
 
 	@Before
 	public void setUp() throws Exception {

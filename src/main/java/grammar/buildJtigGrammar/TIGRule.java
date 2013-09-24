@@ -7,40 +7,42 @@ import java.util.List;
 
 /**
  * A grammatical rule in the tree insertion grammar. 
- * Consists of an list of CFG rules (see {@link Layer}), 
+ * Implicitly describes a tree with nodes of several types. 
+ * These trees can be combined with two operations adjunction and substitution.
+ * Consists of an list of context free grammar rules (also production rules) (see {@link ProductionRule}), 
  * an unique index, an lexical anchor,...
  * @author Fabian Gallenkamp
  */
-public class RuleTree {
+public class TIGRule {
 	
 	/**
-	 * Unique index of the rule tree.
+	 * Unique index in the language of this TIG-rule.
 	 */
 	private long index;
 	
 	/**
-	 * CFG-rules extracted of the tree.
+	 * CFG-production-rules describing implicitly the TIG-rule tree.
 	 */
-	private List<Layer> layers;
+	private List<ProductionRule> productionrules;
 	
 	/**
-	 * Lexical anchors for this tree.
+	 * A lexical anchor is a lexical index (one or more words/units), the tree is connected to.
 	 */
 	private List<String> lexicalanchors;
 
 	/**
-	 * Frequency in which this tree occurs in language.
+	 * Frequency in which this TIG-rule occurs in the language.
 	 */
 	private long freq;
 	
 	/**
-	 * Probability in which this tree occurs in language.
+	 * Probability in which this TIG-rule occurs in language.
 	 */
 	private double prob;
 	
 	/**
 	 * Gorn-number of the layer with the leaf-node where the adjunction happens.
-	 * Null if the tree isn't an auxiliary tree.
+	 * Null if the TIG rule dosn't represent an auxiliary tree and therefore couldn't 
 	 */
 	private Integer[] spine;
 
@@ -53,9 +55,9 @@ public class RuleTree {
 	 * @param prob {@link #prob}
 	 * @param spine {@link #spine}
 	 */
-	public RuleTree(long index,List<Layer> layers, List<String> lexicalanchors,long freq, double prob,Integer[] spine){
+	public TIGRule(long index,List<ProductionRule> productionrules, List<String> lexicalanchors,long freq, double prob,Integer[] spine){
 		this.index = index;
-		this.layers = layers;
+		this.productionrules = productionrules;
 		this.lexicalanchors = lexicalanchors;
 		this.freq = freq;
 		this.prob = prob;
@@ -77,8 +79,8 @@ public class RuleTree {
 	/**
 	 * @return the layers
 	 */
-	public List<Layer> getLayers() {
-		return layers;
+	public List<ProductionRule> getProductionRules() {
+		return productionrules;
 	}
 
 	/**
@@ -102,10 +104,13 @@ public class RuleTree {
 		return spine;
 	}
 	
+	/**
+	 * @return the nonterminal on the left side of the first production rule
+	 */
 	public String getRootSymbol() {
-		if (this.layers.size() <= 0)
-			throw new IllegalArgumentException("Rule tree hasn't any layers.");
-		Layer l = this.layers.get(0);
+		if (this.productionrules.size() <= 0)
+			throw new IllegalArgumentException("Rule tree hasn't any production rules.");
+		ProductionRule l = this.productionrules.get(0);
 		Entry e = l.getEntry(0);
 		if (e != null)
 			return e.getLabel();
