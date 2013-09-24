@@ -82,7 +82,7 @@ public class XMLReader {
     	    is.setEncoding("UTF-8");
 			saxParser.parse(is, handler);
 			
-			lexicon = handler.getruletrees();
+			lexicon = handler.getLexicon();
 			time1 = System.currentTimeMillis() - time1;
 			
 			System.out.println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");

@@ -3,6 +3,9 @@
  */
 package grammar.readXML;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.NodeType;
@@ -24,6 +27,16 @@ public class XMLHandler extends DefaultHandler {
 	 * True, if actual processing a grammar
 	 */
 	private boolean inltig;
+	
+	/**
+	 * True, if actual processing the start-symbols
+	 */
+	private boolean instartsymbols;
+	
+	/**
+	 * True, if actual processing the start-symbol
+	 */
+	private boolean instartsymbol;
 	
 	/**
 	 * True, if actual processing a tree.
@@ -50,6 +63,14 @@ public class XMLHandler extends DefaultHandler {
 	 */
 	private double treeprob;
 	
+	/**
+	 * Stores all startsymbols found while reading
+	 */
+	private List<String> startsymbols;
+	
+	/**
+	 * Stores actual depth in tree
+	 */
 	private int depth;
 	
 	/**
@@ -69,6 +90,7 @@ public class XMLHandler extends DefaultHandler {
 	public XMLHandler(AnchorStrategy anchorstrategy){
 		lexicon = new Lexicon();
 		this.anchorstrategy = anchorstrategy;
+		this.startsymbols = new LinkedList<String>();
 	}
 	
 	/**
@@ -82,6 +104,11 @@ public class XMLHandler extends DefaultHandler {
 			Attributes attributes) throws SAXException {
 		if (qName.equals("ltig")){
 			inltig = true;
+		} else if (qName.equals("start-symbols") && inltig){
+			instartsymbols = true;
+		} else if (qName.equals("symbol") && instartsymbols){
+			instartsymbol = true;
+			startsymbols.add(attributes.getValue("type"));
 		} else if (qName.equals("tree") && inltig){
 			intree = true;
 			this.treeid = Long.parseLong(attributes.getValue("id"));
@@ -105,6 +132,9 @@ public class XMLHandler extends DefaultHandler {
 			throws SAXException {
 		if (qName.equals("ltig")){
 			inltig = false;
+		} else if (qName.equals("start-symbols") && inltig){
+			instartsymbols = false;
+			this.lexicon.setStartSymbols(this.startsymbols);
 		} else if (qName.equals("tree") && inltig){
 			//store RuleTree
 			this.lexicon.add(this.actnode.converttoruletree(
@@ -151,7 +181,7 @@ public class XMLHandler extends DefaultHandler {
 	/**
 	 * @return a lexicon with all extracted rule trees in the grammar.
 	 */
-	public Lexicon getruletrees() {
+	public Lexicon getLexicon() {
 		return this.lexicon;
 	}
 }

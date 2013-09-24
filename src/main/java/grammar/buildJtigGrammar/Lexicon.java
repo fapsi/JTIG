@@ -23,6 +23,8 @@ public class Lexicon {
 	
 	private HashMap<String,Lexicon> entrys;
 	
+	private List<String> symbols;
+	
 	public Lexicon() {
 		content = new LinkedList<TIGRule>();
 		entrys = new HashMap<String,Lexicon>();
@@ -63,6 +65,12 @@ public class Lexicon {
 		return found.content;
 	}
 
+	public void setStartSymbols(List<String> symbols){
+		this.symbols = symbols;
+	}
+	public List<String> getStartSymbols(){
+		return this.symbols==null?new LinkedList<String>():this.symbols;
+	}
 	public int size() {
 		int i = this.content.size();
 		for (Entry<String, Lexicon> l : this.entrys.entrySet()){
@@ -73,7 +81,7 @@ public class Lexicon {
 	
 	@Override
 	public String toString() {
-		return "Lexicon:<\n" + toString(0)+">";
+		return "Lexicon: {Startymbols"+this.getStartSymbols()+"}<\n" + toString(0)+">";
 	}
 	
 	public String toString(int depth){

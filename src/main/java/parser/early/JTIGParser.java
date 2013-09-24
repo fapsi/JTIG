@@ -6,7 +6,6 @@ package parser.early;
 import java.util.List;
 
 import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedRuleTree;
 import parser.lookup.Lookup;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
