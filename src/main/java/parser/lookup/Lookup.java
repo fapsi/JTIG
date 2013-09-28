@@ -5,7 +5,7 @@ package parser.lookup;
 
 import java.util.LinkedList;
 import java.util.List;
-
+import parser.early.JTIGParser;
 import tools.tokenizer.Token;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.TIGRule;
@@ -26,6 +26,7 @@ public class Lookup {
 	}
 	
 	public ActivatedLexicon findlongestmatches(){
+		boolean all = JTIGParser.getProperties().getProperty("parser.lookup.findalllongestmatches").equals("true");
 		
 		ActivatedLexicon slexicon = new ActivatedLexicon();
 		List<Token> searchwords = new LinkedList<Token>();
@@ -51,7 +52,8 @@ public class Lookup {
 				for (TIGRule result : results){
 					slexicon.add(result.getRootSymbol(), new ActivatedRuleTree(result, i, p));
 				}
-				i = p - 1;
+				if(!all)
+					i = p - 1;
 			}
 			
 		}

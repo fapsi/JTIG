@@ -15,10 +15,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import parser.early.JTIGParser;
 
 /**
  * Parses all lexicalised {@link TIGRule}'s for a tree insertion grammar from a given XML input file. 
@@ -67,10 +71,13 @@ public class XMLReader {
 	/**
 	 * Reads the XML-file with a {@link SAXParser}.
 	 * Main work is done by the {@link XMLHandler}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
-	public Lexicon read() {
+	public Lexicon read() throws SAXException, IOException, ParserConfigurationException {
 		Lexicon lexicon = null;
-		try {
+
 			long time1 = System.currentTimeMillis();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
@@ -85,11 +92,10 @@ public class XMLReader {
 			lexicon = handler.getLexicon();
 			time1 = System.currentTimeMillis() - time1;
 			
-			System.out.println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
+			if (JTIGParser.getProperties().getProperty("debug").equals("true"))
+				System.out.println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
+			
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return lexicon;
 	}
 }

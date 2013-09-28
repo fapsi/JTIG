@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 
+import parser.early.JTIGParser;
+
 /**
  * Transforms a Lisp-file into a XML-file.
  * @author Fabian Gallenkamp
@@ -228,8 +230,8 @@ public class LispParser {
 		writer.close();
 		
 		time1 = System.currentTimeMillis() - time1;
-		
-		System.out.println("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
+		if (JTIGParser.getProperties().getProperty("debug").equals("true"))
+			System.out.println("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
 				+ "Output file: "+outputpath);
 		return true;
 	}
@@ -361,8 +363,4 @@ public class LispParser {
 		return t;
 	}
 	
-	public static void main(String[] args) throws XMLStreamException, IOException {
-		LispParser lp = new LispParser("/home/fapsi/example2.lisp","/home/fapsi/example2.xml");
-		lp.parse();
-	}
 }
