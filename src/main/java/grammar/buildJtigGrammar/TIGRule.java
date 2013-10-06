@@ -44,7 +44,7 @@ public class TIGRule {
 	 * Gorn-number of the layer with the leaf-node where the adjunction happens.
 	 * Null if the TIG rule dosn't represent an auxiliary tree and therefore couldn't 
 	 */
-	private Integer[] spine;
+	private int[] spine;
 
 	/**
 	 * Constructs a rule tree.
@@ -55,7 +55,7 @@ public class TIGRule {
 	 * @param prob {@link #prob}
 	 * @param spine {@link #spine}
 	 */
-	public TIGRule(long index,List<ProductionRule> productionrules, List<String> lexicalanchors,long freq, double prob,Integer[] spine){
+	public TIGRule(long index,List<ProductionRule> productionrules, List<String> lexicalanchors,long freq, double prob,int[] spine){
 		this.index = index;
 		this.productionrules = productionrules;
 		this.lexicalanchors = lexicalanchors;
@@ -100,7 +100,7 @@ public class TIGRule {
 	/**
 	 * @return the spine
 	 */
-	public Integer[] getSpine() {
+	public int[] getSpine() {
 		return spine;
 	}
 	

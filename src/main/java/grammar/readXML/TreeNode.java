@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import tools.GeneralTools;
+
 /**
  * Tree structure, needed for parsing efficiently a grammar rule tree in the xml-format.
  * @author Fabian Gallenkamp
@@ -121,7 +123,7 @@ public class TreeNode {
 		
 		return new TIGRule(index, layers, 
 				strategy.getlexicalanchors(this), 
-				treefreq, prob, spine.empty()?null:spine.toArray(new Integer[0]));
+				treefreq, prob, spine.empty()?null:GeneralTools.ListToIntArray(spine));
 	}
 	/**
 	 * 
@@ -142,7 +144,8 @@ public class TreeNode {
 			}
 			// Create layer out of rules and gornnumber and add to list
 			Entry[] layernodes = ruleentrys.toArray(new Entry[0]);
-			Integer[] layergornnumber = gornnumbers.toArray(new Integer[0]);
+			int[] layergornnumber = GeneralTools.ListToIntArray(gornnumbers);
+			
 			layers.add(new ProductionRule(layergornnumber,layernodes));
 						
 			int i = 1;

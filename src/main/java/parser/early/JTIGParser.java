@@ -123,6 +123,7 @@ public class JTIGParser {
 		// read lexicon
 		if (parser.readLexicon())
 			parser.preprocessSentence(input, tokens);
+		
 		System.out.println(parser.toString());
 	}
 	

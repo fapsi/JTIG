@@ -14,14 +14,14 @@ public class ProductionRule {
 	/**
 	 * Gorn number.
 	 */
-	private Integer[] gornnumber;
+	private int[] gornnumber;
 	
 	/**
 	 * CFG-rule represented as a array of {@link Entry}'s.
 	 */
 	private Entry[] entrys;
 	
-	public ProductionRule(Integer[] gornnumber,Entry[] entrys){
+	public ProductionRule(int[] gornnumber,Entry[] entrys){
 		this.entrys = entrys;
 		this.gornnumber = gornnumber;
 	}
