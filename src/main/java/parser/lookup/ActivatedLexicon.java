@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+
+import tools.tokenizer.Token;
 /**
  * 
  * @author Fabian Gallenkamp
@@ -15,13 +17,17 @@ public class ActivatedLexicon {
 	/**
 	 * 
 	 */
-	HashMap<String, List<ActivatedRuleTree>> possibletrees;
+	private HashMap<String, List<ActivatedRuleTree>> possibletrees;
+	
+	private Token[] tokens;
 	
 	/**
+	 * @param tokens 
 	 * 
 	 */
-	public ActivatedLexicon (){
+	public ActivatedLexicon (Token[] tokens){
 		this.possibletrees = new HashMap<String, List<ActivatedRuleTree>>();
+		this.tokens = tokens;
 	}
 	
 	/**
@@ -37,6 +43,14 @@ public class ActivatedLexicon {
 			results.add(content);
 		}
 		
+	}
+	
+	public List<ActivatedRuleTree> get(String symbol){
+		return possibletrees.get(symbol);
+	}
+	
+	public Token[] getTokens(){
+		return this.tokens;
 	}
 
 	@Override

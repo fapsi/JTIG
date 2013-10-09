@@ -16,11 +16,11 @@ import grammar.buildJtigGrammar.TIGRule;
  */
 public class Lookup {
 
-	private List<Token> tokens;
+	private Token[] tokens;
 	
 	private Lexicon lexicon;
 	
-	public Lookup(List<Token> tokens,Lexicon lexicon){
+	public Lookup(Token[] tokens,Lexicon lexicon){
 		this.tokens = tokens;
 		this.lexicon = lexicon;
 	}
@@ -28,21 +28,21 @@ public class Lookup {
 	public ActivatedLexicon findlongestmatches(){
 		boolean all = JTIGParser.getProperties().getProperty("parser.lookup.findalllongestmatches").equals("true");
 		
-		ActivatedLexicon slexicon = new ActivatedLexicon();
+		ActivatedLexicon slexicon = new ActivatedLexicon(this.tokens);
 		List<Token> searchwords = new LinkedList<Token>();
 		
 		int p = 0;
 		List<TIGRule> results;
 		
-		for (int i = 0; i < tokens.size(); i++){
+		for (int i = 0; i < tokens.length; i++){
 			searchwords.clear();
-			searchwords.add(tokens.get(i));
+			searchwords.add(tokens[i]);
 			p = i + 1;
 			
 			results = this.lexicon.find(searchwords,0);
-			while ( (results == null || results.size()<=0) && p < tokens.size()){
+			while ( (results == null || results.size()<=0) && p < tokens.length){
 				
-				searchwords.add(tokens.get(p));
+				searchwords.add(tokens[p]);
 				p++;
 				results = this.lexicon.find(searchwords,0);
 			}

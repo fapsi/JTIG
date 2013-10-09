@@ -26,4 +26,9 @@ public class Itemset {
 	public void getPassiveItems(){
 		
 	}
+
+	public void add(Item item) {
+		// TODO Auto-generated method stub
+		
+	}
 }

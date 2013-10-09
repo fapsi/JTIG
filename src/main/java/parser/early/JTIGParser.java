@@ -9,11 +9,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.xml.sax.SAXException;
+
 import parser.lookup.ActivatedLexicon;
+import parser.lookup.ActivatedRuleTree;
 import parser.lookup.Lookup;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
@@ -67,10 +72,46 @@ public class JTIGParser {
 		return true;
 	}
 	
-	public void preprocessSentence(String originalsentence, List<Token> tokens){
+	public void preprocessSentence(String originalsentence, Token[] tokens){
 		this.originalsentence = originalsentence;
 		Lookup l = new Lookup(tokens , lexicon);
 		this.activatedlexicon = l.findlongestmatches();
+	}
+	
+	public boolean parseSentence(){
+		// create item factory
+		DefaultItemFactory factory = new DefaultItemFactory();
+		// Create chart object
+		Chart chart = new Chart();
+		// Create Agenda
+		Agenda agenda = new Agenda();
+		
+		// initialize the chart with items created by the tokens
+		chart.initialize(activatedlexicon.getTokens() , factory);
+		
+		//initialize the agenda with items created by the activated ruletrees with start-symbols
+		if (!initializeAgenda(agenda , factory))
+			return false;
+		
+		
+		return true;
+	}
+	
+	private boolean initializeAgenda(Agenda agenda, DefaultItemFactory factory) {
+		boolean added = false;
+		for (String startsymbol : lexicon.getStartSymbols()){
+			List<ActivatedRuleTree> result = activatedlexicon.get(startsymbol);
+			
+			if (result != null)
+				for (ActivatedRuleTree art : result){
+					Item item = factory.createItemInstance(art);
+					agenda.add(item);
+					
+					if (!added)
+						added = true;
+				}
+		}
+		return added;
 	}
 	
 	private String[] getLexiconPaths(){
@@ -116,10 +157,10 @@ public class JTIGParser {
 			}
 		}
 		//Create components
-		MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer(input);
+		MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 		JTIGParser parser = new JTIGParser();
 		// get tokens out of string
-		List<Token> tokens = st.getTokens();
+		Token[] tokens = st.getTokens(input);
 		// read lexicon
 		if (parser.readLexicon())
 			parser.preprocessSentence(input, tokens);

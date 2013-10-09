@@ -3,8 +3,10 @@
  */
 package grammar.readXML;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.Lexicon;
@@ -66,7 +68,7 @@ public class XMLHandler extends DefaultHandler {
 	/**
 	 * Stores all startsymbols found while reading
 	 */
-	private List<String> startsymbols;
+	private Set<String> startsymbols;
 	
 	/**
 	 * Stores actual depth in tree
@@ -90,7 +92,7 @@ public class XMLHandler extends DefaultHandler {
 	public XMLHandler(AnchorStrategy anchorstrategy){
 		lexicon = new Lexicon();
 		this.anchorstrategy = anchorstrategy;
-		this.startsymbols = new LinkedList<String>();
+		this.startsymbols = new HashSet<String>();
 	}
 	
 	/**

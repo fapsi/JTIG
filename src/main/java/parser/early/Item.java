@@ -3,8 +3,10 @@
  */
 package parser.early;
 
+import java.util.Arrays;
 import java.util.List;
 
+import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.ProductionRule;
 import grammar.buildJtigGrammar.TIGRule;
 
@@ -24,8 +26,6 @@ public class Item {
 	
 	private TIGRule tigrule;
 	
-	private ItemStatus status;
-	
 	private double prob;
 	
 	private int index;
@@ -33,23 +33,46 @@ public class Item {
 	private List<Item> previousitems;
 
 	public Item(int left, int right, int completed, ProductionRule prodrule,
-			TIGRule tigrule, ItemStatus status, double prob, int index,
+			TIGRule tigrule, double prob, int index,
 			List<Item> previousitems) {
 		this.left = left;
 		this.right = right;
-		this.completed = completed;
+		this.completed = completed; //TODO: maybe always 1 by construction --> always passive on construction
 		this.prodrule = prodrule;
 		this.tigrule = tigrule;
-		this.status = status;
 		this.prob = prob;
 		this.index = index;
 		this.previousitems = previousitems;
 	}
 
-	public boolean isactive() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isActive() {
+		return completed < prodrule.getEntrys().length;
 	}
+	
+	public Entry getLeftHandSide(){
+		return prodrule.getEntry(0);
+	}
+	
+	public Entry[] getRightHandSide(){
+		Entry[] entrys = prodrule.getEntrys();
+		if (entrys != null && entrys.length > 1){
+			return Arrays.copyOfRange(prodrule.getEntrys(), 1, entrys.length);
+		}
+		return null;
+	}
+	
+	public TIGRule getTIGRule(){
+		return tigrule;
+	}
+	
+	public int getLeft(){
+		return left;
+	}
+	
+	public int getRight(){
+		return right;
+	}
+	
 
 	@Override
 	public int hashCode() {
@@ -58,7 +81,7 @@ public class Item {
 		result = prime * result + index;
 		result = prime * result + left;
 		result = prime * result + right;
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + (isActive()?1:0);
 		return result;
 	}
 
@@ -77,7 +100,7 @@ public class Item {
 			return false;
 		if (right != other.right)
 			return false;
-		if (status != other.status)
+		if (this.isActive() ^ other.isActive())
 			return false;
 		return true;
 	}

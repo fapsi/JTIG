@@ -9,25 +9,13 @@ import java.util.List;
  * 
  * @author Fabian Gallenkamp
  */
-public abstract class SentenceTokenizer {
-	
-	/**
-	 * 
-	 */
-	protected String sentence; 
+public interface SentenceTokenizer {
 	
 	/**
 	 * 
 	 * @param sentence
-	 */
-	public SentenceTokenizer(String sentence){
-		this.sentence = sentence;
-	}
-	
-	/**
-	 * 
 	 * @return
 	 */
-	public abstract List<Token> getTokens(); 
+	public abstract Token[] getTokens(String sentence); 
 	
 }

@@ -4,9 +4,11 @@
 package grammar.buildJtigGrammar;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import tools.tokenizer.Token;
 
@@ -23,7 +25,7 @@ public class Lexicon {
 	
 	private HashMap<String,Lexicon> entrys;
 	
-	private List<String> symbols;
+	private Set<String> startsymbols;
 	
 	public Lexicon() {
 		content = new LinkedList<TIGRule>();
@@ -65,11 +67,11 @@ public class Lexicon {
 		return found.content;
 	}
 
-	public void setStartSymbols(List<String> symbols){
-		this.symbols = symbols;
+	public void setStartSymbols(Set<String> startsymbols){
+		this.startsymbols = startsymbols;
 	}
-	public List<String> getStartSymbols(){
-		return this.symbols==null?new LinkedList<String>():this.symbols;
+	public Set<String> getStartSymbols(){
+		return this.startsymbols==null?new HashSet<String>():this.startsymbols;
 	}
 	public int size() {
 		int i = this.content.size();

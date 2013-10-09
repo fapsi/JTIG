@@ -38,6 +38,18 @@ public class ActivatedRuleTree {
 		this.right = right;
 	}
 
+	public int getLeft(){
+		return left;
+	}
+	
+	public int getRight(){
+		return right;
+	}
+	
+	public TIGRule getTIGRuleTree(){
+		return tree;
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + tree + ", left=" + left
