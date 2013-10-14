@@ -5,11 +5,13 @@ package grammar.buildJtigGrammar;
 
 import java.util.List;
 
+import parser.early.Item;
+
 /**
  * A grammatical rule in the tree insertion grammar. 
  * Implicitly describes a tree with nodes of several types. 
  * These trees can be combined with two operations adjunction and substitution.
- * Consists of an list of context free grammar rules (also production rules) (see {@link ProductionRule}), 
+ * Consists of an list of context free grammar rules (also production rules) (see {@link Layer}), 
  * an unique index, an lexical anchor,...
  * @author Fabian Gallenkamp
  */
@@ -23,7 +25,7 @@ public class TIGRule {
 	/**
 	 * CFG-production-rules describing implicitly the TIG-rule tree.
 	 */
-	private List<ProductionRule> productionrules;
+	private List<Layer> productionrules;
 	
 	/**
 	 * A lexical anchor is a lexical index (one or more words/units), the tree is connected to.
@@ -55,7 +57,7 @@ public class TIGRule {
 	 * @param prob {@link #prob}
 	 * @param spine {@link #spine}
 	 */
-	public TIGRule(long index,List<ProductionRule> productionrules, List<String> lexicalanchors,long freq, double prob,int[] spine){
+	public TIGRule(long index,List<Layer> productionrules, List<String> lexicalanchors,long freq, double prob,int[] spine){
 		this.index = index;
 		this.productionrules = productionrules;
 		this.lexicalanchors = lexicalanchors;
@@ -79,7 +81,7 @@ public class TIGRule {
 	/**
 	 * @return the layers
 	 */
-	public List<ProductionRule> getProductionRules() {
+	public List<Layer> getProductionRules() {
 		return productionrules;
 	}
 
@@ -110,11 +112,25 @@ public class TIGRule {
 	public String getRootSymbol() {
 		if (this.productionrules.size() <= 0)
 			throw new IllegalArgumentException("Rule tree hasn't any production rules.");
-		ProductionRule l = this.productionrules.get(0);
+		Layer l = this.productionrules.get(0);
 		Entry e = l.getEntry(0);
 		if (e != null)
 			return e.getLabel();
 		return null;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TIGRule other = (TIGRule) obj;
+		if (other.index != this.index)
+			return false;
+		return true;
 	}
 
 	@Override

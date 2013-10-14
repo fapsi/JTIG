@@ -3,6 +3,8 @@
  */
 package parser.early;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import tools.tokenizer.Token;
@@ -25,7 +27,7 @@ public class Chart {
 	}
 	
 	public void initialize(Token[] tokens, DefaultItemFactory factory){
-		width = tokens.length;
+		width = tokens.length +1 ;
 		entrys =  new Itemset[width*width];
 		
 		// create items for tokens occurring in original sentence and add to chart
@@ -46,9 +48,34 @@ public class Chart {
 		return entrys[right * width + left];
 	}
 	
-	public List<Item> getChartItems(Filter<Item> filter){
-		return null;
+	public List<Item> getChartItems(ItemFilter filter){
+		List<Item> result = new LinkedList<Item>();
+		for (int right = 0; right < width;right++){
+			for (int left = 0; left < width;left++){
+				getItemset(left,right).getItems(result,filter);
+			}
+		}
+		return result;
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int right = 0; right < width;right++){
+			for (int left = 0; left < width;left++){
+				sb.append("[");
+				sb.append(left);
+				sb.append(",");
+				sb.append(right);
+				sb.append("]");
+				sb.append(":");
+				sb.append(getItemset(left,right)!=null?getItemset(left,right):"");
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
 }

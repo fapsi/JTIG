@@ -89,6 +89,8 @@ public class JTIGParser {
 		// initialize the chart with items created by the tokens
 		chart.initialize(activatedlexicon.getTokens() , factory);
 		
+		System.out.println(chart);
+		
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda(agenda , factory))
 			return false;
@@ -166,10 +168,13 @@ public class JTIGParser {
 		// get tokens out of string
 		Token[] tokens = st.getTokens(input);
 		// read lexicon
-		if (parser.readLexicon())
+		if (parser.readLexicon()){
 			parser.preprocessSentence(input, tokens);
+			parser.parseSentence();
+			//System.out.println();
+		}
 		
-		System.out.println(parser.toString());
+		//System.out.println(parser.toString());
 	}
 	
 }

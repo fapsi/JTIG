@@ -5,7 +5,7 @@ package grammar.readXML;
 
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.ProductionRule;
+import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.TIGRule;
 
@@ -114,7 +114,7 @@ public class TreeNode {
 	}
 
 	public TIGRule converttoruletree(long index,long treefreq,double prob,AnchorStrategy strategy){
-		List<ProductionRule> layers = new LinkedList<ProductionRule>();
+		List<Layer> layers = new LinkedList<Layer>();
 		Stack<Integer> gornnumbers = new Stack<Integer>();
 		Stack<Integer> spine = new Stack<Integer>();
 		gornnumbers.push(new Integer(0));
@@ -131,7 +131,7 @@ public class TreeNode {
 	 * @param gornnumbers
 	 * @param spine
 	 */
-	private void extractlayers(List<ProductionRule> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
+	private void extractlayers(List<Layer> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
 		if (haschild()){
 			
 			// Add 0th element of CFG Rule
@@ -146,7 +146,7 @@ public class TreeNode {
 			Entry[] layernodes = ruleentrys.toArray(new Entry[0]);
 			int[] layergornnumber = GeneralTools.ListToIntArray(gornnumbers);
 			
-			layers.add(new ProductionRule(layergornnumber,layernodes));
+			layers.add(new Layer(layergornnumber,layernodes));
 						
 			int i = 1;
 			//make recursive calls

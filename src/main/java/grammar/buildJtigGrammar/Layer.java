@@ -10,7 +10,7 @@ import java.util.Arrays;
  * For accessing properly, it also contains a unique Gorn-number.
  * @author Fabian Gallenkamp
  */
-public class ProductionRule {
+public class Layer {
 	/**
 	 * Gorn number.
 	 */
@@ -21,7 +21,7 @@ public class ProductionRule {
 	 */
 	private Entry[] entrys;
 	
-	public ProductionRule(int[] gornnumber,Entry[] entrys){
+	public Layer(int[] gornnumber,Entry[] entrys){
 		this.entrys = entrys;
 		this.gornnumber = gornnumber;
 	}

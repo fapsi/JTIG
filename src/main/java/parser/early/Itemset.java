@@ -3,7 +3,9 @@
  */
 package parser.early;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -11,24 +13,69 @@ import java.util.Set;
  */
 public class Itemset {
 	
-	private Set<Item> active;
+	private Map<Item,Item> activeitems;
 	
-	private Set<Item> passive;
+	private Map<Item,Item> passiveitems;
 	
 	public Itemset(){
-		
+		activeitems = new HashMap<Item,Item>();
+		passiveitems = new HashMap<Item,Item>();
 	}
 	
-	public void getActiveItems(){
-		
-	}
-	
-	public void getPassiveItems(){
+	public void add(Item item) {
+		Map<Item,Item> addto = item.isActive()?activeitems:passiveitems;
+
+		if (addto.containsKey(item)){
+			Item identicalitem = addto.get(item);
+			//TODO: add further derivation to the identicalitem
+			identicalitem.addDerivation();
+		} else 
+			addto.put(item,item);
 		
 	}
 
-	public void add(Item item) {
-		// TODO Auto-generated method stub
-		
+	public void getItems(List<Item> results,ItemFilter filter) {
+		switch (filter.getStatus()) {
+		case All:
+			for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
+				if (filter.apply(kvpair.getKey()))
+					results.add(kvpair.getKey());
+			}
+		case Active:
+			for (Map.Entry<Item,Item> kvpair : activeitems.entrySet()){
+				if (filter.apply(kvpair.getKey()))
+					results.add(kvpair.getKey());
+			}
+			break;
+		case Passive:
+			for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
+				if (filter.apply(kvpair.getKey()))
+					results.add(kvpair.getKey());
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (passiveitems.size() > 0)
+			sb.append("\n\tPassive Items: ");
+		for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
+			sb.append(kvpair.getKey().toString());
+			sb.append(",");
+		}
+		if (passiveitems.size() > 0)
+			sb.append("\n\tActive Items: ");
+		for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
+			sb.append(kvpair.getKey().toString());
+			sb.append(",");
+		}
+		return sb.toString();
 	}
 }

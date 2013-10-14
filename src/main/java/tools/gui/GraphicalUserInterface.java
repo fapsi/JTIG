@@ -11,7 +11,7 @@ import java.util.List;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.ProductionRule;
+import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.TIGRule;
 
 import javax.swing.JButton;
@@ -111,13 +111,13 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 	}
 	
 	private void visualize(TIGRule rule){	
-		List<ProductionRule> all = rule.getProductionRules();
-		ProductionRule first = rule.getProductionRules().get(0);
+		List<Layer> all = rule.getProductionRules();
+		Layer first = rule.getProductionRules().get(0);
 		Object v1 = graph.insertVertex(parent, null, first.getEntry(0).getLabel(), 0, 0, 80,20);
 		visualize(first,all,v1);
 	}
 	
-	public void visualize(ProductionRule beyond,List<ProductionRule> all,Object p2){
+	public void visualize(Layer beyond,List<Layer> all,Object p2){
 		int i = 0 ;
 		for (Entry entry : beyond.getEntrys()){
 			if (i == 0){
@@ -134,7 +134,7 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 			Object v1 = graph.insertVertex(parent, null, entry.getLabel(), 0, 0, 80,20, style);
 			graph.insertEdge(parent, null, "", p2, v1);
 			
-			ProductionRule prod = findchildren(beyond,all,entry);
+			Layer prod = findchildren(beyond,all,entry);
 			if (prod != null)
 				visualize(prod,all,v1);
 			
@@ -142,8 +142,8 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 		}
 	}
 	
-	private ProductionRule findchildren(ProductionRule rule,List<ProductionRule> all, Entry e){
-		for (ProductionRule elem : all ){
+	private Layer findchildren(Layer rule,List<Layer> all, Entry e){
+		for (Layer elem : all ){
 			int[] a = Arrays.copyOfRange(elem.getGornNumber(), 0, elem.getGornNumber().length-1);
 			int[] b = rule.getGornNumber();
 			if (Arrays.equals(a, b) && elem.getEntry(0).getLabel().equals(e.getLabel())){

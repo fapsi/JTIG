@@ -4,11 +4,13 @@
 package parser.early;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.ProductionRule;
+import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.TIGRule;
 
 /**
@@ -23,7 +25,7 @@ public class Item {
 	
 	private int dotposition;
 	
-	private ProductionRule prodrule;
+	private Layer layer;
 	
 	private TIGRule tigrule;
 	
@@ -31,22 +33,26 @@ public class Item {
 	
 	private int index;
 	
-	private List<Item> previousitems;
+	private Set<ItemDerivation> derivations;
 
-	public Item(int left, int right, int dotposition, ProductionRule prodrule,
+	public Item(int left, int right, int dotposition, Layer layer,
 			TIGRule tigrule, double prob, int index) {
 		this.left = left;
 		this.right = right;
 		this.dotposition = dotposition; //TODO: maybe always 1 by construction --> always active on construction
-		this.prodrule = prodrule;
+		this.layer = layer;
 		//TODO maybe the activated tig rule???
 		this.tigrule = tigrule;
 		this.prob = prob;
 		this.index = index;
-		//TODO not sure about this (maybe a list over pairs?)
-		this.previousitems = new LinkedList<Item>();
+
+		this.derivations = new HashSet<ItemDerivation>();
 	}
 
+	public void addDerivation(){
+		
+	}
+	
 	public void moveDotLeft(){
 		if (isActive())
 			++dotposition;
@@ -54,7 +60,7 @@ public class Item {
 	}
 	
 	public boolean isActive() {
-		return dotposition < prodrule.getEntrys().length;
+		return dotposition < layer.getEntrys().length;
 	}
 	
 	public boolean isPassive(){
@@ -62,13 +68,13 @@ public class Item {
 	}
 	
 	public Entry getLeftHandSide(){
-		return prodrule.getEntry(0);
+		return layer.getEntry(0);
 	}
 	
 	public Entry[] getRightHandSide(){
-		Entry[] entrys = prodrule.getEntrys();
+		Entry[] entrys = layer.getEntrys();
 		if (entrys != null && entrys.length > 1){
-			return Arrays.copyOfRange(prodrule.getEntrys(), 1, entrys.length);
+			return Arrays.copyOfRange(layer.getEntrys(), 1, entrys.length);
 		}
 		return null;
 	}
@@ -106,15 +112,24 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (index != other.index)
+		if (!tigrule.equals(other.tigrule))
 			return false;
-		if (left != other.left)
+		if (layer != other.layer) // TODO equals method in layer
 			return false;
-		if (right != other.right)
+		if (dotposition != other.dotposition)
 			return false;
-		if (this.isActive() ^ other.isActive())
-			return false;
+		//if (this.isActive() ^ other.isActive())
+		//	return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Item [dotposition=" + dotposition + ", tigrule=" + tigrule
+				+ ", index=" + index + "]";
 	}
 
 	

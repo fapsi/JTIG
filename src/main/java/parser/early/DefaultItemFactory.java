@@ -6,7 +6,7 @@ package parser.early;
 import parser.lookup.ActivatedRuleTree;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.ProductionRule;
+import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.TIGRule;
 
 /**
@@ -28,7 +28,7 @@ public class DefaultItemFactory {
 		int[] address = new int[]{0};
 		// build layer production rule for terminal element
 		Entry[] entrys = new Entry[]{new Entry(NodeType.TERM, terminal)};
-		ProductionRule layer = new ProductionRule(address, entrys);
+		Layer layer = new Layer(address, entrys);
 		// create the item and return it
 		Item item = new Item(left,left + 1, 1 , layer, null,1.0,item_cnt);
 		return item;
