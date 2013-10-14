@@ -126,6 +126,10 @@ public class JTIGParser {
 		}
 	}
 	
+	public Lexicon getLexicon(){
+		return lexicon;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

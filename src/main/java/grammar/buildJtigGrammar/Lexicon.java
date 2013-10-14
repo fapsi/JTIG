@@ -58,6 +58,8 @@ public class Lexicon {
 	}
 	
 	public List<TIGRule> find(List<Token> index,int pos){
+		if (index.size() == 0)
+			return this.content;
 		Lexicon found = this.entrys.get(index.get(pos).getLabel());
 		if (found == null)
 			return null;

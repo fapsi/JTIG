@@ -4,6 +4,7 @@
 package parser.early;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import grammar.buildJtigGrammar.Entry;
@@ -20,7 +21,7 @@ public class Item {
 	
 	private int right;
 	
-	private int completed;
+	private int dotposition;
 	
 	private ProductionRule prodrule;
 	
@@ -32,21 +33,32 @@ public class Item {
 	
 	private List<Item> previousitems;
 
-	public Item(int left, int right, int completed, ProductionRule prodrule,
-			TIGRule tigrule, double prob, int index,
-			List<Item> previousitems) {
+	public Item(int left, int right, int dotposition, ProductionRule prodrule,
+			TIGRule tigrule, double prob, int index) {
 		this.left = left;
 		this.right = right;
-		this.completed = completed; //TODO: maybe always 1 by construction --> always passive on construction
+		this.dotposition = dotposition; //TODO: maybe always 1 by construction --> always active on construction
 		this.prodrule = prodrule;
+		//TODO maybe the activated tig rule???
 		this.tigrule = tigrule;
 		this.prob = prob;
 		this.index = index;
-		this.previousitems = previousitems;
+		//TODO not sure about this (maybe a list over pairs?)
+		this.previousitems = new LinkedList<Item>();
 	}
 
+	public void moveDotLeft(){
+		if (isActive())
+			++dotposition;
+		return;
+	}
+	
 	public boolean isActive() {
-		return completed < prodrule.getEntrys().length;
+		return dotposition < prodrule.getEntrys().length;
+	}
+	
+	public boolean isPassive(){
+		return !isActive();
 	}
 	
 	public Entry getLeftHandSide(){

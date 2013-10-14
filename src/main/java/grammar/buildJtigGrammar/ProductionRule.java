@@ -36,6 +36,10 @@ public class ProductionRule {
 		return null;
 	}
 	
+	public int[] getGornNumber(){
+		return gornnumber;
+	}
+	
 	@Override
 	public String toString() {
 		return "Layer [" + Arrays.toString(gornnumber) + ","

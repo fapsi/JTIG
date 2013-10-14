@@ -30,7 +30,7 @@ public class DefaultItemFactory {
 		Entry[] entrys = new Entry[]{new Entry(NodeType.TERM, terminal)};
 		ProductionRule layer = new ProductionRule(address, entrys);
 		// create the item and return it
-		Item item = new Item(left,left + 1, 1 , layer, null,1.0,item_cnt,null);
+		Item item = new Item(left,left + 1, 1 , layer, null,1.0,item_cnt);
 		return item;
 	}
 	
@@ -38,8 +38,7 @@ public class DefaultItemFactory {
 		// increase counter for new instance
 		increase();
 		TIGRule ruletree = aruletree.getTIGRuleTree();
-		Item item = new Item(aruletree.getLeft(),aruletree.getRight() // TODO: not sure about this
-				, 1 , ruletree.getProductionRules().get(0), ruletree, 1.0 , item_cnt, null);
+		Item item = new Item(0,0,1,ruletree.getProductionRules().get(0),ruletree,1.0,item_cnt);
 		return item;
 	}
 	
