@@ -4,8 +4,6 @@
 package grammar.readXML;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import grammar.buildJtigGrammar.AnchorStrategy;
@@ -34,11 +32,6 @@ public class XMLHandler extends DefaultHandler {
 	 * True, if actual processing the start-symbols
 	 */
 	private boolean instartsymbols;
-	
-	/**
-	 * True, if actual processing the start-symbol
-	 */
-	private boolean instartsymbol;
 	
 	/**
 	 * True, if actual processing a tree.
@@ -109,7 +102,6 @@ public class XMLHandler extends DefaultHandler {
 		} else if (qName.equals("start-symbols") && inltig){
 			instartsymbols = true;
 		} else if (qName.equals("symbol") && instartsymbols){
-			instartsymbol = true;
 			startsymbols.add(attributes.getValue("type"));
 		} else if (qName.equals("tree") && inltig){
 			intree = true;

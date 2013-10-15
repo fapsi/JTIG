@@ -9,7 +9,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -31,6 +32,8 @@ import grammar.readXML.XMLReader;
 public class JTIGParser {
 	
 	private static final String parserpropertypath = "resources/parser.properties";
+	
+	private static final PrintStream printstream = System.out;
 	
 	private static final Properties  parserproperties = new Properties();
 	
@@ -57,12 +60,23 @@ public class JTIGParser {
 		}
 	}
 	
-	public static Properties getProperties(){
-		return JTIGParser.parserproperties;
+	public static String getProperty(String key){
+		String s = JTIGParser.parserproperties.getProperty(key);
+		if (s != null)
+			return s.trim();
+		return null;
+	}
+	
+	public static boolean getBooleanProperty(String key){
+		return "true".equals(JTIGParser.getProperty(key).toLowerCase());
+	}
+	
+	public static PrintStream getPrintStream(){
+		return JTIGParser.printstream;
 	}
 	
 	public boolean readLexicon(){		
-		// TODO read more than one file to lexicon
+		// TODO possibly read more than one file to lexicon
 		XMLReader xp = new XMLReader(getLexiconPaths()[0]);
 		try {
 			this.lexicon = xp.read();
@@ -72,13 +86,16 @@ public class JTIGParser {
 		return true;
 	}
 	
-	public void preprocessSentence(String originalsentence, Token[] tokens){
+	private void preprocessSentence(String originalsentence, Token[] tokens){
 		this.originalsentence = originalsentence;
+		
 		Lookup l = new Lookup(tokens , lexicon);
 		this.activatedlexicon = l.findlongestmatches();
 	}
 	
-	public boolean parseSentence(){
+	public boolean parseSentence(String originalsentence, Token[] tokens){
+		preprocessSentence(originalsentence,tokens);
+		System.out.println(this);
 		// create item factory
 		DefaultItemFactory factory = new DefaultItemFactory();
 		// Create chart object
@@ -87,7 +104,7 @@ public class JTIGParser {
 		Agenda agenda = new Agenda();
 		
 		// initialize the chart with items created by the tokens
-		chart.initialize(activatedlexicon.getTokens() , factory);
+		chart.initialize(tokens , factory);
 		
 		System.out.println(chart);
 		
@@ -95,6 +112,7 @@ public class JTIGParser {
 		if (!initializeAgenda(agenda , factory))
 			return false;
 		
+		System.out.println(agenda);
 		
 		return true;
 	}
@@ -142,6 +160,7 @@ public class JTIGParser {
 		sb.append("'"+this.originalsentence+"'\n");
 		sb.append("----------------------------------\n");
 		sb.append(this.activatedlexicon);
+		
 		return sb.toString();
 	}
 
@@ -169,8 +188,7 @@ public class JTIGParser {
 		Token[] tokens = st.getTokens(input);
 		// read lexicon
 		if (parser.readLexicon()){
-			parser.preprocessSentence(input, tokens);
-			parser.parseSentence();
+			parser.parseSentence(input, tokens);
 			//System.out.println();
 		}
 		

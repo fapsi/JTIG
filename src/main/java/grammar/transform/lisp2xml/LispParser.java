@@ -230,8 +230,8 @@ public class LispParser {
 		writer.close();
 		
 		time1 = System.currentTimeMillis() - time1;
-		if (JTIGParser.getProperties().getProperty("debug").equals("true"))
-			System.out.println("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
+		if (JTIGParser.getBooleanProperty("grammar.transform.lisp2xml.output"))
+			JTIGParser.getPrintStream().println("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
 				+ "Output file: "+outputpath);
 		return true;
 	}

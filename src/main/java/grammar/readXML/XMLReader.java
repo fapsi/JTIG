@@ -3,6 +3,7 @@
  */
 package grammar.readXML;
 
+import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.TIGRule;
@@ -76,26 +77,43 @@ public class XMLReader {
 	 * @throws ParserConfigurationException 
 	 */
 	public Lexicon read() throws SAXException, IOException, ParserConfigurationException {
-		Lexicon lexicon = null;
-
+			Lexicon lexicon = null;
 			long time1 = System.currentTimeMillis();
+			
+			// load anchor strategy dynamically from classname in properties-file
+			AnchorStrategy as = null;
+			String classname = "grammar.buildJtigGrammar.DeepestLeftmostAnchor";
+			try {
+				classname = JTIGParser.getProperty("grammar.build.anchorstrategy");
+				as = (AnchorStrategy) Class.forName(classname).newInstance();
+			} catch (InstantiationException | IllegalAccessException
+					| ClassNotFoundException e) {
+				as = new DeepestLeftmostAnchor();
+			}
+			
+			// create sax equipment
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			XMLHandler handler = new XMLHandler(new DeepestLeftmostAnchor());
+			XMLHandler handler = new XMLHandler(as);
+			
+			// open xml file to parse
 	   	    File file = new File(inputpath);
     	    InputStream inputStream= new FileInputStream(file);
     	    Reader reader = new InputStreamReader(inputStream,"UTF-8");
     	    InputSource is = new InputSource(reader);
     	    is.setEncoding("UTF-8");
+    	    
+    	    //parse
 			saxParser.parse(is, handler);
 			
+			// store resulting lexicon
 			lexicon = handler.getLexicon();
+			
 			time1 = System.currentTimeMillis() - time1;
 			
-			if (JTIGParser.getProperties().getProperty("debug").equals("true"))
-				System.out.println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
+			if (JTIGParser.getBooleanProperty("grammar.readXML.output"))
+				JTIGParser.getPrintStream().println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
 			
-
 		return lexicon;
 	}
 }
