@@ -11,13 +11,13 @@ import java.util.Map;
  * 
  * @author Fabian Gallenkamp
  */
-public class Itemset {
+public class ItemSet {
 	
 	private Map<Item,Item> activeitems;
 	
 	private Map<Item,Item> passiveitems;
 	
-	public Itemset(){
+	public ItemSet(){
 		activeitems = new HashMap<Item,Item>();
 		passiveitems = new HashMap<Item,Item>();
 	}

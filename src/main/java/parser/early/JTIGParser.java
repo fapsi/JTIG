@@ -19,7 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedRuleTree;
+import parser.lookup.ActivatedTIGRule;
 import parser.lookup.Lookup;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
@@ -120,10 +120,10 @@ public class JTIGParser {
 	private boolean initializeAgenda(Agenda agenda, DefaultItemFactory factory) {
 		boolean added = false;
 		for (String startsymbol : lexicon.getStartSymbols()){
-			List<ActivatedRuleTree> result = activatedlexicon.get(startsymbol);
+			List<ActivatedTIGRule> result = activatedlexicon.get(startsymbol);
 			
 			if (result != null)
-				for (ActivatedRuleTree art : result){
+				for (ActivatedTIGRule art : result){
 					Item item = factory.createItemInstance(art);
 					agenda.add(item);
 					

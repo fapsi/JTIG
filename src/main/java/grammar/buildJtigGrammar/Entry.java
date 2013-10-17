@@ -32,6 +32,41 @@ public class Entry {
 		return nodetype;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((label == null) ? 0 : label.hashCode());
+		result = prime * result
+				+ ((nodetype == null) ? 0 : nodetype.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entry other = (Entry) obj;
+		if (label == null) {
+			if (other.label != null)
+				return false;
+		} else if (!label.equals(other.label))
+			return false;
+		if (nodetype != other.nodetype)
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		return "(" + nodetype + ", '" + label + "')";

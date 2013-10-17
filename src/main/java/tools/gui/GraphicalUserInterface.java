@@ -111,8 +111,8 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 	}
 	
 	private void visualize(TIGRule rule){	
-		List<Layer> all = rule.getProductionRules();
-		Layer first = rule.getProductionRules().get(0);
+		List<Layer> all = rule.getLayers();
+		Layer first = rule.getLayer(0);
 		Object v1 = graph.insertVertex(parent, null, first.getEntry(0).getLabel(), 0, 0, 80,20);
 		visualize(first,all,v1);
 	}

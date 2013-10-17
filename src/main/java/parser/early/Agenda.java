@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedRuleTree;
+import parser.lookup.ActivatedTIGRule;
 
 /**
  * 
@@ -22,7 +22,7 @@ public class Agenda {
 		
 	public Agenda(){	
 		ItemComparator itemcomp = new ItemComparator();
-		queue = new PriorityQueue<>(10, itemcomp);
+		queue = new PriorityQueue<>(1, itemcomp);
 	}
 
 	public void add(Item item) {

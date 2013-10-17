@@ -25,7 +25,7 @@ public class TIGRule {
 	/**
 	 * CFG-production-rules describing implicitly the TIG-rule tree.
 	 */
-	private List<Layer> productionrules;
+	private List<Layer> layers;
 	
 	/**
 	 * A lexical anchor is a lexical index (one or more words/units), the tree is connected to.
@@ -35,12 +35,12 @@ public class TIGRule {
 	/**
 	 * Frequency in which this TIG-rule occurs in the language.
 	 */
-	private long freq;
+	private long frequency;
 	
 	/**
 	 * Probability in which this TIG-rule occurs in language.
 	 */
-	private double prob;
+	private double probability;
 	
 	/**
 	 * Gorn-number of the layer with the leaf-node where the adjunction happens.
@@ -53,16 +53,16 @@ public class TIGRule {
 	 * @param index {@link #index}
 	 * @param layers {@link #layers}
 	 * @param lexicalanchors {@link #lexicalanchors}
-	 * @param freq {@link #freq}
-	 * @param prob {@link #prob}
+	 * @param frequency {@link #frequency}
+	 * @param probability {@link #probability}
 	 * @param spine {@link #spine}
 	 */
-	public TIGRule(long index,List<Layer> productionrules, List<String> lexicalanchors,long freq, double prob,int[] spine){
+	public TIGRule(long index,List<Layer> productionrules, List<String> lexicalanchors,long frequency, double probability,int[] spine){
 		this.index = index;
-		this.productionrules = productionrules;
+		this.layers = productionrules;
 		this.lexicalanchors = lexicalanchors;
-		this.freq = freq;
-		this.prob = prob;
+		this.frequency = frequency;
+		this.probability = probability;
 		this.spine = spine;
 	}
 	
@@ -81,22 +81,22 @@ public class TIGRule {
 	/**
 	 * @return the layers
 	 */
-	public List<Layer> getProductionRules() {
-		return productionrules;
+	public List<Layer> getLayers() {
+		return layers;
 	}
 
 	/**
-	 * @return the freq
+	 * @return the frequency
 	 */
-	public long getFreq() {
-		return freq;
+	public long getFrequency() {
+		return frequency;
 	}
 
 	/**
-	 * @return the prob
+	 * @return the probability
 	 */
-	public double getProb() {
-		return prob;
+	public double getProbability() {
+		return probability;
 	}
 
 	/**
@@ -106,21 +106,44 @@ public class TIGRule {
 		return spine;
 	}
 	
+	public Layer getLayer(int i){
+		if (this.layers.size() <= 0)
+			throw new IllegalArgumentException("Rule tree hasn't any production rules.");
+		if (i < 0 || i >= this.layers.size())
+			throw new IllegalArgumentException("There exists no layer with such index.");
+		Layer l = this.layers.get(i);
+		return l;
+	}
+	
 	/**
 	 * @return the nonterminal on the left side of the first production rule
 	 */
 	public String getRootSymbol() {
-		if (this.productionrules.size() <= 0)
+		if (this.layers.size() <= 0)
 			throw new IllegalArgumentException("Rule tree hasn't any production rules.");
-		Layer l = this.productionrules.get(0);
+		Layer l = this.layers.get(0);
 		Entry e = l.getEntry(0);
 		if (e != null)
 			return e.getLabel();
 		return null;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
-	public boolean equals(Object obj){
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (index ^ (index >>> 32));
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -128,7 +151,7 @@ public class TIGRule {
 		if (getClass() != obj.getClass())
 			return false;
 		TIGRule other = (TIGRule) obj;
-		if (other.index != this.index)
+		if (index != other.index)
 			return false;
 		return true;
 	}

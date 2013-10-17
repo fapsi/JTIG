@@ -17,7 +17,7 @@ public class ActivatedLexicon {
 	/**
 	 * 
 	 */
-	private HashMap<String, List<ActivatedRuleTree>> possibletrees;
+	private HashMap<String, List<ActivatedTIGRule>> possibletrees;
 	
 	private Token[] tokens;
 	
@@ -26,17 +26,17 @@ public class ActivatedLexicon {
 	 * 
 	 */
 	public ActivatedLexicon (Token[] tokens){
-		this.possibletrees = new HashMap<String, List<ActivatedRuleTree>>();
+		this.possibletrees = new HashMap<String, List<ActivatedTIGRule>>();
 		this.tokens = tokens;
 	}
 	
 	/**
 	 * 
 	 */
-	public void add(String rootlabel,ActivatedRuleTree content){
-		List<ActivatedRuleTree> results = this.possibletrees.get(rootlabel);
+	public void add(String rootlabel,ActivatedTIGRule content){
+		List<ActivatedTIGRule> results = this.possibletrees.get(rootlabel);
 		if (results == null){
-			List<ActivatedRuleTree> toput = new LinkedList<ActivatedRuleTree>();
+			List<ActivatedTIGRule> toput = new LinkedList<ActivatedTIGRule>();
 			toput.add(content);
 			this.possibletrees.put(rootlabel, toput);
 		} else {
@@ -45,7 +45,7 @@ public class ActivatedLexicon {
 		
 	}
 	
-	public List<ActivatedRuleTree> get(String symbol){
+	public List<ActivatedTIGRule> get(String symbol){
 		return possibletrees.get(symbol);
 	}
 	
@@ -57,7 +57,7 @@ public class ActivatedLexicon {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Activated Lexicon:\n");
-		for (Entry<String, List<ActivatedRuleTree>> l : this.possibletrees.entrySet()){
+		for (Entry<String, List<ActivatedTIGRule>> l : this.possibletrees.entrySet()){
 			sb.append(l.getKey());
 			sb.append(":");
 			sb.append(l.getValue());

@@ -16,9 +16,9 @@ import tools.tokenizer.Token;
 public class Chart {
 
 	/**
-	 * Array handling a quadratic two dimensional Array for holding the {@link Itemset} with the specified span
+	 * Array handling a quadratic two dimensional Array for holding the {@link ItemSet} with the specified span
 	 */
-	private Itemset[] entrys;
+	private ItemSet[] entrys;
 	
 	private int width;
 	
@@ -28,7 +28,7 @@ public class Chart {
 	
 	public void initialize(Token[] tokens, DefaultItemFactory factory){
 		width = tokens.length +1 ;
-		entrys =  new Itemset[width*width];
+		entrys =  new ItemSet[width*width];
 		
 		// create items for tokens occurring in original sentence and add to chart
 		for (int i = 0; i < tokens.length; i++ ) {
@@ -40,11 +40,11 @@ public class Chart {
 	public void addItem(Item item){
 		int index = item.getRight() * width + item.getLeft();
 		if (entrys[index] == null)
-			entrys[index] = new Itemset();
+			entrys[index] = new ItemSet();
 		entrys[index].add(item);
 	}
 	
-	public Itemset getItemset(int left, int right){
+	public ItemSet getItemset(int left, int right){
 		return entrys[right * width + left];
 	}
 	

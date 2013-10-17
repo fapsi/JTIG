@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import parser.lookup.ActivatedTIGRule;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.TIGRule;
@@ -27,23 +28,22 @@ public class Item {
 	
 	private Layer layer;
 	
-	private TIGRule tigrule;
+	private ActivatedTIGRule activatedruletree;
 	
-	private double prob;
+	private double probability;
 	
 	private int index;
 	
 	private Set<ItemDerivation> derivations;
 
 	public Item(int left, int right, int dotposition, Layer layer,
-			TIGRule tigrule, double prob, int index) {
+			ActivatedTIGRule activatedruletree, double probability, int index) {
 		this.left = left;
 		this.right = right;
 		this.dotposition = dotposition; //TODO: maybe always 1 by construction --> always active on construction
 		this.layer = layer;
-		//TODO maybe the activated tig rule???
-		this.tigrule = tigrule;
-		this.prob = prob;
+		this.activatedruletree = activatedruletree;
+		this.probability = probability;
 		this.index = index;
 
 		this.derivations = new HashSet<ItemDerivation>();
@@ -79,8 +79,8 @@ public class Item {
 		return null;
 	}
 	
-	public TIGRule getTIGRule(){
-		return tigrule;
+	public ActivatedTIGRule getActivatedTIGRule(){
+		return activatedruletree;
 	}
 	
 	public int getLeft(){
@@ -90,19 +90,30 @@ public class Item {
 	public int getRight(){
 		return right;
 	}
-	
+	// Probability
+	public int getProbability(){
+		return right;
+	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + index;
-		result = prime * result + left;
-		result = prime * result + right;
-		result = prime * result + (isActive()?1:0);
+		result = prime
+				* result
+				+ ((activatedruletree == null) ? 0 : activatedruletree
+						.hashCode());
+		result = prime * result + dotposition;
+		result = prime * result + ((layer == null) ? 0 : layer.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -112,14 +123,18 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (!tigrule.equals(other.tigrule))
-			return false;
-		if (layer != other.layer) // TODO equals method in layer
+		if (activatedruletree == null) {
+			if (other.activatedruletree != null)
+				return false;
+		} else if (!activatedruletree.equals(other.activatedruletree))
 			return false;
 		if (dotposition != other.dotposition)
 			return false;
-		//if (this.isActive() ^ other.isActive())
-		//	return false;
+		if (layer == null) {
+			if (other.layer != null)
+				return false;
+		} else if (!layer.equals(other.layer))
+			return false;
 		return true;
 	}
 
@@ -128,7 +143,7 @@ public class Item {
 	 */
 	@Override
 	public String toString() {
-		return "Item [dotposition=" + dotposition + ", tigrule=" + tigrule
+		return "Item [dotposition=" + dotposition + ", tigrule=" + activatedruletree
 				+ ", index=" + index + "]";
 	}
 

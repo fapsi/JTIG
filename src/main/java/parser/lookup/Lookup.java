@@ -50,7 +50,7 @@ public class Lookup {
 			if (results != null && results.size() > 0){
 				
 				for (TIGRule result : results){
-					slexicon.add(result.getRootSymbol(), new ActivatedRuleTree(result, i, p));
+					slexicon.add(result.getRootSymbol(), new ActivatedTIGRule(result, i, p));
 				}
 				if(!all)
 					i = p - 1;

@@ -39,7 +39,38 @@ public class Layer {
 	public int[] getGornNumber(){
 		return gornnumber;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(entrys);
+		result = prime * result + Arrays.hashCode(gornnumber);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Layer other = (Layer) obj;
+		if (!Arrays.equals(entrys, other.entrys))
+			return false;
+		if (!Arrays.equals(gornnumber, other.gornnumber))
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		return "Layer [" + Arrays.toString(gornnumber) + ","

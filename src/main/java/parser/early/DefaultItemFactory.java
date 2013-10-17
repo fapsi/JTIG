@@ -3,7 +3,7 @@
  */
 package parser.early;
 
-import parser.lookup.ActivatedRuleTree;
+import parser.lookup.ActivatedTIGRule;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.Layer;
@@ -34,11 +34,10 @@ public class DefaultItemFactory {
 		return item;
 	}
 	
-	public Item createItemInstance(ActivatedRuleTree aruletree){
+	public Item createItemInstance(ActivatedTIGRule activatedruletree){
 		// increase counter for new instance
 		increase();
-		TIGRule ruletree = aruletree.getTIGRuleTree();
-		Item item = new Item(0,0,1,ruletree.getProductionRules().get(0),ruletree,1.0,item_cnt);
+		Item item = new Item(0 , 0 , 1, activatedruletree.getLayer(0),activatedruletree,1.0,item_cnt);
 		return item;
 	}
 	

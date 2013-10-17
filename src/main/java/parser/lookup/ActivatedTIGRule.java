@@ -9,13 +9,8 @@ import grammar.buildJtigGrammar.TIGRule;
  * 
  * @author Fabian Gallenkamp
  */
-public class ActivatedRuleTree {
-	
-	/**
-	 * 
-	 */
-	private TIGRule tree;
-	
+public class ActivatedTIGRule extends TIGRule{
+		
 	/**
 	 * 
 	 */
@@ -32,8 +27,8 @@ public class ActivatedRuleTree {
 	 * @param left
 	 * @param right
 	 */
-	public ActivatedRuleTree(TIGRule tree,int left,int right){
-		this.tree = tree;
+	public ActivatedTIGRule(TIGRule tree,int left,int right){
+		super(tree.getIndex(), tree.getLayers(), tree.getlexicalanchors(), tree.getFrequency(), tree.getProbability(), tree.getSpine());
 		this.left = left;
 		this.right = right;
 	}
@@ -44,17 +39,5 @@ public class ActivatedRuleTree {
 	
 	public int getRight(){
 		return right;
-	}
-	
-	public TIGRule getTIGRuleTree(){
-		return tree;
-	}
-	
-	@Override
-	public String toString() {
-		return "(" + tree + ", left=" + left
-				+ ", right=" + right + ")";
-	}
-	
-	
+	}	
 }
