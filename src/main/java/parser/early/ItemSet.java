@@ -27,30 +27,29 @@ public class ItemSet {
 
 		if (addto.containsKey(item)){
 			Item identicalitem = addto.get(item);
-			//TODO: add further derivation to the identicalitem
-			identicalitem.addDerivation();
+			identicalitem.addDerivations(item.getDerivations());
 		} else 
 			addto.put(item,item);
 		
 	}
 
-	public void getItems(List<Item> results,ItemFilter filter) {
+	public void getItems(List<Item> result,ItemFilter filter) {
 		switch (filter.getStatus()) {
 		case All:
 			for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
 				if (filter.apply(kvpair.getKey()))
-					results.add(kvpair.getKey());
+					result.add(kvpair.getKey());
 			}
 		case Active:
 			for (Map.Entry<Item,Item> kvpair : activeitems.entrySet()){
 				if (filter.apply(kvpair.getKey()))
-					results.add(kvpair.getKey());
+					result.add(kvpair.getKey());
 			}
 			break;
 		case Passive:
 			for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
 				if (filter.apply(kvpair.getKey()))
-					results.add(kvpair.getKey());
+					result.add(kvpair.getKey());
 			}
 			break;
 		default:
@@ -72,7 +71,7 @@ public class ItemSet {
 		}
 		if (passiveitems.size() > 0)
 			sb.append("\n\tActive Items: ");
-		for (Map.Entry<Item,Item> kvpair : passiveitems.entrySet()){
+		for (Map.Entry<Item,Item> kvpair : activeitems.entrySet()){
 			sb.append(kvpair.getKey().toString());
 			sb.append(",");
 		}

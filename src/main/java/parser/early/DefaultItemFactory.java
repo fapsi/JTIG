@@ -40,10 +40,27 @@ public class DefaultItemFactory {
 		Item item = new Item(0 , 0 , 1, activatedruletree.getLayer(0),activatedruletree,1.0,item_cnt);
 		return item;
 	}
-	
-	public Item createItemInstance(Item i1,Item i2){
+		
+	public Item createItemInstance(int left,int right,int dotposition, Layer layer,ActivatedTIGRule activatedtigrule, double probability) {
 		// increase counter for new instance
 		increase();
+		
+		Item newitem = new Item(
+				left,
+				right,
+				dotposition,
+				layer,
+				activatedtigrule,
+				probability,
+				item_cnt
+				);
+		return newitem;
+	}
+	
+	public Item createItemInstance(Item item) {
+		// increase counter for new instance
+		increase();
+		
 		return null;
 	}
 	

@@ -3,6 +3,7 @@
  */
 package grammar.buildJtigGrammar;
 
+import java.util.Arrays;
 import java.util.List;
 
 import parser.early.Item;
@@ -113,6 +114,14 @@ public class TIGRule {
 			throw new IllegalArgumentException("There exists no layer with such index.");
 		Layer l = this.layers.get(i);
 		return l;
+	}
+	
+	public Layer getLayer(int[] address){
+		for (Layer element : layers){
+			if (Arrays.equals(element.getGornNumber(),address))
+				return element;
+		}
+		return null;
 	}
 	
 	/**

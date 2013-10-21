@@ -39,5 +39,6 @@ public class ActivatedTIGRule extends TIGRule{
 	
 	public int getRight(){
 		return right;
-	}	
+	}
+	
 }

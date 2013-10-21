@@ -11,13 +11,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.InvalidPropertiesFormatException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import parser.early.inferencerules.InferenceRule;
+import parser.early.inferencerules.PredictTraversation;
+import parser.early.inferencerules.Scanning;
 import parser.lookup.ActivatedLexicon;
 import parser.lookup.ActivatedTIGRule;
 import parser.lookup.Lookup;
@@ -43,21 +49,17 @@ public class JTIGParser {
 	
 	private String originalsentence;
 	
-	public JTIGParser(){
+	private List<InferenceRule> inferencerules;
+	
+	public JTIGParser() throws IOException{
 		// Load preferences from property-file
 		readproperties();
 	}
 	
-	private void readproperties() {
+	private void readproperties() throws InvalidPropertiesFormatException, IOException {
 		InputStream is = null;
-		try {
-			is = new FileInputStream(parserpropertypath);
-			parserproperties.loadFromXML(is);
-		} catch (FileNotFoundException e) {
-			//TODO
-		} catch (IOException e) {
-			//TODO
-		}
+		is = new FileInputStream(parserpropertypath);
+		JTIGParser.parserproperties.loadFromXML(is);
 	}
 	
 	public static String getProperty(String key){
@@ -94,14 +96,18 @@ public class JTIGParser {
 	}
 	
 	public boolean parseSentence(String originalsentence, Token[] tokens){
+		// extract all important TIGRule's
 		preprocessSentence(originalsentence,tokens);
-		System.out.println(this);
-		// create item factory
+		
+		// Create necessary objects
+		ItemFilter isterm = new StopFilter();
 		DefaultItemFactory factory = new DefaultItemFactory();
-		// Create chart object
 		Chart chart = new Chart();
-		// Create Agenda
-		Agenda agenda = new Agenda();
+		ItemComparator itemcomp = new ItemComparator();
+		PriorityQueue<Item> agenda = new PriorityQueue<Item>(1, itemcomp);
+		
+		// Initialize inference rules, which should be used in the parsing process
+		initializeinferencerules(factory,chart,agenda);
 		
 		// initialize the chart with items created by the tokens
 		chart.initialize(tokens , factory);
@@ -112,12 +118,36 @@ public class JTIGParser {
 		if (!initializeAgenda(agenda , factory))
 			return false;
 		
-		System.out.println(agenda);
+		// Main loop
+		Item current;
+		while ((current = agenda.poll()) != null){
+			chart.addItem(current);
+			
+			for (InferenceRule inferencerule : inferencerules){
+				
+				if (inferencerule.isApplicable(current)){
+					System.out.println("Yes");
+					inferencerule.apply(current);
+					}
+			}
+			System.out.println(current);
+			if (isterm.apply(current))
+				break;
+		}
+		
+		//System.out.println(agenda);
 		
 		return true;
 	}
 	
-	private boolean initializeAgenda(Agenda agenda, DefaultItemFactory factory) {
+	private void initializeinferencerules( DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda) {
+		inferencerules = new LinkedList<InferenceRule>();
+		
+		inferencerules.add(new PredictTraversation(factory, agenda));
+		inferencerules.add(new Scanning(factory,chart, agenda));
+	}
+	
+	private boolean initializeAgenda(PriorityQueue<Item> agenda, DefaultItemFactory factory) {
 		boolean added = false;
 		for (String startsymbol : lexicon.getStartSymbols()){
 			List<ActivatedTIGRule> result = activatedlexicon.get(startsymbol);
@@ -164,7 +194,7 @@ public class JTIGParser {
 		return sb.toString();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		String input = null;
 		
 		for (int i = 0;i<args.length;i++){

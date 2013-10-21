@@ -1,5 +1,7 @@
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,21 +20,21 @@ public class JTIGParserTest {
 	}
 
 	@Test
-	public void testexample1() throws URISyntaxException {
+	public void testexample1() throws URISyntaxException, IOException {
 		URL url = getClass().getResource("example.xml");
 		String[] s = {"-l", url.toURI().getPath(),"test"};
 		JTIGParser.main(s);
 	}
 	
 	@Test
-	public void testexample2() throws URISyntaxException {
+	public void testexample2() throws URISyntaxException, IOException {
 		URL url = getClass().getResource("example2.xml");
 		String[] s = {"-l", url.toURI().getPath(),"test"};
 		JTIGParser.main(s);
 	}
 	
 	@Test
-	public void testexample3() throws URISyntaxException {
+	public void testexample3() throws URISyntaxException, IOException {
 		URL url = getClass().getResource("example3.xml");
 		String[] s = {"-l", url.toURI().getPath(),"die"};
 		JTIGParser.main(s);

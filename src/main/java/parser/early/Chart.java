@@ -52,7 +52,9 @@ public class Chart {
 		List<Item> result = new LinkedList<Item>();
 		for (int right = 0; right < width;right++){
 			for (int left = 0; left < width;left++){
-				getItemset(left,right).getItems(result,filter);
+				ItemSet itemset = getItemset(left,right);
+				if (itemset != null)
+					itemset.getItems(result,filter);
 			}
 		}
 		return result;

@@ -21,10 +21,11 @@ public class ItemDerivation {
 	 */
 	private Item[] items;
 	
-	public ItemDerivation(DerivationType type, Item a, Item b){
-		items = new Item[]{a,b};
+	public ItemDerivation(DerivationType type, Item... a ){
+		items = a;
 		this.type = type;
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

@@ -49,8 +49,12 @@ public class Item {
 		this.derivations = new HashSet<ItemDerivation>();
 	}
 
-	public void addDerivation(){
-		
+	public void addDerivation(ItemDerivation itemDerivation){
+		this.derivations.add(itemDerivation);
+	}
+
+	public void addDerivations(Set<ItemDerivation> derivations_param) {
+		this.derivations.addAll(derivations_param);
 	}
 	
 	public void moveDotLeft(){
@@ -78,6 +82,21 @@ public class Item {
 		}
 		return null;
 	}
+	public Entry getNextEntry(){
+		return  layer.getEntry(dotposition);
+	}
+	
+	public Layer getNextLayer(){
+		
+		int[] address = Arrays.copyOf(layer.getGornNumber(), layer.getGornNumber().length+1);
+		address[address.length-1] = dotposition;
+		
+		return this.activatedruletree.getLayer(address);
+	}
+
+	public Layer getLayer() {
+		return layer;
+	}
 	
 	public ActivatedTIGRule getActivatedTIGRule(){
 		return activatedruletree;
@@ -95,6 +114,14 @@ public class Item {
 		return right;
 	}
 
+	public int getDotPosition() {
+		return dotposition;
+	}
+	
+	public Set<ItemDerivation> getDerivations() {
+		return derivations;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -123,6 +150,7 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
+		//TODO: When are activated rule trees identical?
 		if (activatedruletree == null) {
 			if (other.activatedruletree != null)
 				return false;
@@ -143,9 +171,18 @@ public class Item {
 	 */
 	@Override
 	public String toString() {
-		return "Item [dotposition=" + dotposition + ", tigrule=" + activatedruletree
-				+ ", index=" + index + "]";
+		StringBuilder sb = new StringBuilder();
+		Entry[] entrys = layer.getEntrys();
+		for (int i = 0; i < entrys.length; i++){
+			if (dotposition == i)
+				sb.append(".");
+			sb.append(entrys[i].getLabel()+" ");
+			if (i == 0)
+				sb.append("==>");
+		}
+		if (dotposition == entrys.length)
+			sb.append(".");
+		return "["+sb.toString()+" RuleID=" + activatedruletree
+				+ ", ID=" + index + "]";
 	}
-
-	
 }

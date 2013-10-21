@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 		getContentPane().add(mainpanel,BorderLayout.CENTER);
 	}
 	
-	private void showTIGRule(){
+	private void showTIGRule() throws IOException{
 		mainpanel.setVisible(false);
 		getContentPane().remove(mainpanel);
 		mainpanel = new JPanel();
@@ -94,7 +95,7 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 	}
 	
 	
-	private void createJTIGParser(){
+	private void createJTIGParser() throws IOException{
 		JTIGParser parser = new JTIGParser();
 		parser.readLexicon();
 		Lexicon l = parser.getLexicon();
@@ -163,7 +164,12 @@ public class GraphicalUserInterface extends JFrame implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		showTIGRule();
+		try {
+			showTIGRule();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
