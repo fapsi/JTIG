@@ -2,11 +2,8 @@
  * 
  */
 package parser.early;
-
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 import tools.tokenizer.Token;
 
 /**
@@ -27,8 +24,8 @@ public class Chart {
 	}
 	
 	public void initialize(Token[] tokens, DefaultItemFactory factory){
-		width = tokens.length +1 ;
-		entrys =  new ItemSet[width*width];
+		width = tokens.length + 1;
+		entrys =  new ItemSet[(width * width) +1];
 		
 		// create items for tokens occurring in original sentence and add to chart
 		for (int i = 0; i < tokens.length; i++ ) {
@@ -49,12 +46,43 @@ public class Chart {
 	}
 	
 	public List<Item> getChartItems(ItemFilter filter){
+		// TODO secure against invalid input
 		List<Item> result = new LinkedList<Item>();
-		for (int right = 0; right < width;right++){
-			for (int left = 0; left < width;left++){
-				ItemSet itemset = getItemset(left,right);
+		
+		if (filter.getStart() >= 0){
+			
+			if (filter.getEnd() < 0){
+				for (int right = filter.getStart(); right < width;right++){
+					ItemSet itemset = getItemset(filter.getStart() , right);
+					if (itemset != null)
+						itemset.getItems(result,filter);
+				}
+				
+			} else {
+				ItemSet itemset = getItemset(filter.getStart() , filter.getEnd());
 				if (itemset != null)
 					itemset.getItems(result,filter);
+				
+			}
+		} else {
+			if (filter.getEnd() >= 0){
+				
+				for (int left = 0; left <= filter.getEnd();left++){
+					ItemSet itemset = getItemset(left , filter.getEnd());
+					if (itemset != null)
+						itemset.getItems(result,filter);
+				}
+				
+			} else {
+				
+				for (int right = 0; right < width;right++){
+					for (int left = 0; left < width;left++){
+						ItemSet itemset = getItemset(left,right);
+						if (itemset != null)
+							itemset.getItems(result,filter);
+					}
+				}
+				
 			}
 		}
 		return result;

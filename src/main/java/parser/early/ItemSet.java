@@ -69,7 +69,7 @@ public class ItemSet {
 			sb.append(kvpair.getKey().toString());
 			sb.append(",");
 		}
-		if (passiveitems.size() > 0)
+		if (activeitems.size() > 0)
 			sb.append("\n\tActive Items: ");
 		for (Map.Entry<Item,Item> kvpair : activeitems.entrySet()){
 			sb.append(kvpair.getKey().toString());

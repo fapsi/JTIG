@@ -75,6 +75,14 @@ public class Item {
 		return layer.getEntry(0);
 	}
 	
+	public boolean hasParentGornNumber(Item item){
+		if (layer == null)
+			return false;
+		int[] gornnumber = item.getLayer() != null? item.getLayer().getGornNumber() : null;
+		int[] truncatedgornnumber = Arrays.copyOfRange(gornnumber, 0, gornnumber.length-1);
+		return Arrays.equals(truncatedgornnumber, layer.getGornNumber());
+	}
+	
 	public Entry[] getRightHandSide(){
 		Entry[] entrys = layer.getEntrys();
 		if (entrys != null && entrys.length > 1){
@@ -183,6 +191,6 @@ public class Item {
 		if (dotposition == entrys.length)
 			sb.append(".");
 		return "["+sb.toString()+" RuleID=" + activatedruletree
-				+ ", ID=" + index + "]";
+				+ ", ID=" + index + ",("+left+","+right+"), "+Arrays.toString(layer.getGornNumber())+"]";
 	}
 }

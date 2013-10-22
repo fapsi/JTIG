@@ -30,9 +30,9 @@ public class Scanning extends InferenceRule {
 	 * @see parser.early.inferencerules.InferenceRule#apply(parser.early.Item)
 	 */
 	@Override
-	public void apply(Item item) {
+	public void apply(final Item item) {
 		
-		final Entry actualentry = item.getNextEntry();
+		Entry actualentry = item.getNextEntry();
 		NodeType type = actualentry.getNodeType();
 		
 		Item newitem = null;
@@ -46,23 +46,35 @@ public class Scanning extends InferenceRule {
 			
 		} else {
 			ItemFilter filter= new ItemFilter() {
-				
 				@Override
 				public ItemStatus getStatus() {
 					return ItemStatus.Passive;
 				}
-				
 				@Override
-				public boolean apply(Item item) {
-					return item.getActivatedTIGRule() == null && 
-							actualentry.getLabel().equals(item.getLeftHandSide().getLabel());
+				public int getStart() {
+					return item.getRight();
+				}
+
+				@Override
+				public int getEnd() {
+					return item.getRight()+1;
+				}
+				@Override
+				public boolean apply(Item x) {
+					return x.getActivatedTIGRule() == null && 
+							item.getNextEntry().getLabel().equals(x.getLeftHandSide().getLabel());
 				}
 			};
 
-			for (Item chartitem : chart.getChartItems(filter)){
+			for (Item candidate : chart.getChartItems(filter)){
 				newitem = factory.createItemInstance(
-					item.getLeft(),chartitem.getRight(), item.getDotPosition()+1 ,item.getLayer(),item.getActivatedTIGRule(),item.getProbability());
-				newitem.addDerivation(new ItemDerivation(DerivationType.Consume, item));
+					item.getLeft(),
+					candidate.getRight(), 
+					item.getDotPosition()+1 ,
+					item.getLayer(),
+					item.getActivatedTIGRule(),
+					item.getProbability());
+				newitem.addDerivation(new ItemDerivation(DerivationType.Consume, item , candidate));
 				agenda.add(newitem);
 			}
 		}

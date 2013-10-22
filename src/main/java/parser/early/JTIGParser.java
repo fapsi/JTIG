@@ -21,6 +21,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import parser.early.inferencerules.CompleteSubstitution;
+import parser.early.inferencerules.CompleteTraversation;
 import parser.early.inferencerules.InferenceRule;
 import parser.early.inferencerules.PredictTraversation;
 import parser.early.inferencerules.Scanning;
@@ -100,11 +102,12 @@ public class JTIGParser {
 		preprocessSentence(originalsentence,tokens);
 		
 		// Create necessary objects
-		ItemFilter isterm = new StopFilter();
+		ItemFilter isterm = new TerminationCriterion(lexicon.getStartSymbols(),tokens.length);
 		DefaultItemFactory factory = new DefaultItemFactory();
 		Chart chart = new Chart();
 		ItemComparator itemcomp = new ItemComparator();
 		PriorityQueue<Item> agenda = new PriorityQueue<Item>(1, itemcomp);
+		boolean finishedgood = false;
 		
 		// Initialize inference rules, which should be used in the parsing process
 		initializeinferencerules(factory,chart,agenda);
@@ -112,7 +115,7 @@ public class JTIGParser {
 		// initialize the chart with items created by the tokens
 		chart.initialize(tokens , factory);
 		
-		System.out.println(chart);
+		//System.out.println(chart);
 		
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda(agenda , factory))
@@ -126,16 +129,20 @@ public class JTIGParser {
 			for (InferenceRule inferencerule : inferencerules){
 				
 				if (inferencerule.isApplicable(current)){
-					System.out.println("Yes");
+					//System.out.println("Apply rule :"+inferencerule.getClass().getName() );
 					inferencerule.apply(current);
 					}
 			}
-			System.out.println(current);
-			if (isterm.apply(current))
+			
+			
+			if (isterm.apply(current)){
+				finishedgood = true;
 				break;
+			}
 		}
 		
-		//System.out.println(agenda);
+		if (finishedgood)
+			System.out.println("Success. Found: "+current);
 		
 		return true;
 	}
@@ -143,8 +150,12 @@ public class JTIGParser {
 	private void initializeinferencerules( DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda) {
 		inferencerules = new LinkedList<InferenceRule>();
 		
-		inferencerules.add(new PredictTraversation(factory, agenda));
 		inferencerules.add(new Scanning(factory,chart, agenda));
+		
+		inferencerules.add(new PredictTraversation(factory, agenda));
+		inferencerules.add(new CompleteTraversation(factory,chart, agenda));
+		
+		
 	}
 	
 	private boolean initializeAgenda(PriorityQueue<Item> agenda, DefaultItemFactory factory) {
