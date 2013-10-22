@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 import parser.early.inferencerules.CompleteSubstitution;
 import parser.early.inferencerules.CompleteTraversation;
 import parser.early.inferencerules.InferenceRule;
+import parser.early.inferencerules.PredictSubstitution;
 import parser.early.inferencerules.PredictTraversation;
 import parser.early.inferencerules.Scanning;
 import parser.lookup.ActivatedLexicon;
@@ -98,7 +99,7 @@ public class JTIGParser {
 	}
 	
 	public boolean parseSentence(String originalsentence, Token[] tokens){
-		// extract all important TIGRule's
+		// extract all important TIGRule's and store in activatedlexicon
 		preprocessSentence(originalsentence,tokens);
 		
 		// Create necessary objects
@@ -155,6 +156,8 @@ public class JTIGParser {
 		inferencerules.add(new PredictTraversation(factory, agenda));
 		inferencerules.add(new CompleteTraversation(factory,chart, agenda));
 		
+		inferencerules.add(new PredictSubstitution(factory, agenda, activatedlexicon));
+		inferencerules.add(new CompleteSubstitution(factory, chart, agenda));
 		
 	}
 	
