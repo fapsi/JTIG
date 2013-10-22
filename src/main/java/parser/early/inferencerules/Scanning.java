@@ -32,11 +32,10 @@ public class Scanning extends InferenceRule {
 	@Override
 	public void apply(final Item item) {
 		
-		Entry actualentry = item.getNextEntry();
-		NodeType type = actualentry.getNodeType();
+		NodeType type = item.getNextEntryType();
 		
 		Item newitem = null;
-		if (type != NodeType.TERM){
+		if (type != NodeType.TERM){ // CASE type == LFOOT | RFOOT | EPS  [if isApplicable was called first]
 			
 			// just skip it
 			newitem = factory.createItemInstance(
@@ -83,10 +82,7 @@ public class Scanning extends InferenceRule {
 
 	@Override
 	public boolean isApplicable(Item item) {
-		
-		Entry e = item.getNextEntry();
-		NodeType type = ( e == null? null : e.getNodeType());
-		
+		NodeType type = item.getNextEntryType();
 		return type == NodeType.EPS || type == NodeType.LFOOT || type == NodeType.RFOOT || type == NodeType.TERM;
 	}
 	

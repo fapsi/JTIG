@@ -18,6 +18,7 @@ public class TerminationCriterion implements ItemFilter {
 	public TerminationCriterion(Set<String> startSymbols, int inputlength) {
 		this.startSymbols = startSymbols;
 		this.inputlength = inputlength;
+		
 	}
 	/**
 	 * 
@@ -28,9 +29,8 @@ public class TerminationCriterion implements ItemFilter {
 		return item.isPassive() 
 				&& item.getLeft() == 0
 				&& item.getRight() == inputlength
-				&& startSymbols.contains(item.getLeftHandSide().getLabel()
-						//TODO: may check type :initial in tree's ???
-				);
+				&& startSymbols.contains(item.getLeftHandSide().getLabel())
+				&& item.hasInitialTypeTree();
 	}
 
 	@Override

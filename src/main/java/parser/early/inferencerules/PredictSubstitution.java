@@ -3,11 +3,18 @@
  */
 package parser.early.inferencerules;
 
+import grammar.buildJtigGrammar.NodeType;
+
+import java.util.List;
 import java.util.PriorityQueue;
 
 import parser.early.Chart;
 import parser.early.DefaultItemFactory;
+import parser.early.DerivationType;
 import parser.early.Item;
+import parser.early.ItemDerivation;
+import parser.lookup.ActivatedLexicon;
+import parser.lookup.ActivatedTIGRule;
 
 /**
  * 
@@ -15,10 +22,12 @@ import parser.early.Item;
  */
 public class PredictSubstitution extends InferenceRule {
 
-	public PredictSubstitution(DefaultItemFactory factory, Chart chart,
-			PriorityQueue<Item> agenda) {
-		super(factory, chart, agenda);
-		// TODO Auto-generated constructor stub
+	private ActivatedLexicon activatedlexicon;
+
+	public PredictSubstitution(DefaultItemFactory factory,
+			PriorityQueue<Item> agenda,ActivatedLexicon activatedlexicon) {
+		super(factory, null, agenda);
+		this.activatedlexicon = activatedlexicon;
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +35,14 @@ public class PredictSubstitution extends InferenceRule {
 	 */
 	@Override
 	public void apply(Item item) {
-		// TODO Auto-generated method stub
-
+		List<ActivatedTIGRule> result = activatedlexicon.get(item.getNextEntry().getLabel());
+		for (ActivatedTIGRule element : result){
+			
+			Item newitem = factory.createItemInstance(element,item.getRight());
+			newitem.addDerivation(new ItemDerivation(DerivationType.PredictSubstitution,item));
+			
+			agenda.add(newitem);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -35,7 +50,8 @@ public class PredictSubstitution extends InferenceRule {
 	 */
 	@Override
 	public boolean isApplicable(Item item) {
-		return true; // TODO improve this
+		return item.isActive() 
+				&& item.getNextEntryType() == NodeType.SUBST;
 	}
 
 	/* (non-Javadoc)

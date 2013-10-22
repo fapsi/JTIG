@@ -136,6 +136,10 @@ public class TIGRule {
 			return e.getLabel();
 		return null;
 	}
+	
+	public boolean isInitial(){
+		return this.spine == null;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

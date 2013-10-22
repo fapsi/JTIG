@@ -165,7 +165,7 @@ public class JTIGParser {
 			
 			if (result != null)
 				for (ActivatedTIGRule art : result){
-					Item item = factory.createItemInstance(art);
+					Item item = factory.createItemInstance(art,0); // initialize trees with span (0,0)
 					agenda.add(item);
 					
 					if (!added)

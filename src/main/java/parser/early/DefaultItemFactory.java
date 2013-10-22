@@ -34,10 +34,10 @@ public class DefaultItemFactory {
 		return item;
 	}
 	
-	public Item createItemInstance(ActivatedTIGRule activatedruletree){
+	public Item createItemInstance(ActivatedTIGRule activatedruletree, int start){
 		// increase counter for new instance
 		increase();
-		Item item = new Item(0 , 0 , 1, activatedruletree.getLayer(0),activatedruletree,1.0,item_cnt);
+		Item item = new Item(start , start , 1, activatedruletree.getLayer(0),activatedruletree,1.0,item_cnt);
 		return item;
 	}
 		

@@ -12,6 +12,7 @@ import java.util.Set;
 import parser.lookup.ActivatedTIGRule;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Layer;
+import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.TIGRule;
 
 /**
@@ -83,6 +84,10 @@ public class Item {
 		return Arrays.equals(truncatedgornnumber, layer.getGornNumber());
 	}
 	
+	public boolean hasInitialTypeTree(){
+		return activatedruletree!=null?activatedruletree.isInitial():false;
+	}
+	
 	public Entry[] getRightHandSide(){
 		Entry[] entrys = layer.getEntrys();
 		if (entrys != null && entrys.length > 1){
@@ -92,6 +97,13 @@ public class Item {
 	}
 	public Entry getNextEntry(){
 		return  layer.getEntry(dotposition);
+	}
+	
+	public NodeType getNextEntryType(){
+		Entry nextentry = getNextEntry();
+		if (nextentry != null)
+			return nextentry.getNodeType();
+		return null;
 	}
 	
 	public Layer getNextLayer(){
