@@ -48,10 +48,6 @@ public class JTIGParser {
 	
 	private Lexicon lexicon;
 	
-	private ActivatedLexicon activatedlexicon;
-	
-	private String originalsentence;
-	
 	private List<InferenceRule> inferencerules;
 	
 	public JTIGParser() throws IOException{
@@ -70,6 +66,12 @@ public class JTIGParser {
 		if (s != null)
 			return s.trim();
 		return null;
+	}
+	
+	public static void setProperty(String key,String value){
+		JTIGParser.parserproperties.setProperty(key,value);
+		//os = new FileInputStream(parserpropertypath);
+		//JTIGParser.parserproperties.storeToXML(parserpropertypath,null );
 	}
 	
 	public static boolean getBooleanProperty(String key){
@@ -91,16 +93,9 @@ public class JTIGParser {
 		return true;
 	}
 	
-	private void preprocessSentence(String originalsentence, Token[] tokens){
-		this.originalsentence = originalsentence;
-		
-		Lookup l = new Lookup(tokens , lexicon);
-		this.activatedlexicon = l.findlongestmatches();
-	}
-	
-	public boolean parseSentence(String originalsentence, Token[] tokens){
+	public Item parseSentence(String originalsentence, Token[] tokens){
 		// extract all important TIGRule's and store in activatedlexicon
-		preprocessSentence(originalsentence,tokens);
+		ActivatedLexicon activatedlexicon = preprocessSentence(tokens);
 		
 		// Create necessary objects
 		ItemFilter isterm = new TerminationCriterion(lexicon.getStartSymbols(),tokens.length);
@@ -111,7 +106,7 @@ public class JTIGParser {
 		boolean finishedgood = false;
 		
 		// Initialize inference rules, which should be used in the parsing process
-		initializeinferencerules(factory,chart,agenda);
+		initializeinferencerules(factory,chart,agenda,activatedlexicon);
 		
 		// initialize the chart with items created by the tokens
 		chart.initialize(tokens , factory);
@@ -119,8 +114,8 @@ public class JTIGParser {
 		//System.out.println(chart);
 		
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
-		if (!initializeAgenda(agenda , factory))
-			return false;
+		if (!initializeAgenda(agenda , factory,activatedlexicon))
+			return null;
 		
 		// Main loop
 		Item current;
@@ -145,10 +140,17 @@ public class JTIGParser {
 		if (finishedgood)
 			System.out.println("Success. Found: "+current);
 		
-		return true;
+		return current;
 	}
 	
-	private void initializeinferencerules( DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda) {
+	private ActivatedLexicon preprocessSentence(Token[] tokens){
+		if (lexicon == null)
+			throw new IllegalArgumentException("Please read some lexicon first.");
+		Lookup l = new Lookup(tokens , lexicon);
+		return l.findlongestmatches();
+	}
+	
+	private void initializeinferencerules( DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda,ActivatedLexicon activatedlexicon) {
 		inferencerules = new LinkedList<InferenceRule>();
 		
 		inferencerules.add(new Scanning(factory,chart, agenda));
@@ -161,7 +163,7 @@ public class JTIGParser {
 		
 	}
 	
-	private boolean initializeAgenda(PriorityQueue<Item> agenda, DefaultItemFactory factory) {
+	private boolean initializeAgenda(PriorityQueue<Item> agenda, DefaultItemFactory factory,ActivatedLexicon activatedlexicon) {
 		boolean added = false;
 		for (String startsymbol : lexicon.getStartSymbols()){
 			List<ActivatedTIGRule> result = activatedlexicon.get(startsymbol);
@@ -197,14 +199,6 @@ public class JTIGParser {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("----------------------------------\n");
-		sb.append(this.lexicon);
-		sb.append("----------------------------------\n");
-		sb.append("Sentence to be parsed:\n");
-		sb.append("'"+this.originalsentence+"'\n");
-		sb.append("----------------------------------\n");
-		sb.append(this.activatedlexicon);
-		
 		return sb.toString();
 	}
 

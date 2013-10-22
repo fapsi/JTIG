@@ -106,7 +106,7 @@ public class CompleteTraversation extends InferenceRule {
 					 candidate.getActivatedTIGRule(), 
 					 candidate.getProbability());
 			newitem.addDerivation(new ItemDerivation(
-					ispassive? DerivationType.PassiveTraversation : DerivationType.ActiveTraversation, 
+					DerivationType.CompleteTraversation, 
 					ispassive? candidate : item,
 					ispassive? item : candidate));
 			agenda.add(newitem);

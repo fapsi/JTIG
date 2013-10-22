@@ -96,7 +96,7 @@ public class CompleteSubstitution extends InferenceRule {
 					 candidate.getProbability() * item.getProbability());
 			
 			newitem.addDerivation(new ItemDerivation(
-					ispassive? DerivationType.CompleteSubstitution : DerivationType.ActiveTraversation, 
+					DerivationType.CompleteSubstitution, 
 					ispassive? candidate : item,
 					ispassive? item : candidate));
 			agenda.add(newitem);

@@ -186,11 +186,7 @@ public class Item {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
+	public String getDottedRuleString(){
 		StringBuilder sb = new StringBuilder();
 		Entry[] entrys = layer.getEntrys();
 		for (int i = 0; i < entrys.length; i++){
@@ -198,11 +194,19 @@ public class Item {
 				sb.append(".");
 			sb.append(entrys[i].getLabel()+" ");
 			if (i == 0)
-				sb.append("==>");
+				sb.append("=>");
 		}
 		if (dotposition == entrys.length)
 			sb.append(".");
-		return "["+sb.toString()+" RuleID=" + activatedruletree
+		return sb.toString();
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+
+		return "["+getDottedRuleString()+" RuleID=" + activatedruletree
 				+ ", ID=" + index + ",("+left+","+right+"), "+Arrays.toString(layer.getGornNumber())+"]";
 	}
 }
