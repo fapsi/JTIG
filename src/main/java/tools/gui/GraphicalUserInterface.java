@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -22,11 +23,17 @@ import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.TIGRule;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import parser.early.DerivationType;
 import parser.early.Item;
@@ -66,53 +73,56 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	
 	private JTIGParser jtigparser;
 
+	private JMenuItem menuItem_preferences;
+
+	private JPanel panel_preferences;
+
+	private PreferencesDialog preferences;
+
 	
 	public GraphicalUserInterface() throws IOException {
 		super("Visualize JTIG forest");
 		
 		jtigparser = new JTIGParser();
 		
-		JPanel panel = new JPanel(new GridBagLayout());
-		filechooser = new JFileChooser();
+		JMenuBar menuBar = new JMenuBar();
+
+		JMenu menu = new JMenu("Parser");
+		menu.setMnemonic(KeyEvent.VK_A);
+		menu.getAccessibleContext().setAccessibleDescription("");
+		menuBar.add(menu);
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		menuItem_preferences = new JMenuItem("Preferences",KeyEvent.VK_T);
+		menuItem_preferences.addActionListener(this);
+		menuItem_preferences.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.ALT_MASK));
+		menu.add(menuItem_preferences);
 		
-		c.insets = new Insets(5,5,5,5);
-		c.weightx = 0.5;
+		this.setJMenuBar(menuBar);
 		
-		c.gridx = 0;
-		c.gridy = 0;
-		lexiconfile_label = new JLabel(JTIGParser.getProperty("grammar.lexicon.path"));
-		panel.add(lexiconfile_label,c);
+		preferences = new PreferencesDialog();
+		preferences.setLocationRelativeTo(this);
+		
+
+		
+
 		
 		
-		c.gridx = 1;
-		c.gridy = 0;
-		
-		lexiconfile_button = new JButton("Choose lexicon");
-		lexiconfile_button.addActionListener(this);
-		panel.add(lexiconfile_button,c);
-		
-		c.gridx = 0;
-		c.gridy = 1;
+		JPanel input_parse_panel = new JPanel();
 		
 		parse_input = new JTextField("DER MANN SIEHT",10);
 		parse_input.setSize(100, 10);
-		panel.add(parse_input,c);
+		input_parse_panel.add(parse_input);
 		
-		c.gridx = 1;
-		c.gridy = 1;
 		parse_button = new JButton("Start parsing");
 		parse_button.addActionListener(this);
-		panel.add(parse_button,c);
+		input_parse_panel.add(parse_button);
 		
 		JPanel panel2 = new JPanel();
 		
 		
 		getContentPane().add(panel2,BorderLayout.PAGE_START);
 
-		panel2.add(panel,BorderLayout.WEST);
+		panel2.add(input_parse_panel,BorderLayout.WEST);
 		
 		mainpanel = new JPanel();
 
@@ -188,22 +198,16 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == lexiconfile_button) {
-			
-			int returnVal = filechooser.showOpenDialog(this);
-
-	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            File file = filechooser.getSelectedFile();
-	            JTIGParser.setProperty("grammar.lexicon.path", file.getAbsolutePath());
-	            lexiconfile_label.setText(JTIGParser.getProperty("grammar.lexicon.path"));
-	        } 
-		} else if (e.getSource() == parse_button){   
+		if (e.getSource() == parse_button){   
 			MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 			Token[] tokens = st.getTokens(parse_input.getText());
 			jtigparser.readLexicon();
 			Item item = jtigparser.parseSentence(parse_input.getText(), tokens);
 			if (item != null)
 				printItems(item);
+		} else if (e.getSource() == menuItem_preferences){
+			
+			preferences.setVisible(true);
 		}
 	}
 
