@@ -11,6 +11,7 @@ import grammar.transform.lisp2xml.LispParser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +20,7 @@ import java.io.Reader;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,35 +41,29 @@ public class XMLReader {
 	/**
 	 * 
 	 * @param inputpath
+	 * @throws FileNotFoundException 
 	 */
 	public XMLReader(String inputpath) {
 		this.inputpath = inputpath;
-		// if the file is in Lisp Format, transform to XML
-		if (LispParser.isLispFormat(inputpath))
-			transformtoXML();
 	}
 	/**
 	 * If the input file ends with ".lisp" the lisp format is transformed into an xml file.
 	 * See also {@link grammar.transform.lisp2xml.LispParser}
+	 * @throws FileNotFoundException 
+	 * @throws XMLStreamException 
 	 */
-	private void transformtoXML() {
+	private void transformtoXML() throws FileNotFoundException, XMLStreamException {
 		String newinputpath = this.inputpath.replaceAll("\\.lisp", ".xml");
 		LispParser lp;
 		try {
 			lp = new LispParser(this.inputpath, newinputpath);
 		} catch (IOException e) {
-			throw new IllegalArgumentException(
+			throw new FileNotFoundException(
 					"Couldn't read file "
 							+ e.getMessage());
 		}
 		this.inputpath = newinputpath;
-		try {
-			lp.parse();
-		} catch (Exception e) {
-			throw new IllegalArgumentException(
-					"Couldn't transform LISP-format into XML-format. "
-							+ e.getLocalizedMessage());
-		}
+		lp.parse();
 	}
 	/**
 	 * Reads the XML-file with a {@link SAXParser}.
@@ -75,8 +71,13 @@ public class XMLReader {
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
+	 * @throws XMLStreamException 
 	 */
-	public Lexicon read() throws SAXException, IOException, ParserConfigurationException {
+	public Lexicon read() throws SAXException, IOException, ParserConfigurationException, XMLStreamException {
+		// if the file is in Lisp Format, transform to XML
+		if (LispParser.isLispFormat(inputpath))
+			transformtoXML();
+		
 			Lexicon lexicon = null;
 			long time1 = System.currentTimeMillis();
 			

@@ -18,6 +18,7 @@ import java.util.PriorityQueue;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
@@ -87,7 +88,8 @@ public class JTIGParser {
 		XMLReader xp = new XMLReader(getLexiconPaths()[0]);
 		try {
 			this.lexicon = xp.read();
-		} catch (SAXException | IOException | ParserConfigurationException e) {
+		} catch (SAXException | IOException | ParserConfigurationException | XMLStreamException e) {
+			this.lexicon = null;
 			return false;
 		}
 		return true;
@@ -231,6 +233,10 @@ public class JTIGParser {
 		}
 		
 		//System.out.println(parser.toString());
+	}
+
+	public boolean hasLexicon() {
+		return lexicon != null;
 	}
 	
 }

@@ -42,7 +42,10 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 
 	private JButton close_button;
 	
-	public PreferencesDialog(){
+	private JTIGParser jtigparser;
+	
+	public PreferencesDialog(JTIGParser jtigparser){
+		this.jtigparser = jtigparser;
 		setModalityType(DEFAULT_MODALITY_TYPE);
 		
 		setTitle("JTIG Preferences");
@@ -69,7 +72,7 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		c.gridy = 0;
 		c.gridheight = 1;
 		
-		lexiconfile_label = new JLabel(JTIGParser.getProperty("grammar.lexicon.path"));
+		lexiconfile_label = new JLabel(jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
 		panel_preferences.add(lexiconfile_label,c);
 		
 		
@@ -117,7 +120,9 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            File file = filechooser.getSelectedFile();
 	            JTIGParser.setProperty("grammar.lexicon.path", file.getAbsolutePath());
-	            lexiconfile_label.setText(JTIGParser.getProperty("grammar.lexicon.path"));
+
+	            lexiconfile_label.setText(
+	            		jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
 	            pack();
 	        } 
 		} else if(e.getSource() == close_button){

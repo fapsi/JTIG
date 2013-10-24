@@ -99,7 +99,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 		this.setJMenuBar(menuBar);
 		
-		preferences = new PreferencesDialog();
+		preferences = new PreferencesDialog(jtigparser);
 		preferences.setLocationRelativeTo(this);
 		
 
@@ -201,10 +201,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		if (e.getSource() == parse_button){   
 			MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 			Token[] tokens = st.getTokens(parse_input.getText());
-			jtigparser.readLexicon();
-			Item item = jtigparser.parseSentence(parse_input.getText(), tokens);
-			if (item != null)
-				printItems(item);
+			if(jtigparser.hasLexicon()){
+				
+				Item item = jtigparser.parseSentence(parse_input.getText(), tokens);
+				if (item != null)
+					printItems(item);
+			}
 		} else if (e.getSource() == menuItem_preferences){
 			
 			preferences.setVisible(true);
