@@ -8,8 +8,6 @@ import edu.northwestern.at.morphadorner.corpuslinguistics.tokenizer.WordTokenize
 
 public class MorphAdornoSentenceTokenizer implements SentenceTokenizer{
 
-	private List<Token> tokens;
-	
 	@Override
 	public Token[] getTokens(String sentence){
 		List<Token> tokenlist = new LinkedList<Token>();
@@ -23,7 +21,6 @@ public class MorphAdornoSentenceTokenizer implements SentenceTokenizer{
 			tokenlist.add(new Token(offsets[i], w));
 			i++;
 		}
-		this.tokens = tokenlist;
 		return tokenlist.toArray(new Token[0]);
 	}
 

@@ -52,6 +52,14 @@ public class ActivatedLexicon {
 	public Token[] getTokens(){
 		return this.tokens;
 	}
+	
+	public int getSize(){
+		int i = 0;
+		for ( List<ActivatedTIGRule> list :possibletrees.values()){
+			i += list.size();
+		}
+		return i;
+	}
 
 	@Override
 	public String toString() {

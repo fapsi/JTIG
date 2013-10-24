@@ -6,8 +6,6 @@ package grammar.buildJtigGrammar;
 import java.util.Arrays;
 import java.util.List;
 
-import parser.early.Item;
-
 /**
  * A grammatical rule in the tree insertion grammar. 
  * Implicitly describes a tree with nodes of several types. 

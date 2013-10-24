@@ -24,8 +24,6 @@ public abstract class InferenceRule {
 	
 	public abstract boolean isApplicable(Item item);
 	
-	public abstract String getName();
-	
 	protected void addtoagenda(Item item){
 		agenda.add(item);
 	}

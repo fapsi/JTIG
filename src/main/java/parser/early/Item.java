@@ -5,15 +5,12 @@ package parser.early;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import parser.lookup.ActivatedTIGRule;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.TIGRule;
 
 /**
  * 
@@ -130,8 +127,8 @@ public class Item {
 		return right;
 	}
 	// Probability
-	public int getProbability(){
-		return right;
+	public double getProbability(){
+		return probability;
 	}
 
 	public int getDotPosition() {

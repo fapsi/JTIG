@@ -7,7 +7,6 @@ import parser.lookup.ActivatedTIGRule;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.Layer;
-import grammar.buildJtigGrammar.TIGRule;
 
 /**
  * 
@@ -15,7 +14,7 @@ import grammar.buildJtigGrammar.TIGRule;
  */
 public class DefaultItemFactory {
 
-	int item_cnt;
+	private int item_cnt;
 	
 	public DefaultItemFactory(){
 		reset();
@@ -70,5 +69,8 @@ public class DefaultItemFactory {
 
 	public synchronized void reset() {
 		item_cnt = 0;
+	}
+	public int getAmountCreatedItems(){
+		return item_cnt;
 	}
 }

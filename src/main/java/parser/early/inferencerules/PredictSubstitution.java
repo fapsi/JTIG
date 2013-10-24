@@ -8,7 +8,6 @@ import grammar.buildJtigGrammar.NodeType;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import parser.early.Chart;
 import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
@@ -58,9 +57,8 @@ public class PredictSubstitution extends InferenceRule {
 	 * @see parser.early.inferencerules.InferenceRule#getName()
 	 */
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return "PredictSubstitution";
 	}
 
 }

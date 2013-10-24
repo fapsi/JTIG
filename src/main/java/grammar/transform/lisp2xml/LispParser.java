@@ -231,7 +231,7 @@ public class LispParser {
 		
 		time1 = System.currentTimeMillis() - time1;
 		if (JTIGParser.getBooleanProperty("grammar.transform.lisp2xml.output"))
-			JTIGParser.getPrintStream().println("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
+			JTIGParser.getStringBuilder().append("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
 				+ "Output file: "+outputpath);
 		return true;
 	}

@@ -50,9 +50,8 @@ public class PredictTraversation extends InferenceRule {
 	 * @see parser.early.inferencerules.InferenceRule#getName()
 	 */
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return "PredictTraversation";
 	}
 
 }

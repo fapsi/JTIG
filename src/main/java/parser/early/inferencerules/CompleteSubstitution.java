@@ -123,13 +123,9 @@ public class CompleteSubstitution extends InferenceRule {
 				&& item.getNextEntryType() == NodeType.SUBST;
 	}
 
-	/* (non-Javadoc)
-	 * @see parser.early.inferencerules.InferenceRule#getName()
-	 */
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return "CompleteSubstitution";
 	}
 
 }

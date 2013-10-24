@@ -113,7 +113,7 @@ public class XMLReader {
 			time1 = System.currentTimeMillis() - time1;
 			
 			if (JTIGParser.getBooleanProperty("grammar.readXML.output"))
-				JTIGParser.getPrintStream().println("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
+				JTIGParser.getStringBuilder().append("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
 			
 		return lexicon;
 	}

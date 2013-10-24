@@ -3,9 +3,7 @@
  */
 package parser.early.inferencerules;
 
-import java.util.Arrays;
 import java.util.PriorityQueue;
-
 import parser.early.Chart;
 import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
@@ -13,7 +11,6 @@ import parser.early.Item;
 import parser.early.ItemDerivation;
 import parser.early.ItemFilter;
 import parser.early.ItemStatus;
-import parser.lookup.ActivatedTIGRule;
 
 /**
  * 
@@ -123,13 +120,9 @@ public class CompleteTraversation extends InferenceRule {
 		return true; // improve it
 	}
 
-	/* (non-Javadoc)
-	 * @see parser.early.inferencerules.InferenceRule#getName()
-	 */
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return "CompleteTraversation";
 	}
 
 }

@@ -3,7 +3,6 @@
  */
 package tools.tokenizer;
 
-import java.util.List;
 
 /**
  * 

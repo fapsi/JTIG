@@ -3,7 +3,6 @@
  */
 package parser.early.inferencerules;
 
-import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.NodeType;
 
 import java.util.PriorityQueue;
@@ -86,11 +85,8 @@ public class Scanning extends InferenceRule {
 		return type == NodeType.EPS || type == NodeType.LFOOT || type == NodeType.RFOOT || type == NodeType.TERM;
 	}
 	
-	/* (non-Javadoc)
-	 * @see parser.early.inferencerules.InferenceRule#getName()
-	 */
 	@Override
-	public String getName() {
-		return null;
+	public String toString() {
+		return "Scanning";
 	}
 }
