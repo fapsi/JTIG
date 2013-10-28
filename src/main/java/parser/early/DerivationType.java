@@ -9,8 +9,10 @@ package parser.early;
  */
 public enum DerivationType {
 	Consume, 
-
 	PredictTraversation, 
 	PredictSubstitution, 
-	CompleteSubstitution, CompleteTraversation;
+	PredictLeftAux, PredictRightAux,
+	CompleteTraversation,
+	CompleteSubstitution, 
+	CompleteLeftAux,CompleteRightAux;
 }

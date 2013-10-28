@@ -3,6 +3,12 @@
  */
 package parser.lookup;
 
+import java.util.Arrays;
+
+import parser.early.Item;
+import grammar.buildJtigGrammar.Entry;
+import grammar.buildJtigGrammar.Layer;
+import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.TIGRule;
 
 /**
@@ -40,5 +46,15 @@ public class ActivatedTIGRule extends TIGRule{
 	public int getRight(){
 		return right;
 	}
-	
+
+	public boolean isAdjuntionCompatible(Item item,NodeType auxtype) {
+		if (auxtype != NodeType.LFOOT && auxtype != NodeType.RFOOT)
+			throw new IllegalArgumentException("Expected LFOOT or RFOOT, found: "+ auxtype.toString());
+		
+		Layer l = getLayer(Arrays.copyOfRange(spine, 0, spine.length-1));
+		Entry spine_entry = l.getEntry(spine.length-1);
+		
+		return isAuxiliary() 
+				&& spine_entry.getNodeType() == auxtype;
+	}	
 }

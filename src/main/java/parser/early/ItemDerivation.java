@@ -42,7 +42,7 @@ public class ItemDerivation {
 			return (items[0].equals(other[0]) && items[1].equals(other[1])) ||
 					(items[0].equals(other[1]) && items[1].equals(other[0]));
 		else if(items.length == 1)
-			return items[0] == other[0];
+			return items[0].equals(other[0]);
 		return false;
 	}
 

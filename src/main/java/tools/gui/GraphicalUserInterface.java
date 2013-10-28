@@ -1,5 +1,9 @@
 package tools.gui;
 
+import grammar.buildJtigGrammar.Lexicon;
+import grammar.buildJtigGrammar.TIGRule;
+
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -43,34 +49,23 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	private JMenuItem menuItem_preferences;
 
 	private PreferencesDialog preferences;
+
+	private JMenuItem menuItem_showlexicon;
 	
 	public GraphicalUserInterface() throws IOException {
-		super("Visualize JTIG forest");
+		super("JTIG Parser");
 		
 		jtigparser = new JTIGParser();
 		
-		JMenuBar menuBar = new JMenuBar();
+		createMenu();
+		
+		createDialogs();
+		
+		createBody();
+		
+	}
 
-		JMenu menu = new JMenu("Parser");
-		menu.setMnemonic(KeyEvent.VK_A);
-		menu.getAccessibleContext().setAccessibleDescription("");
-		menuBar.add(menu);
-		
-		menuItem_preferences = new JMenuItem("Preferences",KeyEvent.VK_T);
-		menuItem_preferences.addActionListener(this);
-		menuItem_preferences.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.ALT_MASK));
-		menu.add(menuItem_preferences);
-		
-		this.setJMenuBar(menuBar);
-		
-		preferences = new PreferencesDialog(jtigparser);
-		preferences.setLocationRelativeTo(this);
-		
-
-		
-
-		
-		
+	private void createBody() {
 		JPanel input_parse_panel = new JPanel();
 		input_parse_panel.setBorder(new TitledBorder("Input"));
 		
@@ -88,15 +83,14 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		mainpanel = new JTabbedPane();
 		mainpanel.setBorder(new TitledBorder("Output"));
 		
-		//JPanel panel2 = new JPanel();
-		
 		getContentPane().setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
+		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5,5,5,5);
-		c.weightx = 1;
-		c.weighty = 0;
+		c.weightx = 100;
+		c.weighty = 1;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridheight = 2;
@@ -104,7 +98,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 		getContentPane().add(input_parse_panel,c);
 		
-		c.weighty = 0;
+		c.weighty = 1;
+		c.weightx = 0;
 		c.gridx = 2;
 		c.gridy = 0;
 		c.gridheight = 2;
@@ -112,88 +107,45 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 		getContentPane().add(action_parse_panel,c);
 		
-		c.weighty = 1;
+		c.weighty = 100;
+		c.weightx = 100;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridheight = 1;
 		c.gridwidth = 3;
+		
 		getContentPane().add(mainpanel,c);
-		
-		//getContentPane().add(panel2,BorderLayout.PAGE_START);
+	}
 
-		//panel2.add(input_parse_panel,BorderLayout.WEST);
-		
-		
+	private void createMenu() {
+		JMenuBar menuBar = new JMenuBar();
 
+		JMenu menu_parser = new JMenu("Parser");
+		menu_parser.setMnemonic(KeyEvent.VK_P);
+		menuBar.add(menu_parser);
+		JMenu menu_lexicon = new JMenu("Lexicon");
+		menu_lexicon.setMnemonic(KeyEvent.VK_L);
+		menuBar.add(menu_lexicon);
 		
-	}
-		/*
-	private void createJTIGParser() throws IOException{
-		JTIGParser parser = new JTIGParser();
-		parser.readLexicon();
-		Lexicon l = parser.getLexicon();
+		menuItem_preferences = new JMenuItem("Preferences",KeyEvent.VK_T);
+		menuItem_preferences.addActionListener(this);
+		menuItem_preferences.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+		menu_parser.add(menuItem_preferences);
 		
-		MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
-		Token[] tokens = st.getTokens(parse_input.getText());
+		menuItem_showlexicon = new JMenuItem("Show lexicon-entry...",KeyEvent.VK_T);
+		menuItem_showlexicon.addActionListener(this);
+		menuItem_showlexicon.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+		menu_lexicon.add(menuItem_showlexicon);
 		
-		List<TIGRule> result = l.find(Arrays.asList(tokens), 0);
-		if (result == null || result.size() <= 0){
-			graph.insertVertex(parent, null, "NOT FOUND", 0, 0, 80,20);
-			return;
-		}
-		visualize(result.get(0));
+		setJMenuBar(menuBar);
 	}
-	*//*
-	private void visualize(TIGRule rule){	
-		List<Layer> all = rule.getLayers();
-		Layer first = rule.getLayer(0);
-		Object v1 = graph.insertVertex(parent, null, first.getEntry(0).getLabel(), 0, 0, 80,20);
-		visualize(first,all,v1);
-	}
-	*//*
-	public void visualize(Layer beyond,List<Layer> all,Object p2){
-		int i = 0 ;
-		for (Entry entry : beyond.getEntrys()){
-			if (i == 0){
-				i++;
-				continue;
-				}
-			String style = "";
-			if (entry.getNodeType() == NodeType.EPS)
-				style = "fillColor=green";
-			if (entry.getNodeType() == NodeType.SUBST)
-				style = "fillColor=yellow";
-			if (entry.getNodeType() == NodeType.TERM)
-				style = "fillColor=red";
-			Object v1 = graph.insertVertex(parent, null, entry.getLabel(), 0, 0, 80,20, style);
-			graph.insertEdge(parent, null, "", p2, v1);
-			
-			Layer prod = findchildren(beyond,all,entry);
-			if (prod != null)
-				visualize(prod,all,v1);
-			
-			i++;
-		}
-	}
-	*//*
-	private Layer findchildren(Layer rule,List<Layer> all, Entry e){
-		for (Layer elem : all ){
-			int[] a = Arrays.copyOfRange(elem.getGornNumber(), 0, elem.getGornNumber().length-1);
-			int[] b = rule.getGornNumber();
-			if (Arrays.equals(a, b) && elem.getEntry(0).getLabel().equals(e.getLabel())){
-				return elem;
-			}
-		}
-		return null;
-	}*/
 	
-	public static void main(String[] args) throws IOException
-	{
-		GraphicalUserInterface frame = new GraphicalUserInterface();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setVisible(true);
+	private void createDialogs() {
+		preferences = new PreferencesDialog(jtigparser);
+		preferences.setLocationRelativeTo(this);
 	}
+
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -209,29 +161,51 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		} else if (e.getSource() == menuItem_preferences){
 			
 			preferences.setVisible(true);
+		} else if (e.getSource() == menuItem_showlexicon){
+			String result = JOptionPane.showInputDialog("");
+			if (result != null && !result.trim().isEmpty() && jtigparser.hasLexicon()){
+				Lexicon l = jtigparser.getLexicon();
+				MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
+				Token[] tokens = st.getTokens(result);
+				int i = 1;
+				for (TIGRule r : l.find(Arrays.asList(tokens), 0)){
+					TIGRulePanel tigrulepanel = new TIGRulePanel(r);
+					addTab(result+" "+i,tigrulepanel);
+					i++;
+				}
+			}
 		}
+		
 	}
 
 	private void printItems(List<Item> items) {
 		
-		this.mainpanel.removeAll();
+		mainpanel.removeAll();
 		
 		LogPanel logpanel = new LogPanel(jtigparser.getLog());
-		this.mainpanel.add("Log",logpanel);
+		addTab("Log",logpanel);
 		int i = 1;
 		for (Item item : items){
 			ItemPanel actualpanel = new ItemPanel(item);
 			actualpanel.drawItem();
-			this.mainpanel.add("Forest item "+i,actualpanel);
+			addTab("Forest item "+i,actualpanel);
 			i++;
 		}
+		//mainpanel.validate();
 		
-		/*
-		mainpanel.setVisible(false);
-		getContentPane().remove(mainpanel);
-		mainpanel = new JPanel();
-
+	}
+	
+	private void addTab(String description,JPanel tab){
 		
-		*/
+		mainpanel.add(description, tab);
+		mainpanel.setTabComponentAt(mainpanel.getTabCount()-1,new ButtonTabComponent(mainpanel));
+		
+	}
+	
+	public static void main(String[] args) throws IOException {
+		GraphicalUserInterface frame = new GraphicalUserInterface();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setVisible(true);
 	}
 }

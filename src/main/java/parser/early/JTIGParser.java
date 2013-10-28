@@ -107,8 +107,8 @@ public class JTIGParser {
 		ItemFilter isterm = new TerminationCriterion(lexicon.getStartSymbols(),tokens.length);
 		DefaultItemFactory factory = new DefaultItemFactory();
 		Chart chart = new Chart();
-		ItemComparator itemcomp = new ItemComparator();
-		PriorityQueue<Item> agenda = new PriorityQueue<Item>(1, itemcomp);
+		ItemComparator itemcomp = new ItemComparator(isterm);
+		PriorityQueue<Item> agenda = new PriorityQueue<Item>(10, itemcomp);
 		boolean finishedgood = false;
 		
 		// Initialize inference rules, which should be used in the parsing process
@@ -128,21 +128,26 @@ public class JTIGParser {
 		Item current;
 		while ((current = agenda.poll()) != null){
 			chart.addItem(current);
-			
-			for (InferenceRule inferencerule : inferencerules){
-				
-				if (inferencerule.isApplicable(current)){
-					//System.out.println("Apply rule :"+inferencerule.getClass().getName() );
-					inferencerule.apply(current);
-					}
-			}
-			
-			
-			if (isterm.apply(current)){
+			System.out.println(current.getID());
+			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
+				System.out.println("breaked");
 				results.add(current);
 				finishedgood = true;
 				break;
 			}
+			
+			for (InferenceRule inferencerule : inferencerules){
+				
+				if (inferencerule.isApplicable(current)){
+					inferencerule.apply(current);
+				}
+			}
+			System.out.println(agenda.toString());
+		}
+		if (! JTIGParser.getBooleanProperty("parser.stoponfirsttermitem")){
+			results = chart.getChartItems(isterm);
+			if (results.size() > 0)
+				finishedgood = true;
 		}
 		appendToLog("Finished main loop. "+factory.getAmountCreatedItems()+" items were created.");
 		

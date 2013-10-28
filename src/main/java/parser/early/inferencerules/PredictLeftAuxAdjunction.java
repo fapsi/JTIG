@@ -5,9 +5,11 @@ package parser.early.inferencerules;
 
 import grammar.buildJtigGrammar.NodeType;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import parser.early.Chart;
 import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
@@ -19,13 +21,14 @@ import parser.lookup.ActivatedTIGRule;
  * 
  * @author Fabian Gallenkamp
  */
-public class PredictSubstitution extends InferenceRule {
+public class PredictLeftAuxAdjunction extends InferenceRule {
 
 	private ActivatedLexicon activatedlexicon;
-
-	public PredictSubstitution(DefaultItemFactory factory,
+	
+	public PredictLeftAuxAdjunction(DefaultItemFactory factory, Chart chart,
 			PriorityQueue<Item> agenda,ActivatedLexicon activatedlexicon) {
-		super(factory, null, agenda);
+		super(factory, chart, agenda);
+		
 		this.activatedlexicon = activatedlexicon;
 	}
 
@@ -34,16 +37,20 @@ public class PredictSubstitution extends InferenceRule {
 	 */
 	@Override
 	public void apply(Item item) {
-		List<ActivatedTIGRule> result = activatedlexicon.get(item.getNextEntry().getLabel());
+
+		List<ActivatedTIGRule> result = activatedlexicon.get(item.getLeftHandSide().getLabel());
+		
 		for (ActivatedTIGRule element : result){
 			
-			if (item.getRight() <= element.getLeft()){
-				Item newitem = factory.createItemInstance(element,item.getRight());
-				newitem.addDerivation(new ItemDerivation(DerivationType.PredictSubstitution,item));
-			
+			if (item.getRight() <= element.getLeft() && 
+					element.isAdjuntionCompatible(item,NodeType.LFOOT)){ 
+				Item newitem = factory.createItemInstance(element, item.getRight());
+				newitem.addDerivation(new ItemDerivation(DerivationType.PredictLeftAux,item));
 				agenda.add(newitem);
 			}
+			
 		}
+
 	}
 
 	/* (non-Javadoc)
@@ -52,15 +59,9 @@ public class PredictSubstitution extends InferenceRule {
 	@Override
 	public boolean isApplicable(Item item) {
 		return item.isActive() 
-				&& item.getNextEntryType() == NodeType.SUBST;
-	}
-
-	/* (non-Javadoc)
-	 * @see parser.early.inferencerules.InferenceRule#getName()
-	 */
-	@Override
-	public String toString() {
-		return "PredictSubstitution";
+				&& item.getDotPosition() == 1 //dot is leftmost
+				&& Arrays.equals(item.getLayer().getGornNumber(), new int[]{0})
+				&& ! (item.hasAuxiliaryTypeTree());
 	}
 
 }

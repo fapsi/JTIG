@@ -3,6 +3,7 @@
  */
 package tools.gui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,11 +13,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
 
 import parser.early.JTIGParser;
 
@@ -31,7 +36,6 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel panel_preferences;
 	
 	private JFileChooser filechooser;
 
@@ -42,6 +46,12 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	private JButton close_button;
 	
 	private JTIGParser jtigparser;
+
+
+	private JCheckBox stopcriterion_checkbox;
+
+
+	private JCheckBox showprediction_checkbox;
 	
 	public PreferencesDialog(JTIGParser jtigparser){
 		this.jtigparser = jtigparser;
@@ -51,45 +61,18 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		setResizable(false);
 		
 		JTabbedPane tabbedpane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT );
-		panel_preferences = new JPanel(new GridBagLayout());
-		filechooser = new JFileChooser();
+
+		tabbedpane.add( "General" , createGeneralPanel());
+		tabbedpane.add( "Inference Rules" , createInferenceRulesPanel());
+		tabbedpane.add( "Forest" , createIFRPanel());
+		tabbedpane.add( "Outputs" , new JPanel());
 		
+		JPanel panel_tabbed = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
 		
 		c.insets = new Insets(5,5,5,5);
 		c.weightx = 0.5;
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 2;
-		
-		JLabel lexiconfile_descriptionlabel = new JLabel("Lexicon path:");
-		panel_preferences.add(lexiconfile_descriptionlabel,c);
-		
-		c.gridx = 1;
-		c.gridy = 0;
-		c.gridheight = 1;
-		
-		lexiconfile_label = new JLabel(jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
-		panel_preferences.add(lexiconfile_label,c);
-		
-		
-		c.gridx = 1;
-		c.gridy = 1;
-		
-		lexiconfile_button = new JButton("Choose path");
-		lexiconfile_button.addActionListener(this);
-		panel_preferences.add(lexiconfile_button,c);
-		
-		
-			
-		tabbedpane.add( "General" , panel_preferences);
-		tabbedpane.add( "Modules" , new JPanel());
-		tabbedpane.add( "Outputs" , new JPanel());
-		
-		JPanel panel_tabbed = new JPanel(new GridBagLayout());
-		
 		//c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -110,6 +93,100 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		pack();
 	}
 
+	private JPanel createIFRPanel() {
+		JPanel ifrpanel = new JPanel(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.insets = new Insets(5,5,5,5);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		
+		JLabel showprediction_descriptionlabel = new JLabel("Prediction:");
+		ifrpanel.add(showprediction_descriptionlabel,c);
+		c.anchor = GridBagConstraints.NORTHEAST;
+		c.weighty = 10;
+		c.weightx = 10;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		
+		showprediction_checkbox = new JCheckBox("Show predicted items in graph");
+		showprediction_checkbox.addActionListener(this);
+		showprediction_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.forest.showpredictions"));
+		ifrpanel.add(showprediction_checkbox,c);
+		
+		return ifrpanel;
+	}
+
+	private Component createGeneralPanel() {
+		JPanel panel_preferences = new JPanel(new GridBagLayout());
+		filechooser = new JFileChooser();
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		
+		c.insets = new Insets(5,5,5,5);
+		c.weightx = 0;
+		c.weighty = 0;		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridheight = 2;
+		
+		JLabel lexiconfile_descriptionlabel = new JLabel("Lexicon path:");
+		panel_preferences.add(lexiconfile_descriptionlabel,c);
+		
+		c.gridx = 1;
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridy = 0;
+		c.weightx = 10;
+		c.weighty = 0;
+		c.gridheight = 1;
+		
+		lexiconfile_label = new JLabel(jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
+		panel_preferences.add(lexiconfile_label,c);
+		
+		c.weighty = 0;
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx = 1;
+		c.gridy = 1;
+		
+		lexiconfile_button = new JButton("Choose path");
+		lexiconfile_button.addActionListener(this);
+		panel_preferences.add(lexiconfile_button,c);
+		
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.weighty = 20;
+		c.weightx = 0;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 1;
+		
+		JLabel stopcriterion_descriptionlabel = new JLabel("Stop criterion:");
+		panel_preferences.add(stopcriterion_descriptionlabel,c);
+		c.anchor = GridBagConstraints.NORTH;
+		c.gridx = 1;
+		c.weightx = 10;
+		c.gridy = 2;
+		c.gridwidth = 2;
+		
+		stopcriterion_checkbox = new JCheckBox("Stop on first terminal element.");
+		stopcriterion_checkbox.addActionListener(this);
+		stopcriterion_checkbox.setSelected(JTIGParser.getBooleanProperty("parser.stoponfirsttermitem"));
+		panel_preferences.add(stopcriterion_checkbox,c);
+		
+		return panel_preferences;
+	}
+
+	private JPanel createInferenceRulesPanel() {
+		JPanel newpanel = new JPanel();
+		newpanel.add(new JScrollPane( new JTable() ));
+		return newpanel;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == lexiconfile_button) {
@@ -124,6 +201,10 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	            		jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
 	            pack();
 	        } 
+		} else if(e.getSource() == stopcriterion_checkbox){
+			JTIGParser.setProperty("parser.stoponfirsttermitem", stopcriterion_checkbox.isSelected()?"true":"false");
+		} else if(e.getSource() == showprediction_checkbox){
+			JTIGParser.setProperty("gui.forest.showpredictions", showprediction_checkbox.isSelected()?"true":"false");
 		} else if(e.getSource() == close_button){
 			setVisible(false);
 		}

@@ -84,6 +84,10 @@ public class Item {
 	public boolean hasInitialTypeTree(){
 		return activatedruletree!=null?activatedruletree.isInitial():false;
 	}
+
+	public boolean hasAuxiliaryTypeTree() {
+		return activatedruletree!=null?activatedruletree.isAuxiliary():false;
+	}
 	
 	public Entry[] getRightHandSide(){
 		Entry[] entrys = layer.getEntrys();
@@ -137,6 +141,9 @@ public class Item {
 	
 	public Set<ItemDerivation> getDerivations() {
 		return derivations;
+	}
+	public int getID() {
+		return index;
 	}
 	
 	/* (non-Javadoc)
@@ -203,7 +210,7 @@ public class Item {
 	@Override
 	public String toString() {
 
-		return "["+getDottedRuleString()+" RuleID=" + activatedruletree
+		return "["+(isActive()?"A":"P")+" "+getDottedRuleString()+" RuleID=" + activatedruletree
 				+ ", ID=" + index + ",("+left+","+right+"), "+Arrays.toString(layer.getGornNumber())+"]";
 	}
 }

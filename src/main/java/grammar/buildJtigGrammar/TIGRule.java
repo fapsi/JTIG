@@ -19,33 +19,33 @@ public class TIGRule {
 	/**
 	 * Unique index in the language of this TIG-rule.
 	 */
-	private long index;
+	protected long index;
 	
 	/**
 	 * CFG-production-rules describing implicitly the TIG-rule tree.
 	 */
-	private List<Layer> layers;
+	protected List<Layer> layers;
 	
 	/**
 	 * A lexical anchor is a lexical index (one or more words/units), the tree is connected to.
 	 */
-	private List<String> lexicalanchors;
+	protected List<String> lexicalanchors;
 
 	/**
 	 * Frequency in which this TIG-rule occurs in the language.
 	 */
-	private long frequency;
+	protected long frequency;
 	
 	/**
 	 * Probability in which this TIG-rule occurs in language.
 	 */
-	private double probability;
+	protected double probability;
 	
 	/**
 	 * Gorn-number of the layer with the leaf-node where the adjunction happens.
 	 * Null if the TIG rule dosn't represent an auxiliary tree and therefore couldn't 
 	 */
-	private int[] spine;
+	protected int[] spine;
 
 	/**
 	 * Constructs a rule tree.
@@ -137,6 +137,10 @@ public class TIGRule {
 	
 	public boolean isInitial(){
 		return this.spine == null;
+	}
+	
+	public boolean isAuxiliary() {
+		return !isInitial();
 	}
 
 	/* (non-Javadoc)

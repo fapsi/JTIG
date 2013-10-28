@@ -56,13 +56,6 @@ public class DefaultItemFactory {
 		return newitem;
 	}
 	
-	public Item createItemInstance(Item item) {
-		// increase counter for new instance
-		increase();
-		
-		return null;
-	}
-	
 	private synchronized void increase(){
 		item_cnt++;
 	}

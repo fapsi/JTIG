@@ -35,15 +35,15 @@ public class TerminationCriterion implements ItemFilter {
 
 	@Override
 	public int getStart() {
-		throw new UnsupportedOperationException("Shouldn't be ever called.");
+		return 0;
 	}
 	@Override
 	public int getEnd() {
-		throw new UnsupportedOperationException("Shouldn't be ever called.");
+		return inputlength;
 	}
 	@Override
 	public ItemStatus getStatus() {
-		throw new UnsupportedOperationException("Shouldn't be ever called.");
+		return ItemStatus.Passive;
 	}
 
 }

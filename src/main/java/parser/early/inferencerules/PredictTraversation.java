@@ -22,7 +22,6 @@ public class PredictTraversation extends InferenceRule {
 	public PredictTraversation(DefaultItemFactory factory,PriorityQueue<Item> agenda) {
 		// needs no chart
 		super(factory,null,agenda);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
