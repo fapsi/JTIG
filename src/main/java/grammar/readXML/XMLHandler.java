@@ -115,7 +115,8 @@ public class XMLHandler extends DefaultHandler {
 				this.actnode.addchild(n);
 			this.actnode = n;
 			depth++;
-		}
+		} else
+			throw new SAXException("Wrong xml schema.");
 	}
 	
 	/**

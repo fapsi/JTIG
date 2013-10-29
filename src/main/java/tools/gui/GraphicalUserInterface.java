@@ -153,11 +153,18 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 			Token[] tokens = st.getTokens(parse_input.getText());
 			if(jtigparser.hasLexicon()){
+				List<Item> items = jtigparser.parseSentence(parse_input.getText(), tokens);
 				
-				List<Item> item = jtigparser.parseSentence(parse_input.getText(), tokens);
-				if (item != null && item.size() > 0)
-					printItems(item);
+				mainpanel.removeAll();
+				
+				addLogPanel();
+				
+				printItems(items);
+			} else {
+				jtigparser.appendToLog("There exists no lexicon. Aborted.");
+				addLogPanel();
 			}
+				
 		} else if (e.getSource() == menuItem_preferences){
 			
 			preferences.setVisible(true);
@@ -178,12 +185,13 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 	}
 
-	private void printItems(List<Item> items) {
-		
-		mainpanel.removeAll();
-		
+	private void addLogPanel(){
 		LogPanel logpanel = new LogPanel(jtigparser.getLog());
 		addTab("Log",logpanel);
+	}
+	
+	private void printItems(List<Item> items) {
+				
 		int i = 1;
 		for (Item item : items){
 			ItemPanel actualpanel = new ItemPanel(item);

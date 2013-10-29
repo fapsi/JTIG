@@ -89,7 +89,7 @@ public class JTIGParser {
 		XMLReader xp = new XMLReader(getLexiconPaths()[0]);
 		try {
 			this.lexicon = xp.read();
-		} catch (SAXException | IOException | ParserConfigurationException | XMLStreamException e) {
+		} catch (SAXException | IOException | IllegalArgumentException | ParserConfigurationException | XMLStreamException e) {
 			this.lexicon = null;
 			return false;
 		}
@@ -127,10 +127,10 @@ public class JTIGParser {
 		appendToLog("Started main loop using following inference rules: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
+			appendToLog("Actual element: "+current);
 			chart.addItem(current);
-			System.out.println(current.getID());
+			
 			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
-				System.out.println("breaked");
 				results.add(current);
 				finishedgood = true;
 				break;
@@ -142,7 +142,6 @@ public class JTIGParser {
 					inferencerule.apply(current);
 				}
 			}
-			System.out.println(agenda.toString());
 		}
 		if (! JTIGParser.getBooleanProperty("parser.stoponfirsttermitem")){
 			results = chart.getChartItems(isterm);
@@ -214,7 +213,7 @@ public class JTIGParser {
 		return lexicon;
 	}
 	
-	private void appendToLog(String message) {
+	public void appendToLog(String message) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		log.append( sdf.format(new Date()) + " : " + message + "\n");
 	}
