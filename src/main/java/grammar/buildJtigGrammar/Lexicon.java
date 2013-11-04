@@ -21,23 +21,23 @@ import tools.tokenizer.Token;
  */
 public class Lexicon {
 
-	private List<TIGRule> content;
+	private List<ElementaryTree> content;
 	
 	private HashMap<String,Lexicon> entrys;
 	
 	private Set<String> startsymbols;
 	
 	public Lexicon() {
-		content = new LinkedList<TIGRule>();
+		content = new LinkedList<ElementaryTree>();
 		entrys = new HashMap<String,Lexicon>();
 	}
 	
-	public void add(TIGRule toadd){
+	public void add(ElementaryTree toadd){
 		List<String> remaining = toadd.getlexicalanchors();
 		add (toadd,remaining);
 	}
 	
-	private void add(TIGRule toadd,List<String> remaining){
+	private void add(ElementaryTree toadd,List<String> remaining){
 		if (remaining.size() <= 0)
 			return;
 		
@@ -57,7 +57,7 @@ public class Lexicon {
 		}
 	}
 	
-	public List<TIGRule> find(List<Token> index,int pos){
+	public List<ElementaryTree> find(List<Token> index,int pos){
 		if (index.size() == 0)
 			return this.content;
 		Lexicon found = this.entrys.get(index.get(pos).getLabel());
@@ -103,10 +103,6 @@ public class Lexicon {
 			sb.append("\n");
 			sb.append(l.getValue().toString(depth+1));
 		}
-		/*indent(sb,depth);
-		sb.append(" ");
-		sb.append(this.content);
-		*/
 		return sb.toString();
 	}
 	

@@ -3,7 +3,9 @@
  */
 package parser.early.inferencerules;
 
+import java.util.Arrays;
 import java.util.PriorityQueue;
+
 import parser.early.Chart;
 import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
@@ -16,9 +18,9 @@ import parser.early.ItemStatus;
  * 
  * @author Fabian Gallenkamp
  */
-public class CompleteTraversation extends InferenceRule {
+public class CompleteLeftAdjunction extends InferenceRule {
 
-	public CompleteTraversation(DefaultItemFactory factory, Chart chart,
+	public CompleteLeftAdjunction(DefaultItemFactory factory, Chart chart,
 			PriorityQueue<Item> agenda) {
 		super(factory, chart, agenda);
 	}
@@ -46,17 +48,14 @@ public class CompleteTraversation extends InferenceRule {
 					return item.getLeft();
 				}
 				
-				/**
-				 * True, if<br>
-				 *  - both item's have the same underlying tree's (same index)<br>
-				 *  - the gornnumber of the outer passive item is a subset of the gornnumber of the input item<br>
-				 *  - the left hand side of the outer passive item is identical with the actual entry in the input item<br>
-				 */
 				@Override
 				public boolean apply(Item x) {
-					return item.getActivatedElementaryTree().equals(x.getActivatedElementaryTree())
-							&& x.hasParentGornNumber(item)
-							&& item.getLeftHandSide().equals(x.getNextEntry());
+					// see CompleteLeftAdjunction#isApplicableActive
+					return CompleteLeftAdjunction.this.isApplicableActive(x)
+							// left-hand-sides have equal labels
+							&& x.getLeftHandSide().getLabel().equals(item.getLeftHandSide().getLabel())
+							// trees are adjunction compatible
+							&& item.getActivatedElementaryTree().isAdjuntionCompatible(x);	
 				}
 			};
 		} else {
@@ -74,19 +73,16 @@ public class CompleteTraversation extends InferenceRule {
 				public int getEnd() {
 					return -1;
 				}
-				/**
-				 * True, if<br>
-				 *  - both item's have the same underlying tree's (same index)<br>
-				 *  - the gornnumber of the input item is a subset of the gornnumber of the outer active item<br>
-				 *  - the left hand side of the input item is identical with the actual entry of the outer active item<br>
-				 */
+				
 				@Override
-				public boolean apply(Item x) {					
-					return item.getActivatedElementaryTree().equals(x.getActivatedElementaryTree())
-							&& item.hasParentGornNumber(x)
-							&& x.getLeftHandSide().equals(item.getNextEntry());
+				public boolean apply(Item x) {
+					// see CompleteLeftAdjunction#isApplicableActive
+					return CompleteLeftAdjunction.this.isApplicablePassive(x)
+							// left-hand-sides have equal labels
+							&& item.getLeftHandSide().getLabel().equals(x.getLeftHandSide().getLabel())
+							// trees are adjunction compatible
+							&& x.getActivatedElementaryTree().isAdjuntionCompatible(item);	
 				}
-
 			};
 		}
 		
@@ -94,17 +90,16 @@ public class CompleteTraversation extends InferenceRule {
 			Item newitem = factory.createItemInstance(
 					 ispassive ? candidate.getLeft() : item.getLeft(), 
 					 ispassive ? item.getRight() : candidate.getRight(), 
-					(ispassive ? candidate.getDotPosition() : item.getDotPosition()) + 1, 
+					(ispassive ? candidate.getDotPosition() : item.getDotPosition()), 
 					 ispassive ? candidate.getLayer() : item.getLayer(), 
-					 candidate.getActivatedElementaryTree(), 
-					 candidate.getProbability());
+					 ispassive ? candidate.getActivatedElementaryTree() : item.getActivatedElementaryTree(), 
+					 candidate.getProbability() * item.getProbability());
 			newitem.addDerivation(new ItemDerivation(
-					DerivationType.CompleteTraversation, 
+					DerivationType.CompleteLeftAdjunction, 
 					ispassive? candidate : item,
 					ispassive? item : candidate));
 			agenda.add(newitem);
 		}
-		
 
 	}
 
@@ -113,12 +108,23 @@ public class CompleteTraversation extends InferenceRule {
 	 */
 	@Override
 	public boolean isApplicable(Item item) {
-		return true; // improve it
+		return (item.isActive() && isApplicableActive(item)) 
+				|| ( item.isPassive() && isApplicablePassive(item));
+	}
+	
+	private boolean isApplicableActive(Item item) {
+		return 	//only leftmost ?? TODO: check this
+				item.getDotPosition() == 1 
+				// not auxiliary tree root node
+				&& !(item.hasAuxiliaryTypeTree() && 
+						Arrays.equals(item.getLayer().getGornNumber(), new int[]{0}));
 	}
 
-	@Override
-	public String toString() {
-		return "CompleteTraversation";
+	private boolean isApplicablePassive(Item item){
+		return item.isPassive() 
+				&& item.hasLeftAuxiliaryTypeTree()
+				// completed auxiliary tree, which can be adjoined into something
+				&& Arrays.equals(item.getLayer().getGornNumber(), new int[]{0});
 	}
 
 }

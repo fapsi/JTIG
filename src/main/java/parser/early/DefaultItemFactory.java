@@ -3,7 +3,7 @@
  */
 package parser.early;
 
-import parser.lookup.ActivatedTIGRule;
+import parser.lookup.ActivatedElementaryTree;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.NodeType;
 import grammar.buildJtigGrammar.Layer;
@@ -27,20 +27,20 @@ public class DefaultItemFactory {
 		int[] address = new int[]{0};
 		// build layer production rule for terminal element
 		Entry[] entrys = new Entry[]{new Entry(NodeType.TERM, terminal)};
-		Layer layer = new Layer(address, entrys);
+		Layer layer = new Layer(address, entrys,false);
 		// create the item and return it
 		Item item = new Item(left,left + 1, 1 , layer, null,1.0,item_cnt);
 		return item;
 	}
 	
-	public Item createItemInstance(ActivatedTIGRule activatedruletree, int start){
+	public Item createItemInstance(ActivatedElementaryTree activatedruletree, int start){
 		// increase counter for new instance
 		increase();
 		Item item = new Item(start , start , 1, activatedruletree.getLayer(0),activatedruletree,1.0,item_cnt);
 		return item;
 	}
 		
-	public Item createItemInstance(int left,int right,int dotposition, Layer layer,ActivatedTIGRule activatedtigrule, double probability) {
+	public Item createItemInstance(int left,int right,int dotposition, Layer layer,ActivatedElementaryTree activatedtigrule, double probability) {
 		// increase counter for new instance
 		increase();
 		

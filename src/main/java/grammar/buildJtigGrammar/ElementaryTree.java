@@ -14,7 +14,9 @@ import java.util.List;
  * an unique index, an lexical anchor,...
  * @author Fabian Gallenkamp
  */
-public class TIGRule {
+public class ElementaryTree {
+	
+	protected TreeType type;
 	
 	/**
 	 * Unique index in the language of this TIG-rule.
@@ -42,27 +44,20 @@ public class TIGRule {
 	protected double probability;
 	
 	/**
-	 * Gorn-number of the layer with the leaf-node where the adjunction happens.
-	 * Null if the TIG rule dosn't represent an auxiliary tree and therefore couldn't 
-	 */
-	protected int[] spine;
-
-	/**
 	 * Constructs a rule tree.
 	 * @param index {@link #index}
 	 * @param layers {@link #layers}
 	 * @param lexicalanchors {@link #lexicalanchors}
 	 * @param frequency {@link #frequency}
 	 * @param probability {@link #probability}
-	 * @param spine {@link #spine}
 	 */
-	public TIGRule(long index,List<Layer> productionrules, List<String> lexicalanchors,long frequency, double probability,int[] spine){
+	public ElementaryTree(TreeType type,long index,List<Layer> productionrules, List<String> lexicalanchors,long frequency, double probability){
+		this.type = type;
 		this.index = index;
 		this.layers = productionrules;
 		this.lexicalanchors = lexicalanchors;
 		this.frequency = frequency;
 		this.probability = probability;
-		this.spine = spine;
 	}
 	
 	public List<String> getlexicalanchors(){
@@ -97,13 +92,6 @@ public class TIGRule {
 	public double getProbability() {
 		return probability;
 	}
-
-	/**
-	 * @return the spine
-	 */
-	public int[] getSpine() {
-		return spine;
-	}
 	
 	public Layer getLayer(int i){
 		if (this.layers.size() <= 0)
@@ -136,11 +124,15 @@ public class TIGRule {
 	}
 	
 	public boolean isInitial(){
-		return this.spine == null;
+		return this.type == TreeType.Initial;
 	}
 	
 	public boolean isAuxiliary() {
-		return !isInitial();
+		return this.type == TreeType.LeftAuxiliary || this.type == TreeType.RightAuxiliary;
+	}
+
+	public TreeType getType() {
+		return type;
 	}
 
 	/* (non-Javadoc)
@@ -165,7 +157,7 @@ public class TIGRule {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TIGRule other = (TIGRule) obj;
+		ElementaryTree other = (ElementaryTree) obj;
 		if (index != other.index)
 			return false;
 		return true;

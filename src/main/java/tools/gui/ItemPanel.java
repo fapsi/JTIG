@@ -66,7 +66,7 @@ public class ItemPanel extends JPanel {
 	
 	private void printItem(Item item,Object p,DerivationType type) {
 		String style="";
-		if (item.getActivatedTIGRule() == null)
+		if (item.getActivatedElementaryTree() == null)
 			style = "fillColor=red";
 		if (p == null)
 			style = "fillColor=gray";

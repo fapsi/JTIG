@@ -21,14 +21,16 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import parser.early.inferencerules.CompleteLeftAdjunction;
 import parser.early.inferencerules.CompleteSubstitution;
 import parser.early.inferencerules.CompleteTraversation;
 import parser.early.inferencerules.InferenceRule;
+import parser.early.inferencerules.PredictLeftAdjunction;
 import parser.early.inferencerules.PredictSubstitution;
 import parser.early.inferencerules.PredictTraversation;
 import parser.early.inferencerules.Scanning;
 import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedTIGRule;
+import parser.lookup.ActivatedElementaryTree;
 import parser.lookup.Lookup;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
@@ -121,12 +123,17 @@ public class JTIGParser {
 		
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda(agenda , factory,activatedlexicon))
-			return null;
+			return results;
 		
 		// Main loop
 		appendToLog("Started main loop using following inference rules: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
+			if (factory.getAmountCreatedItems() > 500){
+				appendToLog("Too many items created. Stopping!");
+				break;
+			}
+				
 			appendToLog("Actual element: "+current);
 			chart.addItem(current);
 			
@@ -178,15 +185,17 @@ public class JTIGParser {
 		inferencerules.add(new PredictSubstitution(factory, agenda, activatedlexicon));
 		inferencerules.add(new CompleteSubstitution(factory, chart, agenda));
 		
+		inferencerules.add(new PredictLeftAdjunction(factory, chart, agenda, activatedlexicon));
+		inferencerules.add(new CompleteLeftAdjunction(factory, chart, agenda));
 	}
 	
 	private boolean initializeAgenda(PriorityQueue<Item> agenda, DefaultItemFactory factory,ActivatedLexicon activatedlexicon) {
 		boolean added = false;
 		for (String startsymbol : lexicon.getStartSymbols()){
-			List<ActivatedTIGRule> result = activatedlexicon.get(startsymbol);
+			List<ActivatedElementaryTree> result = activatedlexicon.get(startsymbol);
 			
 			if (result != null)
-				for (ActivatedTIGRule art : result){
+				for (ActivatedElementaryTree art : result){
 					Item item = factory.createItemInstance(art,0); // initialize trees with span (0,0)
 					agenda.add(item);
 					
@@ -227,7 +236,7 @@ public class JTIGParser {
 		StringBuilder sb = new StringBuilder();
 		return sb.toString();
 	}
-
+/*
 	public static void main(String[] args) throws IOException {
 		String input = null;
 		
@@ -259,6 +268,7 @@ public class JTIGParser {
 		//System.out.println(parser.toString());
 	}
 
+	*/
 	public boolean hasLexicon() {
 		return lexicon != null;
 	}

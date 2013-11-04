@@ -7,10 +7,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import parser.lookup.ActivatedTIGRule;
+import parser.lookup.ActivatedElementaryTree;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.NodeType;
+import grammar.buildJtigGrammar.TreeType;
 
 /**
  * 
@@ -26,7 +27,7 @@ public class Item {
 	
 	private Layer layer;
 	
-	private ActivatedTIGRule activatedruletree;
+	private ActivatedElementaryTree activatedruletree;
 	
 	private double probability;
 	
@@ -35,7 +36,7 @@ public class Item {
 	private Set<ItemDerivation> derivations;
 
 	public Item(int left, int right, int dotposition, Layer layer,
-			ActivatedTIGRule activatedruletree, double probability, int index) {
+			ActivatedElementaryTree activatedruletree, double probability, int index) {
 		this.left = left;
 		this.right = right;
 		this.dotposition = dotposition; //TODO: maybe always 1 by construction --> always active on construction
@@ -89,6 +90,14 @@ public class Item {
 		return activatedruletree!=null?activatedruletree.isAuxiliary():false;
 	}
 	
+	public boolean hasLeftAuxiliaryTypeTree() {
+		return activatedruletree!=null?activatedruletree.getType() == TreeType.LeftAuxiliary:false;
+	}
+	
+	public boolean hasRightAuxiliaryTypeTree() {
+		return activatedruletree!=null?activatedruletree.getType() == TreeType.LeftAuxiliary:false;
+	}
+	
 	public Entry[] getRightHandSide(){
 		Entry[] entrys = layer.getEntrys();
 		if (entrys != null && entrys.length > 1){
@@ -119,7 +128,7 @@ public class Item {
 		return layer;
 	}
 	
-	public ActivatedTIGRule getActivatedTIGRule(){
+	public ActivatedElementaryTree getActivatedElementaryTree(){
 		return activatedruletree;
 	}
 	

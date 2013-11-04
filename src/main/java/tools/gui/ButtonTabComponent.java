@@ -11,15 +11,24 @@ import javax.swing.JTabbedPane;
 
 public class ButtonTabComponent extends JPanel {
 	
-	private final JTabbedPane pane;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+
 	 
     public ButtonTabComponent(final JTabbedPane pane) {
 
-        this.pane = pane;
         setOpaque(false);
         //make JLabel read titles from JTabbedPane
         JLabel label = new JLabel() {
-            public String getText() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public String getText() {
                 int i = pane.indexOfTabComponent(ButtonTabComponent.this);
                 if (i != -1) {
                     return pane.getTitleAt(i);

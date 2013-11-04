@@ -20,10 +20,13 @@ public class Layer {
 	 * CFG-rule represented as a array of {@link Entry}'s.
 	 */
 	private Entry[] entrys;
+
+	private boolean isonspine;
 	
-	public Layer(int[] gornnumber,Entry[] entrys){
+	public Layer(int[] gornnumber,Entry[] entrys, boolean isonspine){
 		this.entrys = entrys;
 		this.gornnumber = gornnumber;
+		this.isonspine = isonspine;
 	}
 
 	public Entry[] getEntrys(){
@@ -75,5 +78,9 @@ public class Layer {
 	public String toString() {
 		return "Layer [" + Arrays.toString(gornnumber) + ","
 				+ Arrays.toString(entrys) + "]\n";
+	}
+
+	public boolean isOnSpine() {
+		return isonspine;
 	}
 }

@@ -14,5 +14,5 @@ public enum DerivationType {
 	PredictLeftAux, PredictRightAux,
 	CompleteTraversation,
 	CompleteSubstitution, 
-	CompleteLeftAux,CompleteRightAux;
+	CompleteLeftAdjunction,CompleteRightAdjunction;
 }

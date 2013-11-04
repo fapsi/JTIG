@@ -9,7 +9,6 @@ import java.util.Set;
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.TIGRule;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -112,7 +111,7 @@ public class XMLHandler extends DefaultHandler {
 		} else if (qName.equals("node") && intree){
 			TreeNode n = createfromXMLNode(this.actnode,attributes);
 			if (this.actnode != null)
-				this.actnode.addchild(n);
+				this.actnode.addChild(n);
 			this.actnode = n;
 			depth++;
 		} else
@@ -132,7 +131,7 @@ public class XMLHandler extends DefaultHandler {
 			this.lexicon.setStartSymbols(this.startsymbols);
 		} else if (qName.equals("tree") && inltig){
 			//store RuleTree
-			this.lexicon.add(this.actnode.converttoruletree(
+			this.lexicon.add(this.actnode.convertToElementaryTree(
 					treeid,
 					treefreq,
 					treeprob,
@@ -141,7 +140,7 @@ public class XMLHandler extends DefaultHandler {
 			this.actnode = null;
 			intree = false;
 		} else if (qName.equals("node") && intree){
-			TreeNode parent = this.actnode.getparent();
+			TreeNode parent = this.actnode.getParent();
 			if (parent != null)
 				this.actnode = parent;
 			depth--;

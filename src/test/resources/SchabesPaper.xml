@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ltig>
+	<start-symbols>
+		<symbol type="NP"/>
+		<symbol type="VP"/>
+		<symbol type="S"/>
+	</start-symbols>
+	<tree id="0" prob="1" freq="1">
+		<node cat="NP" type="nonterm">
+			<node type="subst" cat="D"></node>
+			<node type="nonterm" cat="N">
+				<node type="term" label="boy"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="1" prob="1" freq="1">
+		<node cat="D" type="nonterm">
+			<node type="term" label="a"></node>
+		</node>
+	</tree>
+	<tree id="2" prob="1" freq="1">
+		<node cat="N" type="nonterm">
+			<node cat="A" type="nonterm">
+				<node type="term" label="pretty"></node>
+			</node>
+			<node type="lfoot" cat="N"></node>
+		</node>
+	</tree>
+</ltig>

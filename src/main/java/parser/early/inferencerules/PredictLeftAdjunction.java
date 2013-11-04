@@ -3,7 +3,6 @@
  */
 package parser.early.inferencerules;
 
-import grammar.buildJtigGrammar.NodeType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,17 +14,17 @@ import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
 import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedTIGRule;
+import parser.lookup.ActivatedElementaryTree;
 
 /**
  * 
  * @author Fabian Gallenkamp
  */
-public class PredictLeftAuxAdjunction extends InferenceRule {
+public class PredictLeftAdjunction extends InferenceRule {
 
 	private ActivatedLexicon activatedlexicon;
 	
-	public PredictLeftAuxAdjunction(DefaultItemFactory factory, Chart chart,
+	public PredictLeftAdjunction(DefaultItemFactory factory, Chart chart,
 			PriorityQueue<Item> agenda,ActivatedLexicon activatedlexicon) {
 		super(factory, chart, agenda);
 		
@@ -38,12 +37,14 @@ public class PredictLeftAuxAdjunction extends InferenceRule {
 	@Override
 	public void apply(Item item) {
 
-		List<ActivatedTIGRule> result = activatedlexicon.get(item.getLeftHandSide().getLabel());
+		List<ActivatedElementaryTree> result = activatedlexicon.get(item.getLeftHandSide().getLabel());
+		if (result == null)
+			return;
 		
-		for (ActivatedTIGRule element : result){
+		for (ActivatedElementaryTree element : result){
 			
 			if (item.getRight() <= element.getLeft() && 
-					element.isAdjuntionCompatible(item,NodeType.LFOOT)){ 
+					element.isAdjuntionCompatible(item)){ 
 				Item newitem = factory.createItemInstance(element, item.getRight());
 				newitem.addDerivation(new ItemDerivation(DerivationType.PredictLeftAux,item));
 				agenda.add(newitem);
@@ -60,8 +61,7 @@ public class PredictLeftAuxAdjunction extends InferenceRule {
 	public boolean isApplicable(Item item) {
 		return item.isActive() 
 				&& item.getDotPosition() == 1 //dot is leftmost
-				&& Arrays.equals(item.getLayer().getGornNumber(), new int[]{0})
-				&& ! (item.hasAuxiliaryTypeTree());
+				&& !(Arrays.equals(item.getLayer().getGornNumber(), new int[]{0}) && item.hasAuxiliaryTypeTree());
 	}
 
 }

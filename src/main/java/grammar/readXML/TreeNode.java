@@ -4,13 +4,14 @@
 package grammar.readXML;
 
 import grammar.buildJtigGrammar.AnchorStrategy;
+import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.TIGRule;
-
+import grammar.buildJtigGrammar.TreeType;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
 
 import tools.GeneralTools;
@@ -63,14 +64,14 @@ public class TreeNode {
 	 * Adds a child to tree-node.
 	 * @param child the child to be added
 	 */
-	public void addchild(TreeNode child){
+	public void addChild(TreeNode child){
 		this.children.add(child);
 	}
 	
 	/**
 	 * @return the children of this node
 	 */
-	public List<TreeNode> getchildren(){
+	public List<TreeNode> getChildren(){
 		return children;
 	}
 	
@@ -78,7 +79,7 @@ public class TreeNode {
 	 * 
 	 * @return if tree has children
 	 */
-	public boolean haschild(){
+	public boolean hasChildren(){
 		return !this.children.isEmpty();
 	}
 	
@@ -86,7 +87,7 @@ public class TreeNode {
 	 * 
 	 * @return the parent of this tree node
 	 */
-	public TreeNode getparent(){
+	public TreeNode getParent(){
 		return this.parent;
 	}
 	
@@ -94,7 +95,7 @@ public class TreeNode {
 	 * 
 	 * @return label of this node
 	 */
-	public String getlabel(){
+	public String getLabel(){
 		return this.label;
 	}
 	
@@ -102,37 +103,63 @@ public class TreeNode {
 	 * 
 	 * @return type of this node.
 	 */
-	public NodeType gettype() {
+	public NodeType getType() {
 		return this.type;
 	}
 	
 	/**
 	 * @return the depth of this node in the tree.
 	 */
-	public int getdepth() {
+	public int getDepth() {
 		return this.depth;
 	}
 
-	public TIGRule converttoruletree(long index,long treefreq,double prob,AnchorStrategy strategy){
+	public ElementaryTree convertToElementaryTree(long index,long treefreq,double prob,AnchorStrategy strategy){
 		List<Layer> layers = new LinkedList<Layer>();
 		Stack<Integer> gornnumbers = new Stack<Integer>();
-		Stack<Integer> spine = new Stack<Integer>();
 		gornnumbers.push(new Integer(0));
 		
-		extractlayers(layers,gornnumbers,spine);
+		TreeType treetype = getTreeType();
 		
-		return new TIGRule(index, layers, 
+		TreeInformation information = new TreeInformation(treetype);
+		extractLayers(information,layers,gornnumbers);
+		
+		return new ElementaryTree(treetype,index, layers, 
 				strategy.getlexicalanchors(this), 
-				treefreq, prob, spine.empty()?null:GeneralTools.ListToIntArray(spine));
+				treefreq, prob);
 	}
+	
+	private TreeType getTreeType() {
+		if (!hasChildren()){
+			switch (type){
+			case LFOOT:
+				return TreeType.LeftAuxiliary;
+			case RFOOT:
+				return TreeType.RightAuxiliary;
+			default:
+				return null;
+			}
+		} else {
+			for (TreeNode n: children){
+				TreeType treetype = n.getTreeType();
+				if (treetype != null)
+					return treetype;
+			}
+			if (parent == null)
+				return TreeType.Initial;
+			else
+				return null;
+		}	
+	}
+
 	/**
 	 * 
 	 * @param layers
 	 * @param gornnumbers
 	 * @param spine
 	 */
-	private void extractlayers(List<Layer> layers, Stack<Integer> gornnumbers, Stack<Integer> spine){
-		if (haschild()){
+	private void extractLayers(TreeInformation information,List<Layer> layers, Stack<Integer> gornnumbers){
+		if (hasChildren()){
 			
 			// Add 0th element of CFG Rule
 			List<Entry> ruleentrys = new LinkedList<Entry>();
@@ -140,26 +167,37 @@ public class TreeNode {
 			
 			// Add other elemnts of cfg rule
 			for (TreeNode tn : this.children){
-				ruleentrys.add(new Entry(tn.gettype(),tn.getlabel()));
+				ruleentrys.add(new Entry(tn.getType(),tn.getLabel()));
 			}
 			// Create layer out of rules and gornnumber and add to list
 			Entry[] layernodes = ruleentrys.toArray(new Entry[0]);
 			int[] layergornnumber = GeneralTools.ListToIntArray(gornnumbers);
 			
-			layers.add(new Layer(layergornnumber,layernodes));
-						
-			int i = 1;
-			//make recursive calls
-			for (TreeNode tn : this.children){
-				gornnumbers.push(new Integer(i));
-				tn.extractlayers(layers, gornnumbers, spine);
-				gornnumbers.pop();
-				i++;
+			layers.add(new Layer(layergornnumber,layernodes,information.getActualOnSpine()));
+			
+			//make recursive calls either from left to right or otherwise
+			if (information.getTreeType() != TreeType.LeftAuxiliary){
+				int i = 1;
+				for (TreeNode tn : this.children){
+					gornnumbers.push(new Integer(i));
+					tn.extractLayers(information,layers, gornnumbers);
+					gornnumbers.pop();
+					i++;
+				}
+			} else {
+				int i = this.children.size();
+				ListIterator<TreeNode> iterator = this.children.listIterator(i);
+				while (iterator.hasPrevious()){
+					gornnumbers.push(new Integer(i));
+					iterator.previous().extractLayers(information,layers, gornnumbers);
+					gornnumbers.pop();
+					i--;
+				}
 			}
 		} else {
-			//find spine and add
+			//find auxiliary tree foot and flip actual on spine information
 			if (type == NodeType.RFOOT || type == NodeType.LFOOT){
-				spine.addAll(gornnumbers);
+				information.setActualOnSpine(!information.getActualOnSpine());
 			}
 		}
 	}

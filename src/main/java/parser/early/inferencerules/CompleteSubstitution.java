@@ -92,7 +92,7 @@ public class CompleteSubstitution extends InferenceRule {
 					 ispassive ? item.getRight() : candidate.getRight(), 
 					(ispassive ? candidate.getDotPosition() : item.getDotPosition()) + 1, 
 					 ispassive ? candidate.getLayer() : item.getLayer(), 
-					 ispassive ? candidate.getActivatedTIGRule() : item.getActivatedTIGRule(), 
+					 ispassive ? candidate.getActivatedElementaryTree() : item.getActivatedElementaryTree(), 
 					 candidate.getProbability() * item.getProbability());
 			
 			newitem.addDerivation(new ItemDerivation(

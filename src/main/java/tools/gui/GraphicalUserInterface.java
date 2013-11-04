@@ -1,9 +1,7 @@
 package tools.gui;
 
+import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Lexicon;
-import grammar.buildJtigGrammar.TIGRule;
-
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -72,7 +70,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		JPanel action_parse_panel = new JPanel();
 		action_parse_panel.setBorder(new TitledBorder("Actions"));
 		
-		parse_input = new JTextArea("DER MANN SIEHT",5,100);
+		parse_input = new JTextArea("a pretty boy",5,100);
 		parse_input.setSize(100, 10);
 		input_parse_panel.add(parse_input);
 		
@@ -175,7 +173,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 				Token[] tokens = st.getTokens(result);
 				int i = 1;
-				for (TIGRule r : l.find(Arrays.asList(tokens), 0)){
+				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
 					TIGRulePanel tigrulepanel = new TIGRulePanel(r);
 					addTab(result+" "+i,tigrulepanel);
 					i++;

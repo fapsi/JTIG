@@ -38,7 +38,7 @@ public class Scanning extends InferenceRule {
 			
 			// just skip it
 			newitem = factory.createItemInstance(
-					item.getLeft(),item.getRight(),item.getDotPosition()+1,item.getLayer(),item.getActivatedTIGRule(), item.getProbability());
+					item.getLeft(),item.getRight(),item.getDotPosition()+1,item.getLayer(),item.getActivatedElementaryTree(), item.getProbability());
 			newitem.addDerivation(new ItemDerivation(DerivationType.Consume, item));
 			agenda.add(newitem);
 			
@@ -59,7 +59,7 @@ public class Scanning extends InferenceRule {
 				}
 				@Override
 				public boolean apply(Item x) {
-					return x.getActivatedTIGRule() == null && 
+					return x.getActivatedElementaryTree() == null && 
 							item.getNextEntry().getLabel().equals(x.getLeftHandSide().getLabel());
 				}
 			};
@@ -70,7 +70,7 @@ public class Scanning extends InferenceRule {
 					candidate.getRight(), 
 					item.getDotPosition()+1 ,
 					item.getLayer(),
-					item.getActivatedTIGRule(),
+					item.getActivatedElementaryTree(),
 					item.getProbability());
 				newitem.addDerivation(new ItemDerivation(DerivationType.Consume, item , candidate));
 				agenda.add(newitem);

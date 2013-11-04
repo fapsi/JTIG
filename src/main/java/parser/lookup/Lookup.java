@@ -5,10 +5,11 @@ package parser.lookup;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import parser.early.JTIGParser;
 import tools.tokenizer.Token;
+import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Lexicon;
-import grammar.buildJtigGrammar.TIGRule;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class Lookup {
 		List<Token> searchwords = new LinkedList<Token>();
 		
 		int p = 0;
-		List<TIGRule> results;
+		List<ElementaryTree> results;
 		
 		for (int i = 0; i < tokens.length; i++){
 			searchwords.clear();
@@ -49,8 +50,8 @@ public class Lookup {
 
 			if (results != null && results.size() > 0){
 				
-				for (TIGRule result : results){
-					slexicon.add(result.getRootSymbol(), new ActivatedTIGRule(result, i, p));
+				for (ElementaryTree result : results){
+					slexicon.add(result.getRootSymbol(), new ActivatedElementaryTree(result, i, p));
 				}
 				if(!all)
 					i = p - 1;

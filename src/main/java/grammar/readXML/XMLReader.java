@@ -6,7 +6,6 @@ package grammar.readXML;
 import grammar.buildJtigGrammar.AnchorStrategy;
 import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
 import grammar.buildJtigGrammar.Lexicon;
-import grammar.buildJtigGrammar.TIGRule;
 import grammar.transform.lisp2xml.LispParser;
 
 import java.io.File;

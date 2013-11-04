@@ -41,20 +41,20 @@ public class DeepestLeftmostAnchor implements AnchorStrategy {
 	 */
 	private void findanchors(TreeNode node) {
 		
-		if (node.gettype() == NodeType.TERM && !interruptedchain){
-			anchors.add(node.getlabel());
-			lastdepth = Math.max(lastdepth,node.getdepth());
-		} else if (node.gettype() == NodeType.TERM && (lastdepth < node.getdepth())){
+		if (node.getType() == NodeType.TERM && !interruptedchain){
+			anchors.add(node.getLabel());
+			lastdepth = Math.max(lastdepth,node.getDepth());
+		} else if (node.getType() == NodeType.TERM && (lastdepth < node.getDepth())){
 				interruptedchain = false;
-				lastdepth = Math.max(lastdepth,node.getdepth()); 
+				lastdepth = Math.max(lastdepth,node.getDepth()); 
 				anchors.clear();
-				anchors.add(node.getlabel());
-		} else if ((node.gettype() == NodeType.SUBST 
-				|| node.gettype() == NodeType.LFOOT 
-				|| node.gettype() == NodeType.RFOOT) && anchors.size() > 0){
+				anchors.add(node.getLabel());
+		} else if ((node.getType() == NodeType.SUBST 
+				|| node.getType() == NodeType.LFOOT 
+				|| node.getType() == NodeType.RFOOT) && anchors.size() > 0){
 			interruptedchain = true;
 		}
-		for(TreeNode child : node.getchildren()){
+		for(TreeNode child : node.getChildren()){
 			findanchors(child);
 		}
 	}

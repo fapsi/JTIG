@@ -22,7 +22,7 @@ public class ItemComparator implements Comparator<Item> {
 	 */
 	@Override
 	public int compare(Item a, Item b) {
-		boolean term_a = terminationcriterion.apply(a);
+	/*	boolean term_a = terminationcriterion.apply(a);
 		boolean term_b = terminationcriterion.apply(b);
 		if (term_a && term_b)
 			return 0;
@@ -37,13 +37,13 @@ public class ItemComparator implements Comparator<Item> {
 		if (a.getDotPosition() > b.getDotPosition())
 			return dotdistance;*/
 			
-		
+	/*	
 		int iddistance = Math.abs(a.getID() - b.getID());
 		if (a.getID() < b.getID())
 			return -iddistance;
 		if (a.getID() > b.getID())
 			return iddistance;
-			
+	*/		
 		return 0;
 	}
 

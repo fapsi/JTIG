@@ -17,7 +17,7 @@ public class ActivatedLexicon {
 	/**
 	 * 
 	 */
-	private HashMap<String, List<ActivatedTIGRule>> possibletrees;
+	private HashMap<String, List<ActivatedElementaryTree>> possibletrees;
 	
 	private Token[] tokens;
 	
@@ -26,17 +26,17 @@ public class ActivatedLexicon {
 	 * 
 	 */
 	public ActivatedLexicon (Token[] tokens){
-		this.possibletrees = new HashMap<String, List<ActivatedTIGRule>>();
+		this.possibletrees = new HashMap<String, List<ActivatedElementaryTree>>();
 		this.tokens = tokens;
 	}
 	
 	/**
 	 * 
 	 */
-	public void add(String rootlabel,ActivatedTIGRule content){
-		List<ActivatedTIGRule> results = this.possibletrees.get(rootlabel);
+	public void add(String rootlabel,ActivatedElementaryTree content){
+		List<ActivatedElementaryTree> results = this.possibletrees.get(rootlabel);
 		if (results == null){
-			List<ActivatedTIGRule> toput = new LinkedList<ActivatedTIGRule>();
+			List<ActivatedElementaryTree> toput = new LinkedList<ActivatedElementaryTree>();
 			toput.add(content);
 			this.possibletrees.put(rootlabel, toput);
 		} else {
@@ -45,7 +45,7 @@ public class ActivatedLexicon {
 		
 	}
 	
-	public List<ActivatedTIGRule> get(String symbol){
+	public List<ActivatedElementaryTree> get(String symbol){
 		return possibletrees.get(symbol);
 	}
 	
@@ -55,7 +55,7 @@ public class ActivatedLexicon {
 	
 	public int getSize(){
 		int i = 0;
-		for ( List<ActivatedTIGRule> list :possibletrees.values()){
+		for ( List<ActivatedElementaryTree> list :possibletrees.values()){
 			i += list.size();
 		}
 		return i;
@@ -65,7 +65,7 @@ public class ActivatedLexicon {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Activated Lexicon:\n");
-		for (Entry<String, List<ActivatedTIGRule>> l : this.possibletrees.entrySet()){
+		for (Entry<String, List<ActivatedElementaryTree>> l : this.possibletrees.entrySet()){
 			sb.append(l.getKey());
 			sb.append(":");
 			sb.append(l.getValue());

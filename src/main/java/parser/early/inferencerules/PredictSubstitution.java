@@ -13,7 +13,7 @@ import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
 import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedTIGRule;
+import parser.lookup.ActivatedElementaryTree;
 
 /**
  * 
@@ -34,8 +34,10 @@ public class PredictSubstitution extends InferenceRule {
 	 */
 	@Override
 	public void apply(Item item) {
-		List<ActivatedTIGRule> result = activatedlexicon.get(item.getNextEntry().getLabel());
-		for (ActivatedTIGRule element : result){
+		List<ActivatedElementaryTree> result = activatedlexicon.get(item.getNextEntry().getLabel());
+		if (result == null)
+			return;
+		for (ActivatedElementaryTree element : result){
 			
 			if (item.getRight() <= element.getLeft()){
 				Item newitem = factory.createItemInstance(element,item.getRight());

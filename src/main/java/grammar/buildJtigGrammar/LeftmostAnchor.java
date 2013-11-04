@@ -35,15 +35,15 @@ public class LeftmostAnchor implements AnchorStrategy {
 	 */
 	private void findanchors(TreeNode node){
 		
-		if (node.gettype() == NodeType.TERM && !interruptedchain){
-			anchors.add(node.getlabel());
-		} else if ((node.gettype() == NodeType.SUBST 
-				|| node.gettype() == NodeType.LFOOT 
-				|| node.gettype() == NodeType.RFOOT) && anchors.size() > 0){
+		if (node.getType() == NodeType.TERM && !interruptedchain){
+			anchors.add(node.getLabel());
+		} else if ((node.getType() == NodeType.SUBST 
+				|| node.getType() == NodeType.LFOOT 
+				|| node.getType() == NodeType.RFOOT) && anchors.size() > 0){
 			interruptedchain = true;
 		}
 			
-		for(TreeNode child : node.getchildren()){
+		for(TreeNode child : node.getChildren()){
 			findanchors(child);
 		}
 	}

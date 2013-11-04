@@ -1,9 +1,9 @@
 package tools.gui;
 
+import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Entry;
 import grammar.buildJtigGrammar.Layer;
 import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.TIGRule;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,13 +21,13 @@ public class TIGRulePanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private TIGRule rule;
+	private ElementaryTree rule;
 
 	private mxGraph graph;
 
 	private Object parent;
 	
-	public TIGRulePanel(TIGRule rule) {
+	public TIGRulePanel(ElementaryTree rule) {
 		this.rule = rule;
 		graph = new mxGraph();
 		parent = graph.getDefaultParent();
@@ -59,7 +59,10 @@ public class TIGRulePanel extends JPanel {
 	private void visualize(){	
 		List<Layer> all = rule.getLayers();
 		Layer first = rule.getLayer(0);
-		Object v1 = graph.insertVertex(parent, null, first.getEntry(0).getLabel(), 0, 0, 80,20);
+		String style = "shape=ellipse;";
+		if (first.isOnSpine())
+			style += "fontStyle=2;";
+		Object v1 = graph.insertVertex(parent, null, first.getEntry(0).getLabel(), 0, 0, 80,20, style);
 		visualize(first,all,v1);
 	}
 	
@@ -70,17 +73,25 @@ public class TIGRulePanel extends JPanel {
 				i++;
 				continue;
 				}
-			String style = "";
-			if (entry.getNodeType() == NodeType.EPS)
-				style = "fillColor=green";
-			if (entry.getNodeType() == NodeType.SUBST)
-				style = "fillColor=yellow";
-			if (entry.getNodeType() == NodeType.TERM)
-				style = "fillColor=red";
-			Object v1 = graph.insertVertex(parent, null, entry.getLabel(), 0, 0, 80,20, style);
-			graph.insertEdge(parent, null, "", p2, v1);
 			
 			Layer prod = findchildren(beyond,all,entry);
+			
+			String style = "shape=ellipse;";
+			if (entry.getNodeType() == NodeType.EPS)
+				style += "fillColor=green;";
+			if (entry.getNodeType() == NodeType.SUBST)
+				style += "fillColor=yellow;";
+			if (entry.getNodeType() == NodeType.TERM)
+				style += "fillColor=red;";
+			if(prod != null && prod.isOnSpine())
+				style += "fontStyle=2;";
+			String star = "";
+			if (entry.getNodeType() == NodeType.LFOOT || entry.getNodeType() == NodeType.RFOOT)
+				star="*";
+			Object v1 = graph.insertVertex(parent, null, entry.getLabel()+star, 0, 0, 80,20, style);
+			graph.insertEdge(parent, null, "", p2, v1);
+			
+			
 			if (prod != null)
 				visualize(prod,all,v1);
 			

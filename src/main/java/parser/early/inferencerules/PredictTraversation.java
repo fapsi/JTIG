@@ -32,7 +32,7 @@ public class PredictTraversation extends InferenceRule {
 		// Retrieve the next layer element
 		Layer nextlayer = item.getNextLayer();
 		// Construct the new item out of the old one with the retrieved layer
-		Item newitem = factory.createItemInstance(item.getRight(), item.getRight(), 1 , nextlayer, item.getActivatedTIGRule(),1.0d);
+		Item newitem = factory.createItemInstance(item.getRight(), item.getRight(), 1 , nextlayer, item.getActivatedElementaryTree(),1.0d);
 		newitem.addDerivation(new ItemDerivation(DerivationType.PredictTraversation, item));
 		// add to agenda
 		addtoagenda(newitem);
