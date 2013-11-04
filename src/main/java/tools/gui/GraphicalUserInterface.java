@@ -174,7 +174,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				Token[] tokens = st.getTokens(result);
 				int i = 1;
 				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
-					TIGRulePanel tigrulepanel = new TIGRulePanel(r);
+					ElementaryTreePanel tigrulepanel = new ElementaryTreePanel(r);
 					addTab(result+" "+i,tigrulepanel);
 					i++;
 				}

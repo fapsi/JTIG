@@ -14,7 +14,7 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
-public class TIGRulePanel extends JPanel {
+public class ElementaryTreePanel extends JPanel {
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public class TIGRulePanel extends JPanel {
 
 	private Object parent;
 	
-	public TIGRulePanel(ElementaryTree rule) {
+	public ElementaryTreePanel(ElementaryTree rule) {
 		this.rule = rule;
 		graph = new mxGraph();
 		parent = graph.getDefaultParent();
