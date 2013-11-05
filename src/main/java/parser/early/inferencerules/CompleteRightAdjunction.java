@@ -4,10 +4,7 @@
 package parser.early.inferencerules;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
 
-import parser.early.Chart;
-import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
@@ -18,11 +15,7 @@ import parser.early.ItemStatus;
  * 
  * @author Fabian Gallenkamp
  */
-public class CompleteLeftAdjunction extends InferenceRule {
-
-	public CompleteLeftAdjunction() {
-		super();
-	}
+public class CompleteRightAdjunction extends InferenceRule {
 
 	/* (non-Javadoc)
 	 * @see parser.early.inferencerules.InferenceRule#apply(parser.early.Item)
@@ -30,12 +23,12 @@ public class CompleteLeftAdjunction extends InferenceRule {
 	@Override
 	public void apply(final Item item) {
 		ItemFilter filter = null;
-		boolean ispassive = item.isPassive();
+		boolean ispassive = isApplicablePassive(item);
 		if (ispassive){
 			filter = new ItemFilter() {
 				@Override
 				public ItemStatus getStatus() {
-					return ItemStatus.Active;
+					return ItemStatus.Passive;
 				}
 				@Override
 				public int getStart() {
@@ -50,11 +43,11 @@ public class CompleteLeftAdjunction extends InferenceRule {
 				@Override
 				public boolean apply(Item x) {
 					// see CompleteLeftAdjunction#isApplicableActive
-					return CompleteLeftAdjunction.this.isApplicableActive(x)
+					return CompleteRightAdjunction.this.isApplicableActive(x)
 							// left-hand-sides have equal labels
 							&& x.getLeftHandSide().getLabel().equals(item.getLeftHandSide().getLabel())
 							// trees are adjunction compatible
-							&& item.getActivatedElementaryTree().isAdjuntionCompatible(x);	
+							&& item.getActivatedElementaryTree()!=null?item.getActivatedElementaryTree().isAdjuntionCompatible(x):false;	
 				}
 			};
 		} else {
@@ -76,11 +69,11 @@ public class CompleteLeftAdjunction extends InferenceRule {
 				@Override
 				public boolean apply(Item x) {
 					// see CompleteLeftAdjunction#isApplicableActive
-					return CompleteLeftAdjunction.this.isApplicablePassive(x)
+					return CompleteRightAdjunction.this.isApplicablePassive(x)
 							// left-hand-sides have equal labels
 							&& item.getLeftHandSide().getLabel().equals(x.getLeftHandSide().getLabel())
 							// trees are adjunction compatible
-							&& x.getActivatedElementaryTree().isAdjuntionCompatible(item);	
+							&& x.getActivatedElementaryTree()!=null?item.getActivatedElementaryTree().isAdjuntionCompatible(item):false;	
 				}
 			};
 		}
@@ -94,12 +87,11 @@ public class CompleteLeftAdjunction extends InferenceRule {
 					 ispassive ? candidate.getActivatedElementaryTree() : item.getActivatedElementaryTree(), 
 					 candidate.getProbability() * item.getProbability());
 			newitem.addDerivation(new ItemDerivation(
-					DerivationType.CompleteLeftAdjunction, 
+					DerivationType.CompleteRightAdjunction, 
 					ispassive? candidate : item,
 					ispassive? item : candidate));
 			agenda.add(newitem);
 		}
-
 	}
 
 	/* (non-Javadoc)
@@ -107,26 +99,24 @@ public class CompleteLeftAdjunction extends InferenceRule {
 	 */
 	@Override
 	public boolean isApplicable(Item item) {
-		return (item.isActive() && isApplicableActive(item)) 
+		return (item.isPassive() && isApplicableActive(item)) //TODO: really passive???
 				|| ( item.isPassive() && isApplicablePassive(item));
 	}
 	
 	private boolean isApplicableActive(Item item) {
-		return 	//only leftmost ?? TODO: check this
-				item.getDotPosition() == 1 
-				// not auxiliary tree root node
-				&& !(item.hasAuxiliaryTypeTree() && 
+		return 	// not auxiliary tree root node
+				!(item.hasAuxiliaryTypeTree() && 
 						Arrays.equals(item.getLayer().getGornNumber(), new int[]{0}));
 	}
 
 	private boolean isApplicablePassive(Item item){
-		return item.hasLeftAuxiliaryTypeTree()
+		return item.hasRightAuxiliaryTypeTree()
 				// completed auxiliary tree, which can be adjoined into something
 				&& Arrays.equals(item.getLayer().getGornNumber(), new int[]{0});
 	}
-
+	
 	@Override
 	public String toString() {
-		return "CompleteLeftAdjunction";
+		return "CompleteRightAdjunction";
 	}
 }

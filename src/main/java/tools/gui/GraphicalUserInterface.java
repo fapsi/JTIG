@@ -155,12 +155,11 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				
 				mainpanel.removeAll();
 				
-				addLogPanel();
+				addLogPanel(null);
 				
 				printItems(items);
 			} else {
-				jtigparser.appendToLog("There exists no lexicon. Aborted.");
-				addLogPanel();
+				addLogPanel("There exists no lexicon. Aborted.");
 			}
 				
 		} else if (e.getSource() == menuItem_preferences){
@@ -183,8 +182,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 	}
 
-	private void addLogPanel(){
-		LogPanel logpanel = new LogPanel(jtigparser.getLog());
+	private void addLogPanel(String alternative){
+		LogPanel logpanel = new LogPanel(alternative == null?jtigparser.getLog():alternative);
 		addTab("Log",logpanel);
 	}
 	

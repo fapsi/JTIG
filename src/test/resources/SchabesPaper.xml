@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ltig>
 	<start-symbols>
-		<symbol type="NP"/>
-		<symbol type="VP"/>
-		<symbol type="S"/>
+		<symbol type="NP" />
+		<symbol type="VP" />
+		<symbol type="S" />
 	</start-symbols>
 	<tree id="0" prob="1" freq="1">
 		<node cat="NP" type="nonterm">
@@ -24,6 +24,24 @@
 				<node type="term" label="pretty"></node>
 			</node>
 			<node type="lfoot" cat="N"></node>
+		</node>
+	</tree>
+	<tree id="3" prob="1" freq="1">
+		<node cat="S" type="nonterm">
+			<node cat="NP" type="subst"></node>
+			<node cat="VP" type="nonterm">
+				<node cat="V" type="nonterm">
+					<node type="term" label="sleeps"></node>
+				</node>
+			</node>
+		</node>
+	</tree>
+	<tree id="4" prob="1" freq="1">
+		<node cat="VP" type="nonterm">
+			<node type="rfoot" cat="VP"></node>
+			<node cat="ADV" type="nonterm">
+				<node type="term" label="often"></node>
+			</node>
 		</node>
 	</tree>
 </ltig>

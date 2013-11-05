@@ -34,6 +34,8 @@ import parser.lookup.ActivatedElementaryTree;
 import parser.lookup.Lookup;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
+import grammar.buildJtigGrammar.AnchorStrategy;
+import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
 import grammar.buildJtigGrammar.Lexicon;
 import grammar.readXML.XMLReader;
 /**
@@ -49,41 +51,18 @@ public class JTIGParser {
 	private static final Properties  parserproperties = new Properties();
 	
 	private Lexicon lexicon;
-	
-	private List<InferenceRule> inferencerules;
-	
-	private StringBuilder log = new StringBuilder();
+
+	private ParseRun lastrun;
 	
 	public JTIGParser() throws IOException{
 		// Load preferences from property-file
 		readproperties();
 	}
-	
+
 	private void readproperties() throws InvalidPropertiesFormatException, IOException {
 		InputStream is = null;
 		is = new FileInputStream(parserpropertypath);
 		JTIGParser.parserproperties.loadFromXML(is);
-	}
-	
-	public static String getProperty(String key){
-		String s = JTIGParser.parserproperties.getProperty(key);
-		if (s != null)
-			return s.trim();
-		return null;
-	}
-	
-	public static void setProperty(String key,String value){
-		JTIGParser.parserproperties.setProperty(key,value);
-		//os = new FileInputStream(parserpropertypath);
-		//JTIGParser.parserproperties.storeToXML(parserpropertypath,null );
-	}
-	
-	public static boolean getBooleanProperty(String key){
-		return "true".equals(JTIGParser.getProperty(key).toLowerCase());
-	}
-	
-	public static StringBuilder getStringBuilder(){
-		return JTIGParser.stringbuilder;
 	}
 	
 	public boolean readLexicon(){		
@@ -99,112 +78,16 @@ public class JTIGParser {
 	}
 	
 	public List<Item> parseSentence(String originalsentence, Token[] tokens){
-		this.log = new StringBuilder();
-		appendToLog("Starting parse-process.");
-		// extract all important TIGRule's and store in activatedlexicon
-		ActivatedLexicon activatedlexicon = preprocessSentence(tokens);
+		//TODO multithreading => synchro in lexicon
+		ParseRun parserun = new ParseRun(lexicon, originalsentence, tokens);
+		List<Item> items = parserun.run();
 		
-		// Create necessary objects
-		List<Item> results = new LinkedList<Item>();
-		ItemFilter isterm = new TerminationCriterion(lexicon.getStartSymbols(),tokens.length);
-		DefaultItemFactory factory = new DefaultItemFactory();
-		Chart chart = new Chart();
-		ItemComparator itemcomp = new ItemComparator(isterm);
-		PriorityQueue<Item> agenda = new PriorityQueue<Item>(10, itemcomp);
-		boolean finishedgood = false;
+		lastrun = parserun;
 		
-		// Initialize inference rules, which should be used in the parsing process
-		initializeinferencerules(factory,chart,agenda,activatedlexicon);
-		
-		// initialize the chart with items created by the tokens
-		chart.initialize(tokens , factory);
-		
-		//System.out.println(chart);
-		
-		//initialize the agenda with items created by the activated ruletrees with start-symbols
-		if (!initializeAgenda(agenda , factory,activatedlexicon))
-			return results;
-		
-		// Main loop
-		appendToLog("Started main loop using following inference rules: "+inferencerules.toString());
-		Item current;
-		while ((current = agenda.poll()) != null){
-			if (factory.getAmountCreatedItems() > 500){
-				appendToLog("Too many items created. Stopping!");
-				break;
-			}
-				
-			appendToLog("Actual element: "+current);
-			chart.addItem(current);
-			
-			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
-				results.add(current);
-				finishedgood = true;
-				break;
-			}
-			
-			for (InferenceRule inferencerule : inferencerules){
-				
-				if (inferencerule.isApplicable(current)){
-					inferencerule.apply(current);
-				}
-			}
-		}
-		if (! JTIGParser.getBooleanProperty("parser.stoponfirsttermitem")){
-			results = chart.getChartItems(isterm);
-			if (results.size() > 0)
-				finishedgood = true;
-		}
-		appendToLog("Finished main loop. "+factory.getAmountCreatedItems()+" items were created.");
-		
-		if (finishedgood)
-			appendToLog("Success.");
-		else 
-			appendToLog("Failure.");
-		
-		return results;
+		return items;
 	}
 	
-	private ActivatedLexicon preprocessSentence(Token[] tokens){
-		if (lexicon == null)
-			throw new IllegalArgumentException("Please read some lexicon first.");
-		Lookup l = new Lookup(tokens , lexicon);
-		ActivatedLexicon tmp = l.findlongestmatches();
-		appendToLog("Found "+tmp.getSize()+" trees in lexicon which can possibly match in the sentence.");
-		return tmp;
-	}
 	
-	private void initializeinferencerules( DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda,ActivatedLexicon activatedlexicon) {
-		inferencerules = new LinkedList<InferenceRule>();
-		
-		inferencerules.add(new Scanning(factory,chart, agenda));
-		
-		inferencerules.add(new PredictTraversation(factory, agenda));
-		inferencerules.add(new CompleteTraversation(factory,chart, agenda));
-		
-		inferencerules.add(new PredictSubstitution(factory, agenda, activatedlexicon));
-		inferencerules.add(new CompleteSubstitution(factory, chart, agenda));
-		
-		inferencerules.add(new PredictLeftAdjunction(factory, chart, agenda, activatedlexicon));
-		inferencerules.add(new CompleteLeftAdjunction(factory, chart, agenda));
-	}
-	
-	private boolean initializeAgenda(PriorityQueue<Item> agenda, DefaultItemFactory factory,ActivatedLexicon activatedlexicon) {
-		boolean added = false;
-		for (String startsymbol : lexicon.getStartSymbols()){
-			List<ActivatedElementaryTree> result = activatedlexicon.get(startsymbol);
-			
-			if (result != null)
-				for (ActivatedElementaryTree art : result){
-					Item item = factory.createItemInstance(art,0); // initialize trees with span (0,0)
-					agenda.add(item);
-					
-					if (!added)
-						added = true;
-				}
-		}
-		return added;
-	}
 	
 	private String[] getLexiconPaths(){
 		// select lexicon-path from properties
@@ -222,13 +105,10 @@ public class JTIGParser {
 		return lexicon;
 	}
 	
-	public void appendToLog(String message) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		log.append( sdf.format(new Date()) + " : " + message + "\n");
-	}
+
 	
 	public String getLog() {
-		return log.toString();
+		return lastrun != null? lastrun.getLog():"";
 	}
 	
 	@Override
@@ -273,4 +153,24 @@ public class JTIGParser {
 		return lexicon != null;
 	}
 	
+	public static String getProperty(String key){
+		String s = JTIGParser.parserproperties.getProperty(key);
+		if (s != null)
+			return s.trim();
+		return null;
+	}
+	
+	public static void setProperty(String key,String value){
+		JTIGParser.parserproperties.setProperty(key,value);
+		//os = new FileInputStream(parserpropertypath);
+		//JTIGParser.parserproperties.storeToXML(parserpropertypath,null );
+	}
+	
+	public static boolean getBooleanProperty(String key){
+		return "true".equals(JTIGParser.getProperty(key).toLowerCase());
+	}
+	
+	public static StringBuilder getStringBuilder(){
+		return JTIGParser.stringbuilder;
+	}
 }

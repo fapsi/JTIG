@@ -3,10 +3,13 @@
  */
 package parser.lookup;
 
+import grammar.buildJtigGrammar.Lexicon;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import tools.tokenizer.Token;
 /**
@@ -21,13 +24,16 @@ public class ActivatedLexicon {
 	
 	private Token[] tokens;
 	
+	private Lexicon lexicon;
+	
 	/**
 	 * @param tokens 
 	 * 
 	 */
-	public ActivatedLexicon (Token[] tokens){
+	public ActivatedLexicon (Lexicon lexicon,Token[] tokens){
 		this.possibletrees = new HashMap<String, List<ActivatedElementaryTree>>();
 		this.tokens = tokens;
+		this.lexicon = lexicon;
 	}
 	
 	/**
@@ -59,6 +65,10 @@ public class ActivatedLexicon {
 			i += list.size();
 		}
 		return i;
+	}
+	
+	public Set<String> getStartSymbols(){
+		return lexicon.getStartSymbols();
 	}
 
 	@Override

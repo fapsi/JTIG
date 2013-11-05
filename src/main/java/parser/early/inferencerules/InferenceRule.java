@@ -5,6 +5,7 @@ import java.util.PriorityQueue;
 import parser.early.Chart;
 import parser.early.DefaultItemFactory;
 import parser.early.Item;
+import parser.lookup.ActivatedLexicon;
 
 public abstract class InferenceRule {
 	
@@ -13,12 +14,10 @@ public abstract class InferenceRule {
 	protected Chart chart;
 	
 	protected PriorityQueue<Item> agenda;
+
+	protected ActivatedLexicon activatedlexicon;
 	
-	public InferenceRule(DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda){
-		this.factory = factory;
-		this.chart = chart;
-		this.agenda = agenda;
-	}
+	protected InferenceRule(){}
 	
 	public abstract void apply(Item item);
 	
@@ -26,5 +25,21 @@ public abstract class InferenceRule {
 	
 	protected void addtoagenda(Item item){
 		agenda.add(item);
+	}
+
+	public void setFactory(DefaultItemFactory factory) {
+		this.factory = factory;
+	}
+
+	public void setChart(Chart chart) {
+		this.chart = chart;
+	}
+
+	public void setAgenda(PriorityQueue<Item> agenda) {
+		this.agenda = agenda;
+	}
+
+	public void setActivatedLexicon(ActivatedLexicon activatedlexicon) {
+		this.activatedlexicon = activatedlexicon;
 	}
 }

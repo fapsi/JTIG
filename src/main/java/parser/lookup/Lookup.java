@@ -16,20 +16,14 @@ import grammar.buildJtigGrammar.Lexicon;
  * @author Fabian Gallenkamp
  */
 public class Lookup {
-
-	private Token[] tokens;
 	
-	private Lexicon lexicon;
-	
-	public Lookup(Token[] tokens,Lexicon lexicon){
-		this.tokens = tokens;
-		this.lexicon = lexicon;
+	public Lookup(){
 	}
 	
-	public ActivatedLexicon findlongestmatches(){
+	public ActivatedLexicon findlongestmatches(Token[] tokens,Lexicon lexicon){
 		boolean all = "true".equals(JTIGParser.getProperty("parser.lookup.findalllongestmatches"));
 		
-		ActivatedLexicon slexicon = new ActivatedLexicon(this.tokens);
+		ActivatedLexicon slexicon = new ActivatedLexicon(lexicon,tokens);
 		List<Token> searchwords = new LinkedList<Token>();
 		
 		int p = 0;
@@ -40,12 +34,12 @@ public class Lookup {
 			searchwords.add(tokens[i]);
 			p = i + 1;
 			
-			results = this.lexicon.find(searchwords,0);
+			results = lexicon.find(searchwords,0);
 			while ( (results == null || results.size()<=0) && p < tokens.length){
 				
 				searchwords.add(tokens[p]);
 				p++;
-				results = this.lexicon.find(searchwords,0);
+				results = lexicon.find(searchwords,0);
 			}
 
 			if (results != null && results.size() > 0){

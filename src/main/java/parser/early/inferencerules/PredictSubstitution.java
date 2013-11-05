@@ -21,12 +21,8 @@ import parser.lookup.ActivatedElementaryTree;
  */
 public class PredictSubstitution extends InferenceRule {
 
-	private ActivatedLexicon activatedlexicon;
-
-	public PredictSubstitution(DefaultItemFactory factory,
-			PriorityQueue<Item> agenda,ActivatedLexicon activatedlexicon) {
-		super(factory, null, agenda);
-		this.activatedlexicon = activatedlexicon;
+	public PredictSubstitution() {
+		super();
 	}
 
 	/* (non-Javadoc)

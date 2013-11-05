@@ -21,8 +21,8 @@ import parser.early.ItemStatus;
  */
 public class Scanning extends InferenceRule {
 
-	public Scanning(DefaultItemFactory factory,Chart chart,PriorityQueue<Item> agenda) {
-		super(factory,chart,agenda);
+	public Scanning() {
+		super();
 	}
 
 	/* (non-Javadoc)

@@ -95,7 +95,7 @@ public class Item {
 	}
 	
 	public boolean hasRightAuxiliaryTypeTree() {
-		return activatedruletree!=null?activatedruletree.getType() == TreeType.LeftAuxiliary:false;
+		return activatedruletree!=null?activatedruletree.getType() == TreeType.RightAuxiliary:false;
 	}
 	
 	public Entry[] getRightHandSide(){

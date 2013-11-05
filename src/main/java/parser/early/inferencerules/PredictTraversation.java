@@ -19,9 +19,8 @@ import parser.early.ItemDerivation;
  */
 public class PredictTraversation extends InferenceRule {
 
-	public PredictTraversation(DefaultItemFactory factory,PriorityQueue<Item> agenda) {
-		// needs no chart
-		super(factory,null,agenda);
+	public PredictTraversation() {
+		super();
 	}
 
 	/* (non-Javadoc)

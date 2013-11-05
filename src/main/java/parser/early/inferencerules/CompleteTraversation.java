@@ -3,9 +3,6 @@
  */
 package parser.early.inferencerules;
 
-import java.util.PriorityQueue;
-import parser.early.Chart;
-import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
@@ -18,9 +15,8 @@ import parser.early.ItemStatus;
  */
 public class CompleteTraversation extends InferenceRule {
 
-	public CompleteTraversation(DefaultItemFactory factory, Chart chart,
-			PriorityQueue<Item> agenda) {
-		super(factory, chart, agenda);
+	public CompleteTraversation() {
+		super();
 	}
 
 	/* (non-Javadoc)

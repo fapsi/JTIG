@@ -22,9 +22,8 @@ import parser.early.ItemStatus;
  */
 public class CompleteSubstitution extends InferenceRule {
 
-	public CompleteSubstitution(DefaultItemFactory factory, Chart chart,
-			PriorityQueue<Item> agenda) {
-		super(factory, chart, agenda);
+	public CompleteSubstitution() {
+		super();
 	}
 
 	/* (non-Javadoc)
