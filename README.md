@@ -2,7 +2,8 @@ JTIG
 ====
 
 ###Description
-Java Tree Insertion Grammar
+A natural language Parser implemented in Java and based on the tree insertion grammar fomalsim, which is a subclass of the
+tree adjoining grammars ([TAG](http://en.wikipedia.org/wiki/Tree-adjoining_grammar)).
 
 ### Building the project (via [Maven](http://maven.apache.org/))
 
