@@ -1,11 +1,11 @@
 JTIG
 ====
 
-###Description
-A natural language Parser implemented in Java and based on the tree insertion grammar fomalsim, which is a subclass of the
-tree adjoining grammars ([TAG](http://en.wikipedia.org/wiki/Tree-adjoining_grammar)).
+###Project description
+A natural language parser implemented in Java and based on the tree insertion grammar fomalsim, which is similar to the
+tree adjoining grammar formalism ([TAG](http://en.wikipedia.org/wiki/Tree-adjoining_grammar)).
 
-### Building the project (via [Maven](http://maven.apache.org/))
+###Building the project (via [Maven](http://maven.apache.org/))
 
 1. Installing 3rd party JARs into local maven repository  
 There is actually one 3rd party JAR ([morphadorner](http://morphadorner.northwestern.edu/)), which isn't available in the global Maven repository. 
@@ -15,4 +15,3 @@ See Also: [Maven HowTo](http://maven.apache.org/guides/mini/guide-3rd-party-jars
 
 2. Build package via maven
 `mvn package`
-
