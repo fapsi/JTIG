@@ -21,6 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import parser.early.JTIGParser;
 
@@ -51,11 +54,16 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 
 
 	private JCheckBox showprediction_checkbox;
+
+
+	private JTable table;
+
+
+	private DefaultTableModel tm;
 	
 	public PreferencesDialog(JTIGParser jtigparser){
 		this.jtigparser = jtigparser;
 		setModalityType(DEFAULT_MODALITY_TYPE);
-		
 		setTitle("JTIG Preferences");
 		setResizable(false);
 		
@@ -182,10 +190,25 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 
 	private JPanel createInferenceRulesPanel() {
 		JPanel newpanel = new JPanel();
-		newpanel.add(new JScrollPane( new JTable() ));
+		tm = new DefaultTableModel();
+		updateTable();
+		table = new JTable(tm);
+		newpanel.add(new JScrollPane( table ));
 		return newpanel;
 	}
 
+	private void updateTable(){
+		String rulenamescommaseparated = JTIGParser.getProperty("parser.core.inferencerules");
+		if (rulenamescommaseparated == null)
+			return;
+		String[] rulefullqualifiednames = rulenamescommaseparated.split("\\s*,\\s*");
+		String[][] dataVector = new String[rulefullqualifiednames.length][2];
+		for (int i = 0; i < rulefullqualifiednames.length; i++){
+			dataVector[i][0] = ""+(i+1);
+			dataVector[i][1] = rulefullqualifiednames[i];
+		}
+		tm.setDataVector(dataVector, new String[]{"Position","Executed inference rule"});
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == lexiconfile_button) {

@@ -62,7 +62,7 @@ public class Lexicon {
 			return this.content;
 		Lexicon found = this.entrys.get(index.get(pos).getLabel());
 		if (found == null)
-			return null;
+			return new LinkedList<ElementaryTree>();
 		if (pos < index.size() - 1){
 			return found.find(index,pos+1);
 		}

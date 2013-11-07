@@ -78,7 +78,7 @@ public class ItemPanel extends JPanel {
 
 		for (ItemDerivation derivation : item.getDerivations()){
 			if (!JTIGParser.getBooleanProperty("gui.forest.showpredictions") && (derivation.getType() == DerivationType.PredictTraversation
-					|| derivation.getType() == DerivationType.PredictSubstitution))
+					|| derivation.getType() == DerivationType.PredictSubstitution)||  derivation.getType() == DerivationType.PredictLeftAux||  derivation.getType() == DerivationType.PredictRightAux)
 				return;
 			
 			for (Item current : derivation.getItems()) {

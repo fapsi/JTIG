@@ -2,6 +2,8 @@ package tools.gui;
 
 import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Lexicon;
+import grammar.derivationtree.DerivationTree;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -70,7 +72,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		JPanel action_parse_panel = new JPanel();
 		action_parse_panel.setBorder(new TitledBorder("Actions"));
 		
-		parse_input = new JTextArea("a pretty boy",5,100);
+		parse_input = new JTextArea("a pretty boy sleeps often",5,100);
 		parse_input.setSize(100, 10);
 		input_parse_panel.add(parse_input);
 		
@@ -158,6 +160,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				addLogPanel(null);
 				
 				printItems(items);
+				
+				printDerivationTrees(items);
 			} else {
 				addLogPanel("There exists no lexicon. Aborted.");
 			}
@@ -180,6 +184,17 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			}
 		}
 		
+	}
+
+	private void printDerivationTrees(List<Item> items) {
+		
+		int i = 1;
+		for (DerivationTree dtree : DerivationTree.createDerivationTrees(items)){
+			DerivationTreePanel actualpanel = new DerivationTreePanel(dtree);
+			actualpanel.paint();
+			addTab("Derivation tree "+i,actualpanel);
+			i++;
+		}
 	}
 
 	private void addLogPanel(String alternative){

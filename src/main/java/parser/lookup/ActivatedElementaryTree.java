@@ -65,5 +65,40 @@ public class ActivatedElementaryTree extends ElementaryTree{
 				return true;
 		}
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + left;
+		result = prime * result + right;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ActivatedElementaryTree other = (ActivatedElementaryTree) obj;
+		if (index != other.index)
+			return false;
+		if (left != other.left)
+			return false;
+		if (right != other.right)
+			return false;
+		return true;
 	}	
+	
+	
 }

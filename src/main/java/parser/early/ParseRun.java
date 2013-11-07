@@ -85,12 +85,12 @@ public class ParseRun {
 		appendToLog("Started main loop using following inference rules: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
-			if (factory.getAmountCreatedItems() > 500){
+			if (factory.getAmountCreatedItems() > 10000){
 				appendToLog("Too many items created. Stopping!");
 				break;
 			}
 				
-			appendToLog("Actual element: "+current);
+			appendToLog("Actual element: "+current.toStringUgly()+"\n");
 			chart.addItem(current);
 			
 			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){

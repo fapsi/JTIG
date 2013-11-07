@@ -27,7 +27,9 @@ public class ItemSet {
 
 		if (addto.containsKey(item)){
 			Item identicalitem = addto.get(item);
+			addto.remove(item);
 			identicalitem.addDerivations(item.getDerivations());
+			addto.put(identicalitem, identicalitem);
 		} else 
 			addto.put(item,item);
 		

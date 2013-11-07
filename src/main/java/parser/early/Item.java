@@ -53,7 +53,9 @@ public class Item {
 	}
 
 	public void addDerivations(Set<ItemDerivation> derivations_param) {
-		this.derivations.addAll(derivations_param);
+		for (ItemDerivation deriv : derivations_param)
+			if (!derivations.contains(deriv))
+				derivations.add(deriv);
 	}
 	
 	public void moveDotLeft(){
@@ -183,7 +185,6 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		//TODO: When are activated rule trees identical?
 		if (activatedruletree == null) {
 			if (other.activatedruletree != null)
 				return false;
@@ -213,13 +214,20 @@ public class Item {
 			sb.append(".");
 		return sb.toString();
 	}
+	
+	public String toStringUgly(){
+		return "Item [left=" + left + ", right=" + right + ", dotposition="
+				+ dotposition + ", layer=" + layer + ", activatedruletree="
+				+ activatedruletree + ", probability=" + probability
+				+ ", index=" + index + "]";
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-
-		return "["+(isActive()?"A":"P")+" "+getDottedRuleString()+" RuleID=" + activatedruletree
-				+ ", ID=" + index + ",("+left+","+right+"), "+Arrays.toString(layer.getGornNumber())+"]";
+			return "["+(isActive()?"A":"P")+" "+getDottedRuleString()+" RuleID=" + activatedruletree
+					+ ", ID=" + index + ",("+left+","+right+"), "+Arrays.toString(layer.getGornNumber())+"]";
 	}
 }

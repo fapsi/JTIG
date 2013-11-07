@@ -84,7 +84,11 @@ public class ItemDerivation {
 	 */
 	@Override
 	public String toString() {
+		String str = "";
+		for (Item i : items)
+			str += i.toStringUgly()+"\n";
+		
 		return "ItemDerivation [type=" + type + ", items="
-				+ Arrays.toString(items) + "]";
+				+ str + "]";
 	}
 }
