@@ -77,6 +77,8 @@ public class DerivationTree {
 		while (!itemstack.isEmpty()) {
 			Item actitem = itemstack.pop();
 			boolean first = true;
+			Stack<Item> tmpstack = new Stack<Item>();
+			tmpstack.addAll(itemstack);
 			for (ItemDerivation itemderiv : actitem.getDerivations()) {		
 				// create variables for !first
 				DerivationEdge tobeadded = null;
@@ -103,6 +105,8 @@ public class DerivationTree {
 							if (!actitem.getActivatedElementaryTree().equals(atree))
 								inserted = atree;
 						}
+						if (inserted == null)
+							throw new IllegalStateException();
 						// Add derivation edge, substitution or adjunction
 						if (itemderiv.getType() == DerivationType.CompleteSubstitution)
 							tobeadded = new SubstitutionDerivationEdge(actitem.getActivatedElementaryTree(), inserted,null);
@@ -122,7 +126,7 @@ public class DerivationTree {
 					derivationtrees.add(other);
 					
 					newstack = new Stack<Item>();
-					newstack.addAll(itemstack);
+					newstack.addAll(tmpstack);
 				}
 				
 				if (tobeadded != null)
