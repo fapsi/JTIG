@@ -91,13 +91,16 @@ public class ParseRun {
 			}
 				
 			appendToLog("Actual element: "+current.toStringUgly()+"\n");
-			chart.addItem(current);
+			boolean inserted = chart.addItem(current);
 			
 			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
 				results.add(current);
 				finishedgood = true;
 				break;
 			}
+			
+			if (!inserted)
+				continue;
 			
 			for (InferenceRule inferencerule : inferencerules){
 				

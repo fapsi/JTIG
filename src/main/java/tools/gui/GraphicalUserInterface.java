@@ -72,7 +72,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		JPanel action_parse_panel = new JPanel();
 		action_parse_panel.setBorder(new TitledBorder("Actions"));
 		
-		parse_input = new JTextArea("a pretty boy sleeps often",5,100);
+		parse_input = new JTextArea("He saw the monkey with a telescope.",5,100);
 		parse_input.setSize(100, 10);
 		input_parse_panel.add(parse_input);
 		

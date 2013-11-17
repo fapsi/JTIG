@@ -62,7 +62,7 @@ public class Scanning extends InferenceRule {
 					return x.getActivatedElementaryTree() == null && 
 							//TODO: ask if it's correct
 							item.getActivatedElementaryTree().getLeft() <= x.getLeft() && 
-									item.getActivatedElementaryTree().getRight() >= x.getLeft() &&
+							item.getActivatedElementaryTree().getRight() >= x.getRight() &&
 							item.getNextEntry().getLabel().equals(x.getLeftHandSide().getLabel());
 				}
 			};
@@ -70,7 +70,7 @@ public class Scanning extends InferenceRule {
 			for (Item candidate : chart.getChartItems(filter)){
 				newitem = factory.createItemInstance(
 					item.getLeft(),
-					candidate.getRight(), //TODO ?????
+					item.getRight()+1, //TODO candidat.getRight ??
 					item.getDotPosition()+1 ,
 					item.getLayer(),
 					item.getActivatedElementaryTree(),

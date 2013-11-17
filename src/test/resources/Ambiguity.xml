@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ltig>
+	<start-symbols>
+		<symbol type="NP" />
+		<symbol type="VP" />
+		<symbol type="PP" />
+		<symbol type="S" />
+	</start-symbols>
+	<tree id="0" prob="1" freq="1">
+		<node cat="NP" type="nonterm">
+			<node type="term" label="He"></node>
+		</node>
+	</tree>
+	<tree id="1" prob="1" freq="1">
+		<node cat="S" type="nonterm">
+			<node cat="NP" type="subst"></node>
+			<node cat="VP" type="nonterm">
+				<node cat="V" type="nonterm">
+					<node type="term" label="saw"></node>
+				</node>
+			</node>
+			<node cat="NP" type="subst"></node>
+		</node>
+	</tree>
+	<tree id="2" prob="1" freq="1">
+		<node cat="S" type="nonterm">
+			<node cat="NP" type="subst"></node>
+			<node cat="VP" type="nonterm">
+				<node cat="V" type="nonterm">
+					<node type="term" label="saw"></node>
+				</node>
+			</node>
+			<node cat="NP" type="subst"></node>
+			<node cat="PP" type="subst"></node>
+		</node>
+	</tree>
+	<tree id="3" prob="1" freq="1">
+		<node cat="NP" type="nonterm">
+			<node type="subst" cat="D"></node>
+			<node type="nonterm" cat="N">
+				<node type="term" label="monkey"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="4" prob="1" freq="1">
+		<node cat="D" type="nonterm">
+			<node type="term" label="the"></node>
+		</node>
+	</tree>
+	<tree id="5" prob="1" freq="1">
+		<node cat="PP" type="nonterm">
+			<node cat="WPP" type="nonterm">
+				<node type="term" label="with"></node>
+			</node>
+			<node cat="NP" type="subst"></node>
+		</node>
+	</tree>
+	<tree id="6" prob="1" freq="1">
+		<node cat="NP" type="nonterm">
+			<node type="subst" cat="ID"></node>
+			<node type="nonterm" cat="N">
+				<node type="term" label="telescope"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="7" prob="1" freq="1">
+		<node cat="ID" type="nonterm">
+			<node type="term" label="a"></node>
+		</node>
+	</tree>
+	<tree id="8" prob="1" freq="1">
+		<node cat="NP" type="nonterm">
+			<node cat="NP" type="subst"></node>
+			<node cat="PP" type="nonterm">
+				<node cat="WPP" type="nonterm">
+					<node type="term" label="with"></node>
+				</node>
+				<node cat="NP" type="subst"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="9" prob="1" freq="1">
+		<node cat="S" type="nonterm">
+			<node cat="S" type="subst"></node>
+			<node type="term" label="."></node>
+		</node>
+	</tree>
+</ltig>

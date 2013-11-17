@@ -34,14 +34,17 @@ public class Chart {
 		}
 	}
 	
-	public void addItem(Item item){
+	public boolean addItem(Item item){
 		int index = item.getRight() * width + item.getLeft();
 		if (entrys[index] == null)
 			entrys[index] = new ItemSet();
-		entrys[index].add(item);
+		return entrys[index].add(item);
 	}
 	
 	public ItemSet getItemset(int left, int right){
+		if ( left >= width || right >= width || left < 0 || right < 0 ){
+			return null;
+		}
 		return entrys[right * width + left];
 	}
 	
@@ -62,7 +65,6 @@ public class Chart {
 				ItemSet itemset = getItemset(filter.getStart() , filter.getEnd());
 				if (itemset != null)
 					itemset.getItems(result,filter);
-				
 			}
 		} else {
 			if (filter.getEnd() >= 0){

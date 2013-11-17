@@ -44,4 +44,13 @@
 			</node>
 		</node>
 	</tree>
+	<tree id="5" prob="1" freq="1">
+		<node cat="NP" type="nonterm">
+			<node type="subst" cat="D"></node>
+			<node type="nonterm" cat="N">
+				<node type="term" label="dragon"></node>
+				<node type="term" label="warrior"></node>
+			</node>
+		</node>
+	</tree>
 </ltig>

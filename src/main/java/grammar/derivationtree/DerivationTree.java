@@ -61,7 +61,7 @@ public class DerivationTree {
 			// create derivation tree add to result
 			DerivationTree actualtree = new DerivationTree(DerivationTree.actindex++);
 			derivationtrees.add(actualtree);
-
+			
 
 			Stack<Item> itemstack = new Stack<Item>();
 			itemstack.add(actualitem);
@@ -77,8 +77,14 @@ public class DerivationTree {
 		while (!itemstack.isEmpty()) {
 			Item actitem = itemstack.pop();
 			boolean first = true;
-			Stack<Item> tmpstack = new Stack<Item>();
-			tmpstack.addAll(itemstack);
+			Stack<Item> tmpstack = null;
+			DerivationTree tmptree = null;
+			/** **/
+			if (actitem.getDerivations().size() > 1){
+				tmpstack = new Stack<Item>();
+				tmpstack.addAll(itemstack);
+				tmptree  = acttree.copy();
+			}
 			for (ItemDerivation itemderiv : actitem.getDerivations()) {		
 				// create variables for !first
 				DerivationEdge tobeadded = null;
@@ -122,7 +128,7 @@ public class DerivationTree {
 					continue;
 				
 				if (!first) { // more than one derivation case
-					other = acttree.copy(); // copy actual derivation and make new one
+					other = tmptree.copy(); // copy actual derivation and make new one
 					derivationtrees.add(other);
 					
 					newstack = new Stack<Item>();

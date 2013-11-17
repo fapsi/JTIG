@@ -22,7 +22,7 @@ public class ItemSet {
 		passiveitems = new HashMap<Item,Item>();
 	}
 	
-	public void add(Item item) {
+	public boolean add(Item item) {
 		Map<Item,Item> addto = item.isActive()?activeitems:passiveitems;
 
 		if (addto.containsKey(item)){
@@ -30,8 +30,11 @@ public class ItemSet {
 			addto.remove(item);
 			identicalitem.addDerivations(item.getDerivations());
 			addto.put(identicalitem, identicalitem);
-		} else 
+			return false;
+		} else {
 			addto.put(item,item);
+			return true;
+		}
 		
 	}
 

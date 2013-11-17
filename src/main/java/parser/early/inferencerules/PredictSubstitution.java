@@ -34,7 +34,6 @@ public class PredictSubstitution extends InferenceRule {
 		if (result == null)
 			return;
 		for (ActivatedElementaryTree element : result){
-			
 			if (item.getRight() <= element.getLeft()){
 				Item newitem = factory.createItemInstance(element,item.getRight());
 				newitem.addDerivation(new ItemDerivation(DerivationType.PredictSubstitution,item));
