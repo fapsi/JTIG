@@ -4,11 +4,6 @@
 package parser.early.inferencerules;
 
 import grammar.buildJtigGrammar.NodeType;
-
-import java.util.PriorityQueue;
-
-import parser.early.Chart;
-import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
@@ -62,7 +57,7 @@ public class Scanning extends InferenceRule {
 					return x.getActivatedElementaryTree() == null && 
 							//TODO: ask if it's correct
 							item.getActivatedElementaryTree().getLeft() <= x.getLeft() && 
-							item.getActivatedElementaryTree().getRight() >= x.getRight() &&
+							item.getActivatedElementaryTree().getRight() >= x.getRight() && 
 							item.getNextEntry().getLabel().equals(x.getLeftHandSide().getLabel());
 				}
 			};

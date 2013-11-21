@@ -33,7 +33,8 @@ public class Lexicon {
 	}
 	
 	public void add(ElementaryTree toadd){
-		List<String> remaining = toadd.getlexicalanchors();
+		List<String> remaining =  new LinkedList<String>();
+		remaining.addAll(toadd.getLexicalAnchors());
 		add (toadd,remaining);
 	}
 	

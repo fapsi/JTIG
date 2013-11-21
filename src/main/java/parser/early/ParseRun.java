@@ -4,6 +4,9 @@
 package parser.early;
 
 import grammar.buildJtigGrammar.Lexicon;
+import grammar.derivationtree.DependentDerivationTree;
+import grammar.derivationtree.DerivationTree;
+import grammar.derivationtree.IndependentDerivationTree;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ import tools.tokenizer.Token;
  */
 public class ParseRun {
 
-	private StringBuilder log;
+	private final StringBuilder log;
 	
 	private ArrayList<InferenceRule> inferencerules;
 	
@@ -33,16 +36,23 @@ public class ParseRun {
 	private PriorityQueue<Item> agenda;
 	private ActivatedLexicon activatedlexicon;
 
-	private TerminationCriterion isterm;
+	private final TerminationCriterion isterm;
 
 	private Token[] tokens;
+
+	/** **/
+	private List<Item> items;
+
+	private List<IndependentDerivationTree> id_derivationtrees = null;
+	
+	private List<DependentDerivationTree> d_derivationtrees = null;
 	
 	public ParseRun(Lexicon lexicon,String originalsentence, Token[] tokens){
 		this.tokens = tokens;
 		
 		this.log = new StringBuilder();
 		appendToLog("Starting parse-process.");
-		// extract all important TIGRule's and store in activatedlexicon
+		// extract all important Elementary Tree's and store in activatedlexicon
 		this.activatedlexicon = preprocessSentence(tokens,lexicon);
 		
 		// Create necessary objects
@@ -61,15 +71,14 @@ public class ParseRun {
 		return log.toString();
 	}
 	
-	public List<Item> run(){
-		
-		List<Item> results = new LinkedList<Item>();
+	public void run(){
+		items = new LinkedList<Item>();
 		boolean finishedgood = false;
 		
 		// prepare inference rules, setting needed classes
 		if (!prepareInferencerules()){
 			appendToLog("No inference rules used in parsing process. Failure.");
-			return results;
+			return;
 		}
 		
 		// initialize the chart with items created by the tokens
@@ -78,7 +87,7 @@ public class ParseRun {
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda()){
 			appendToLog("Agenda hasn't any start items. Failure.");
-			return results;
+			return;
 		}
 		
 		// Main loop
@@ -94,7 +103,7 @@ public class ParseRun {
 			boolean inserted = chart.addItem(current);
 			
 			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
-				results.add(current);
+				items.add(current);
 				finishedgood = true;
 				break;
 			}
@@ -110,8 +119,8 @@ public class ParseRun {
 			}
 		}
 		if (! JTIGParser.getBooleanProperty("parser.stoponfirsttermitem")){
-			results = chart.getChartItems(isterm);
-			if (results.size() > 0)
+			items = chart.getChartItems(isterm);
+			if (items.size() > 0)
 				finishedgood = true;
 		}
 		appendToLog("Finished main loop. "+factory.getAmountCreatedItems()+" items were created.");
@@ -120,8 +129,6 @@ public class ParseRun {
 			appendToLog("Success.");
 		else 
 			appendToLog("Failure.");
-		
-		return results;
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
@@ -179,8 +186,40 @@ public class ParseRun {
 		return added;
 	}
 	
+	private void extractIndependentDerivationTrees(){
+		appendToLog("Extracting independent-derivation-trees.");
+		this.id_derivationtrees = IndependentDerivationTree.createDerivationTrees(items);
+	}
+	
+	private void extractDependentDerivationTrees(){
+		appendToLog("Extracting dependent-derivation-trees.");
+		d_derivationtrees = new LinkedList<DependentDerivationTree>();
+		for (IndependentDerivationTree itree : id_derivationtrees){
+			d_derivationtrees.add(new DependentDerivationTree(itree));
+		}
+	}
+	
 	public void appendToLog(String message) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		log.append( sdf.format(new Date()) + " : " + message + "\n");
 	}
+
+	public List<Item> getItemList() {
+		return items;
+	}
+	
+	public List<IndependentDerivationTree> retrieveIndependentDerivationTrees(){
+		if (id_derivationtrees == null)
+			extractIndependentDerivationTrees();
+		return id_derivationtrees;
+	}
+	
+	public List<DependentDerivationTree> retrieveDependentDerivationTrees(){
+		if (id_derivationtrees == null)
+			return new LinkedList<DependentDerivationTree>();
+		if (d_derivationtrees == null)
+			extractDependentDerivationTrees();
+		return d_derivationtrees;
+	}
+	
 }

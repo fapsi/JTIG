@@ -2,7 +2,9 @@ package tools.gui;
 
 import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Lexicon;
+import grammar.derivationtree.DependentDerivationTree;
 import grammar.derivationtree.DerivationTree;
+import grammar.derivationtree.IndependentDerivationTree;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,12 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
@@ -28,6 +33,7 @@ import javax.swing.border.TitledBorder;
 
 import parser.early.Item;
 import parser.early.JTIGParser;
+import parser.early.ParseRun;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
 
@@ -51,6 +57,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	private PreferencesDialog preferences;
 
 	private JMenuItem menuItem_showlexicon;
+
+	private JCheckBoxMenuItem menuItem_computeIDT;
+
+	private JCheckBoxMenuItem menuItem_computeDDT;
+
+	private JCheckBoxMenuItem menuItem_computePT;
 	
 	public GraphicalUserInterface() throws IOException {
 		super("JTIG Parser");
@@ -72,13 +84,11 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		JPanel action_parse_panel = new JPanel();
 		action_parse_panel.setBorder(new TitledBorder("Actions"));
 		
-		parse_input = new JTextArea("He saw the monkey with a telescope.",5,100);
+		parse_input = new JTextArea("a pretty pretty boy sleeps often",5,100);
 		parse_input.setSize(100, 10);
 		input_parse_panel.add(parse_input);
 		
-		parse_button = new JButton("Start parsing");
-		parse_button.addActionListener(this);
-		action_parse_panel.add(parse_button);
+		fillActionParsePanel(action_parse_panel);
 		
 		mainpanel = new JTabbedPane();
 		mainpanel.setBorder(new TitledBorder("Output"));
@@ -117,6 +127,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		getContentPane().add(mainpanel,c);
 	}
 
+	private void fillActionParsePanel(JPanel action_parse_panel) {
+		parse_button = new JButton("Start parsing");
+		parse_button.addActionListener(this);
+		action_parse_panel.add(parse_button);
+	}
+
 	private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
 
@@ -126,6 +142,20 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		JMenu menu_lexicon = new JMenu("Lexicon");
 		menu_lexicon.setMnemonic(KeyEvent.VK_L);
 		menuBar.add(menu_lexicon);
+		
+		menuItem_computeIDT = new JCheckBoxMenuItem("independent derivation trees");
+		menuItem_computeIDT.addActionListener(this);
+		menu_parser.add(menuItem_computeIDT);
+		
+		menuItem_computeDDT = new JCheckBoxMenuItem("dependent derivation trees");
+		menuItem_computeDDT.addActionListener(this);
+		menu_parser.add(menuItem_computeDDT);
+		
+		menuItem_computePT = new JCheckBoxMenuItem("parse trees");
+		menuItem_computePT.addActionListener(this);
+		menu_parser.add(menuItem_computePT);
+		
+		menu_parser.addSeparator();
 		
 		menuItem_preferences = new JMenuItem("Preferences",KeyEvent.VK_T);
 		menuItem_preferences.addActionListener(this);
@@ -153,15 +183,22 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 			Token[] tokens = st.getTokens(parse_input.getText());
 			if(jtigparser.hasLexicon()){
-				List<Item> items = jtigparser.parseSentence(parse_input.getText(), tokens);
+				
+				ParseRun run = jtigparser.parseSentence(parse_input.getText(), tokens);
+				
+				List<IndependentDerivationTree> tmpidt = run.retrieveIndependentDerivationTrees();
+				
+				List<DependentDerivationTree> tmpddt = run.retrieveDependentDerivationTrees();				
 				
 				mainpanel.removeAll();
 				
-				addLogPanel(null);
+				addLogPanel(run.getLog());
 				
-				printItems(items);
+				printItems(run.getItemList());
+
+				printDerivationTrees(tmpidt);
 				
-				printDerivationTrees(items);
+				printDerivationTrees(tmpddt);
 			} else {
 				addLogPanel("There exists no lexicon. Aborted.");
 			}
@@ -170,7 +207,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			
 			preferences.setVisible(true);
 		} else if (e.getSource() == menuItem_showlexicon){
-			String result = JOptionPane.showInputDialog("");
+			String result = JOptionPane.showInputDialog("Lexical anchor of the lexicon element(s) to be searched.");
 			if (result != null && !result.trim().isEmpty() && jtigparser.hasLexicon()){
 				Lexicon l = jtigparser.getLexicon();
 				MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
@@ -186,13 +223,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 	}
 
-	private void printDerivationTrees(List<Item> items) {
-		
+	private void printDerivationTrees(List<? extends DerivationTree> trees) {
 		int i = 1;
-		for (DerivationTree dtree : DerivationTree.createDerivationTrees(items)){
+		for (DerivationTree dtree :  trees){
 			DerivationTreePanel actualpanel = new DerivationTreePanel(dtree);
 			actualpanel.paint();
-			addTab("Derivation tree "+i,actualpanel);
+			addTab(dtree.toString()+" "+i,actualpanel);
 			i++;
 		}
 	}
@@ -211,13 +247,11 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			addTab("Forest item "+i,actualpanel);
 			i++;
 		}
-		//mainpanel.validate();
 		
 	}
 	
 	private void addTab(String description,JPanel tab){
-		
-		mainpanel.add(description, tab);
+		mainpanel.add(description,tab);
 		mainpanel.setTabComponentAt(mainpanel.getTabCount()-1,new ButtonTabComponent(mainpanel));
 		
 	}

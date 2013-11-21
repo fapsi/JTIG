@@ -21,9 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import parser.early.JTIGParser;
 
@@ -60,6 +58,9 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 
 
 	private DefaultTableModel tm;
+
+
+	private JCheckBox drawforest_checkbox;
 	
 	public PreferencesDialog(JTIGParser jtigparser){
 		this.jtigparser = jtigparser;
@@ -107,17 +108,38 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5,5,5,5);
+		c.weighty = 0;
+		c.weightx = 0;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 1;
+		
+		JLabel showgeneral_descriptionlabel = new JLabel("General:");
+		ifrpanel.add(showgeneral_descriptionlabel,c);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.gridx = 1;
+		c.gridy = 0;
+
+		
+		drawforest_checkbox = new JCheckBox("Draw item forest");
+		drawforest_checkbox.addActionListener(this);
+		drawforest_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.forest.showpredictions"));
+		ifrpanel.add(drawforest_checkbox,c);
+		
+		c.weighty = 0;
+		c.weightx = 0;
+		c.gridx = 0;
+		c.gridy = 1;
+
 		
 		JLabel showprediction_descriptionlabel = new JLabel("Prediction:");
 		ifrpanel.add(showprediction_descriptionlabel,c);
-		c.anchor = GridBagConstraints.NORTHEAST;
+
 		c.weighty = 10;
 		c.weightx = 10;
 		c.gridx = 1;
-		c.gridy = 0;
+		c.gridy = 1;
 		c.gridwidth = 1;
 		
 		showprediction_checkbox = new JCheckBox("Show predicted items in graph");

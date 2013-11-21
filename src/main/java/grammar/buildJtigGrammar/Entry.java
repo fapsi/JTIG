@@ -13,11 +13,11 @@ public class Entry {
 	/**
 	 * Type of the Entry. Possible values, see :{@link NodeType}.
 	 */
-	private NodeType nodetype;
+	protected NodeType nodetype;
 	/**
 	 * Label of the Entry.
 	 */
-	private String label;
+	protected String label;
 	
 	public Entry (NodeType nodetype,String label){
 		this.label = label;

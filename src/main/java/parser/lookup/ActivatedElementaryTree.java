@@ -16,6 +16,8 @@ import grammar.buildJtigGrammar.TreeType;
  */
 public class ActivatedElementaryTree extends ElementaryTree{
 		
+
+
 	/**
 	 * 
 	 */
@@ -33,7 +35,7 @@ public class ActivatedElementaryTree extends ElementaryTree{
 	 * @param right
 	 */
 	public ActivatedElementaryTree(ElementaryTree tree,int left,int right){
-		super(tree.getType(),tree.getIndex(), tree.getLayers(), tree.getlexicalanchors(), tree.getFrequency(), tree.getProbability());
+		super(tree.getType(),tree.getIndex(), tree.getLayers(), tree.getLexicalAnchors(), tree.getFrequency(), tree.getProbability());
 		this.left = left;
 		this.right = right;
 	}
@@ -99,6 +101,14 @@ public class ActivatedElementaryTree extends ElementaryTree{
 			return false;
 		return true;
 	}	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return super.toString() + "{" + left + ","+right+"}";
+	}
 	
 	
 }

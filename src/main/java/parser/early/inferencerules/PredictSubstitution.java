@@ -6,13 +6,9 @@ package parser.early.inferencerules;
 import grammar.buildJtigGrammar.NodeType;
 
 import java.util.List;
-import java.util.PriorityQueue;
-
-import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
-import parser.lookup.ActivatedLexicon;
 import parser.lookup.ActivatedElementaryTree;
 
 /**

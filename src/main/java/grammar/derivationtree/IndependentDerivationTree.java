@@ -1,0 +1,171 @@
+/**
+ * 
+ */
+package grammar.derivationtree;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import parser.early.DerivationType;
+import parser.early.Item;
+import parser.early.ItemDerivation;
+import parser.lookup.ActivatedElementaryTree;
+import tools.GeneralTools;
+
+/**
+ * 
+ * @author Fabian Gallenkamp
+ */
+public class IndependentDerivationTree extends DerivationTree{
+
+	/**
+	 * 
+	 * @param items
+	 *            - a list with all {@link Item} representing different
+	 *            derivations.
+	 * @return All {@link IndependentDerivationTree}'s resulting from the item-structure
+	 *         obtained by the parsing process.
+	 */
+	public static List<IndependentDerivationTree> createDerivationTrees(List<Item> items) {
+		// list for result
+		List<IndependentDerivationTree> derivationtrees = new LinkedList<IndependentDerivationTree>();
+
+		// iterate over all items to be analyzed
+		for (Item actualitem : items) {
+			// create derivation tree add to result
+			IndependentDerivationTree actualtree = new IndependentDerivationTree();
+			derivationtrees.add(actualtree);
+			
+			Stack<Item> itemstack = new Stack<Item>();
+			itemstack.add(actualitem);
+			// call recursion
+			analyzeItemsRecursively(derivationtrees, actualtree,itemstack);
+		}
+
+		return derivationtrees;
+	}
+
+	private static void analyzeItemsRecursively(List<IndependentDerivationTree> derivationtrees, IndependentDerivationTree acttree, Stack<Item> itemstack) {
+		while (!itemstack.isEmpty()) {
+			// pop actual item
+			Item actitem = itemstack.pop();
+			
+			// initialize temporary variables, which store the actual stack and derivation tree
+			Stack<Item> tmpstack = null;
+			IndependentDerivationTree tmptree = null;
+			
+			if (actitem.getDerivations().size() > 1){ // if there are ambiguous derivations
+				// do a real copy into temporary variables
+				tmpstack = new Stack<Item>();
+				tmpstack.addAll(itemstack);
+				tmptree  = acttree.copy();
+			}
+			
+			boolean first = true; // indicates the first derivation in for-loop
+			
+			for (ItemDerivation itemderiv : actitem.getDerivations()) {		
+				// create variables for !first
+				DerivationEdge tobeadded = null;
+				IndependentDerivationTree other = null;
+				Stack<Item> newstack = null;	
+				boolean predict = false;
+				// calculate DerivationEdge on completion, stop on prediction, continue on traversation
+				
+				switch (itemderiv.getType()) {
+					// predictions => stop criterion
+					case PredictLeftAux:
+					case PredictRightAux:
+					case PredictSubstitution:
+					case PredictTraversation:
+						predict = true;
+						break;
+					// completions => add nodes, make edges
+					case CompleteSubstitution:
+					case CompleteLeftAdjunction:
+					case CompleteRightAdjunction:
+						tobeadded = extractDerivationEdge(itemderiv, actitem);
+						break;
+						// Traversation => do nothing but traverse
+					default:
+						break;
+				}
+				if(predict) // stop loop on predict items
+					continue;
+				
+				if (!first) { // more than one derivation case
+					other = tmptree.copy(); // copy actual derivation and make new one
+					derivationtrees.add(other);
+					
+					newstack = new Stack<Item>();
+					newstack.addAll(tmpstack);
+				}
+				
+				if (tobeadded != null) // if completion occurred a derivation-edge was created
+					if (first) // add to acttree
+						acttree.addDerivation(tobeadded);
+					else // add to copy
+						other.addDerivation(tobeadded);
+
+				Item[] items = itemderiv.getItems();
+				for (int i = items.length-1;i>=0;i--){ // push remaining items to stack
+					if (first) // if first derivation push to itemstack
+						itemstack.push(items[i]);
+					else // else to newly created one
+						newstack.push(items[i]);
+				}
+				
+				if (!first) { // make recursive calls for all non-first derivations
+					analyzeItemsRecursively(derivationtrees, other, newstack);
+				}
+				
+
+				if (first) // set !first if not already set
+					first = false;
+			}
+		}
+	}
+	
+	private static DerivationEdge extractDerivationEdge(ItemDerivation itemderiv, Item actualitem){
+		
+		ActivatedElementaryTree inserted = null;
+		for (Item deriveditem : itemderiv.getItems()) {
+			
+			ActivatedElementaryTree deriveditematree = deriveditem.getActivatedElementaryTree();
+			if (!actualitem.getActivatedElementaryTree().equals(deriveditematree))
+				inserted = deriveditematree;
+			
+		}
+		if (inserted == null)
+			throw new IllegalStateException();
+		// Add derivation edge, substitution or adjunction
+		if (itemderiv.getType() == DerivationType.CompleteSubstitution)
+			return new SubstitutionDerivationEdge(actualitem.getActivatedElementaryTree(), inserted , 
+					GeneralTools.AppendToIntArray(
+							actualitem.getLayer().getGornNumber(),
+							actualitem.getDotPosition() - 1)
+					);
+		else
+			return new AdjunctionDerivationEdge(actualitem.getActivatedElementaryTree(), inserted , actualitem.getLayer().getGornNumber());
+	}
+	
+
+	public IndependentDerivationTree() {
+		super();
+	}
+
+	public IndependentDerivationTree(Map<ActivatedElementaryTree, Object> nodesprinted,List<DerivationEdge> edges) {
+		super(nodesprinted,edges);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Independent derivation";
+	}
+}

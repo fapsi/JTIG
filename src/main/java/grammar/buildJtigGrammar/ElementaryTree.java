@@ -6,6 +6,8 @@ package grammar.buildJtigGrammar;
 import java.util.Arrays;
 import java.util.List;
 
+import tools.GeneralTools;
+
 /**
  * A grammatical rule in the tree insertion grammar. 
  * Implicitly describes a tree with nodes of several types. 
@@ -60,8 +62,21 @@ public class ElementaryTree {
 		this.probability = probability;
 	}
 	
-	public List<String> getlexicalanchors(){
+	public List<String> getLexicalAnchors(){
 		return lexicalanchors;
+	}
+	
+	public int[] getFootAddress(){
+		if (type == TreeType.Initial)
+			return null;
+		for (Layer layer : layers){
+			for (int i = 0 ; i < layer.entrys.length ; i++){
+				if (layer.entrys[i].nodetype == NodeType.LFOOT || layer.entrys[i].nodetype == NodeType.RFOOT){
+					return GeneralTools.AppendToIntArray(layer.gornnumber, i);
+				}
+			}
+		}
+		throw new UnvalidTreeException("A tree of type "+ type.toString() + " should have a FOOT-element.");
 	}
 	
 	
@@ -104,7 +119,7 @@ public class ElementaryTree {
 	
 	public Layer getLayer(int[] address){
 		for (Layer element : layers){
-			if (Arrays.equals(element.getGornNumber(),address))
+			if (Arrays.equals(element.gornnumber,address))
 				return element;
 		}
 		return null;
@@ -115,11 +130,11 @@ public class ElementaryTree {
 	 */
 	public String getRootSymbol() {
 		if (this.layers.size() <= 0)
-			throw new IllegalArgumentException("Rule tree hasn't any production rules.");
+			throw new UnvalidTreeException("Elementary tree hasn't any production rules.");
 		Layer l = this.layers.get(0);
-		Entry e = l.getEntry(0);
+		Entry e = l.entrys[0];
 		if (e != null)
-			return e.getLabel();
+			return e.label;
 		return null;
 	}
 	
@@ -168,7 +183,10 @@ public class ElementaryTree {
 		StringBuilder sb = new StringBuilder();
 		sb.append(index);
 		sb.append(" ");
-		sb.append(lexicalanchors);
+		for (String actstr : lexicalanchors){
+			sb.append(actstr);
+			sb.append(" ");
+		}
 		return sb.toString();
 	}
 }

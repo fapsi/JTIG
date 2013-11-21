@@ -1,5 +1,6 @@
 package tools;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GeneralTools {
@@ -13,5 +14,11 @@ public class GeneralTools {
 		}
 
 		return r;
+	}
+	
+	public static int[] AppendToIntArray(int[] toextend,int value){
+		int[] newarray = Arrays.copyOf(toextend,toextend.length+1);
+		newarray[toextend.length] = value;
+		return newarray;
 	}
 }

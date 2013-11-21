@@ -4,10 +4,6 @@
 package parser.early.inferencerules;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
-
-import parser.early.Chart;
-import parser.early.DefaultItemFactory;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;

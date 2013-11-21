@@ -14,14 +14,14 @@ public class Layer {
 	/**
 	 * Gorn number.
 	 */
-	private int[] gornnumber;
+	protected int[] gornnumber;
 	
 	/**
 	 * CFG-rule represented as a array of {@link Entry}'s.
 	 */
-	private Entry[] entrys;
+	protected Entry[] entrys;
 
-	private boolean isonspine;
+	protected boolean isonspine;
 	
 	public Layer(int[] gornnumber,Entry[] entrys, boolean isonspine){
 		this.entrys = entrys;

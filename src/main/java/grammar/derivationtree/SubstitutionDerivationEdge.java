@@ -4,7 +4,6 @@
 package grammar.derivationtree;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.buildJtigGrammar.ElementaryTree;
 import grammar.buildJtigGrammar.Layer;
 
 /**
@@ -13,10 +12,19 @@ import grammar.buildJtigGrammar.Layer;
  */
 public class SubstitutionDerivationEdge extends DerivationEdge {
 
-	protected SubstitutionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second, Layer connector) {
+
+
+	protected SubstitutionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second, int[] connector) {
 		super(first, second, connector);
 	}
 	
-	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SubstitutionDerivationEdge [first=" + first + ", second="
+				+ second + ", connector=" + connector + "]";
+	}
 
 }

@@ -8,12 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,22 +17,9 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import parser.early.inferencerules.CompleteLeftAdjunction;
-import parser.early.inferencerules.CompleteSubstitution;
-import parser.early.inferencerules.CompleteTraversation;
-import parser.early.inferencerules.InferenceRule;
-import parser.early.inferencerules.PredictLeftAdjunction;
-import parser.early.inferencerules.PredictSubstitution;
-import parser.early.inferencerules.PredictTraversation;
-import parser.early.inferencerules.Scanning;
-import parser.lookup.ActivatedLexicon;
-import parser.lookup.ActivatedElementaryTree;
-import parser.lookup.Lookup;
-import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
-import grammar.buildJtigGrammar.AnchorStrategy;
-import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
 import grammar.buildJtigGrammar.Lexicon;
+import grammar.derivationtree.DerivationTree;
 import grammar.readXML.XMLReader;
 /**
  * 
@@ -77,14 +60,15 @@ public class JTIGParser {
 		return true;
 	}
 	
-	public List<Item> parseSentence(String originalsentence, Token[] tokens){
+	public ParseRun parseSentence(String originalsentence, Token[] tokens){
 		//TODO multithreading => synchro in lexicon
 		ParseRun parserun = new ParseRun(lexicon, originalsentence, tokens);
-		List<Item> items = parserun.run();
+		
+		parserun.run();
 		
 		lastrun = parserun;
 		
-		return items;
+		return parserun;
 	}
 	
 	
@@ -172,5 +156,9 @@ public class JTIGParser {
 	
 	public static StringBuilder getStringBuilder(){
 		return JTIGParser.stringbuilder;
+	}
+
+	public ParseRun getLastRun() {
+		return lastrun;
 	}
 }
