@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
+package grammar.buildjtiggrammar;
 
 
 /**
@@ -30,6 +30,10 @@ public class Entry {
 	
 	public NodeType getNodeType() {
 		return nodetype;
+	}
+	
+	public void setType(NodeType nodetype) {
+		this.nodetype = nodetype;
 	}
 
 	/* (non-Javadoc)
@@ -71,4 +75,6 @@ public class Entry {
 	public String toString() {
 		return "(" + nodetype + ", '" + label + "')";
 	}
+
+
 }

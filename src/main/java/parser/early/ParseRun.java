@@ -3,10 +3,7 @@
  */
 package parser.early;
 
-import grammar.buildJtigGrammar.Lexicon;
-import grammar.derivationtree.DependentDerivationTree;
-import grammar.derivationtree.DerivationTree;
-import grammar.derivationtree.IndependentDerivationTree;
+import grammar.buildjtiggrammar.Lexicon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import parser.derivationtree.DependentDerivationTree;
+import parser.derivationtree.DerivationTree;
+import parser.derivationtree.IndependentDerivationTree;
+import parser.derivedtree.DerivedTree;
 import parser.early.inferencerules.InferenceRule;
 import parser.lookup.ActivatedElementaryTree;
 import parser.lookup.ActivatedLexicon;
@@ -26,26 +27,25 @@ import tools.tokenizer.Token;
  * @author Fabian Gallenkamp
  */
 public class ParseRun {
-
+	
+	/** helper variables **/
 	private final StringBuilder log;
-	
 	private ArrayList<InferenceRule> inferencerules;
-	
+
 	private DefaultItemFactory factory;
 	private Chart chart;
 	private PriorityQueue<Item> agenda;
 	private ActivatedLexicon activatedlexicon;
 
 	private final TerminationCriterion isterm;
-
 	private Token[] tokens;
 
-	/** **/
-	private List<Item> items;
-
-	private List<IndependentDerivationTree> id_derivationtrees = null;
+	/** result variables**/
 	
+	private List<Item> items;
+	private List<IndependentDerivationTree> id_derivationtrees = null;
 	private List<DependentDerivationTree> d_derivationtrees = null;
+	private LinkedList<DerivedTree> derivedtrees = null;
 	
 	public ParseRun(Lexicon lexicon,String originalsentence, Token[] tokens){
 		this.tokens = tokens;
@@ -220,6 +220,21 @@ public class ParseRun {
 		if (d_derivationtrees == null)
 			extractDependentDerivationTrees();
 		return d_derivationtrees;
+	}
+	
+	public List<DerivedTree> retrieveDerivedTrees(){
+		// TODO: check status
+		extractDerivedTrees();
+		return derivedtrees;
+	}
+
+	private void extractDerivedTrees() {
+		appendToLog("Extracting derived/parse-trees.");
+		derivedtrees = new LinkedList<DerivedTree>();
+		for (DependentDerivationTree ddtree : d_derivationtrees){
+			derivedtrees.add(new DerivedTree(ddtree));
+		}
+		
 	}
 	
 }

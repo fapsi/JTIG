@@ -1,10 +1,8 @@
 /**
  * 
  */
-package grammar.derivationtree;
+package parser.derivationtree;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +11,7 @@ import java.util.Stack;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
+import parser.early.JTIGParser;
 import parser.lookup.ActivatedElementaryTree;
 import tools.GeneralTools;
 
@@ -22,6 +21,7 @@ import tools.GeneralTools;
  */
 public class IndependentDerivationTree extends DerivationTree{
 
+	public static long multiple_derivations = 1;
 	/**
 	 * 
 	 * @param items
@@ -30,18 +30,28 @@ public class IndependentDerivationTree extends DerivationTree{
 	 * @return All {@link IndependentDerivationTree}'s resulting from the item-structure
 	 *         obtained by the parsing process.
 	 */
+	public static boolean derivationAllowed(){
+		String prop = JTIGParser.getProperty("parser.core.amountderivations");
+		if ("infinity".equals(prop))
+			return true;
+		long amount = Long.parseLong(prop);
+		if (amount > 1)
+			return multiple_derivations <= amount;
+		return false;
+	}
+	
 	public static List<IndependentDerivationTree> createDerivationTrees(List<Item> items) {
 		// list for result
 		List<IndependentDerivationTree> derivationtrees = new LinkedList<IndependentDerivationTree>();
 
 		// iterate over all items to be analyzed
-		for (Item actualitem : items) {
+		for (Item currentitem : items) {
 			// create derivation tree add to result
-			IndependentDerivationTree actualtree = new IndependentDerivationTree();
+			IndependentDerivationTree actualtree = new IndependentDerivationTree(currentitem.getActivatedElementaryTree());
 			derivationtrees.add(actualtree);
 			
 			Stack<Item> itemstack = new Stack<Item>();
-			itemstack.add(actualitem);
+			itemstack.add(currentitem);
 			// call recursion
 			analyzeItemsRecursively(derivationtrees, actualtree,itemstack);
 		}
@@ -118,8 +128,10 @@ public class IndependentDerivationTree extends DerivationTree{
 						newstack.push(items[i]);
 				}
 				
-				if (!first) { // make recursive calls for all non-first derivations
+				if (!first && derivationAllowed()) { // make recursive calls for all non-first derivations
+					multiple_derivations++;
 					analyzeItemsRecursively(derivationtrees, other, newstack);
+					
 				}
 				
 
@@ -144,21 +156,24 @@ public class IndependentDerivationTree extends DerivationTree{
 		// Add derivation edge, substitution or adjunction
 		if (itemderiv.getType() == DerivationType.CompleteSubstitution)
 			return new SubstitutionDerivationEdge(actualitem.getActivatedElementaryTree(), inserted , 
-					GeneralTools.AppendToIntArray(
-							actualitem.getLayer().getGornNumber(),
-							actualitem.getDotPosition() - 1)
-					);
+					GeneralTools.IntArrayToIntegerArray(
+							GeneralTools.AppendToIntArray(
+									actualitem.getLayer().getGornNumber(),
+									actualitem.getDotPosition() - 1
+							)
+					));
 		else
-			return new AdjunctionDerivationEdge(actualitem.getActivatedElementaryTree(), inserted , actualitem.getLayer().getGornNumber());
+			return new AdjunctionDerivationEdge(actualitem.getActivatedElementaryTree(), inserted , 
+					GeneralTools.IntArrayToIntegerArray(actualitem.getLayer().getGornNumber()));
 	}
 	
 
-	public IndependentDerivationTree() {
-		super();
+	public IndependentDerivationTree(ActivatedElementaryTree root) {
+		super(root);
 	}
 
-	public IndependentDerivationTree(Map<ActivatedElementaryTree, Object> nodesprinted,List<DerivationEdge> edges) {
-		super(nodesprinted,edges);
+	public IndependentDerivationTree(Map<ActivatedElementaryTree, Object> nodesprinted,List<DerivationEdge> edges, ActivatedElementaryTree root) {
+		super(nodesprinted,edges,root);
 	}
 
 	/* (non-Javadoc)

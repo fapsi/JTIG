@@ -1,12 +1,11 @@
 /**
  * 
  */
-package grammar.derivationtree;
+package parser.derivationtree;
 
 import java.util.Arrays;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.buildJtigGrammar.Layer;
 
 /**
  * 
@@ -18,9 +17,9 @@ public abstract class DerivationEdge {
 	
 	protected ActivatedElementaryTree second;
 	
-	protected int[] connector;
+	protected Integer[] connector;
 		
-	public DerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second,int[] connector){
+	public DerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second,Integer[] connector){
 		this.first = first;
 		this.second = second;
 		this.connector = connector;
@@ -34,7 +33,7 @@ public abstract class DerivationEdge {
 		return second;
 	}
 	
-	public int[] getConnector(){
+	public Integer[] getConnector(){
 		return connector;
 	}
 

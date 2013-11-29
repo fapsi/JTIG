@@ -1,10 +1,9 @@
 /**
  * 
  */
-package grammar.derivationtree;
+package parser.derivationtree;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.buildJtigGrammar.Layer;
 
 /**
  * 
@@ -12,7 +11,7 @@ import grammar.buildJtigGrammar.Layer;
  */
 public class AdjunctionDerivationEdge extends DerivationEdge {
 
-	protected AdjunctionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second ,int[] connector) {
+	protected AdjunctionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second ,Integer[] connector) {
 		super(first, second, connector);
 		
 	}

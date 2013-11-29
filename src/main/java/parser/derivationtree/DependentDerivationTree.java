@@ -1,14 +1,14 @@
 /**
  * 
  */
-package grammar.derivationtree;
+package parser.derivationtree;
 
-import grammar.buildJtigGrammar.Layer;
+import grammar.buildjtiggrammar.Layer;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import parser.lookup.ActivatedElementaryTree;
+import tools.GeneralTools;
 
 /**
  * 
@@ -24,6 +25,7 @@ import parser.lookup.ActivatedElementaryTree;
 public class DependentDerivationTree extends DerivationTree {
 	
 	public DependentDerivationTree (IndependentDerivationTree independent) {
+		super(independent.root);
 		copyFrom(independent);
 		transformFromIndependent();
 	}
@@ -31,10 +33,10 @@ public class DependentDerivationTree extends DerivationTree {
 	private void transformFromIndependent(){
 		for (ActivatedElementaryTree tree : nodesprinted.keySet()){
 			// collect all adjunction edges with same connector
-			Map<int[], List<AdjunctionDerivationEdge>> nondeterministicedges = collectAdjDerivEdgesWithSameConnectors(tree);
+			Map<List<Integer>, List<AdjunctionDerivationEdge>> nondeterministicedges = collectAdjDerivEdgesWithSameConnectors(tree);
 			
 			// iterate over them
-			for (Entry<int[], List<AdjunctionDerivationEdge>> act : nondeterministicedges.entrySet()){
+			for (Entry<List<Integer>, List<AdjunctionDerivationEdge>> act : nondeterministicedges.entrySet()){
 				// sort them by occurrence 
 				/** TODO: redundant code with {@link DerivationTree#paintWithJGraphX} **/
 				Collections.sort(act.getValue(),new Comparator<DerivationEdge>() {
@@ -52,7 +54,8 @@ public class DependentDerivationTree extends DerivationTree {
 						continue;
 						}
 					// create new edge
-					addDerivation(new AdjunctionDerivationEdge(previous.second,element.second,element.second.getFootAddress()));
+					addDerivation(new AdjunctionDerivationEdge(previous.second,element.second,
+							GeneralTools.IntArrayToIntegerArray(element.second.getFootAddress())));
 					// delete old one
 					removeDerivation(element);
 					
@@ -67,18 +70,18 @@ public class DependentDerivationTree extends DerivationTree {
 	 * @param tree
 	 * @return a mapping between all connectors as {@link Layer} and all {@link AdjunctionDerivationEdge}'s occurring at that connector.
 	 */
-	private Map<int[],List<AdjunctionDerivationEdge>> collectAdjDerivEdgesWithSameConnectors(ActivatedElementaryTree tree){
+	private Map<List<Integer>,List<AdjunctionDerivationEdge>> collectAdjDerivEdgesWithSameConnectors(ActivatedElementaryTree tree){
 		
-		Map<int[], List<AdjunctionDerivationEdge>> result = new HashMap<int[],List<AdjunctionDerivationEdge>>();
+		Map<List<Integer>, List<AdjunctionDerivationEdge>> result = new HashMap<List<Integer>,List<AdjunctionDerivationEdge>>();
 		
 		for (DerivationEdge edge : edges){
 			if (edge.first.equals(tree) && edge instanceof AdjunctionDerivationEdge){
-				if (result.containsKey(edge.connector)){
-					result.get(edge.connector).add((AdjunctionDerivationEdge) edge);
+				if (result.containsKey(Arrays.asList(edge.connector))){
+					result.get(Arrays.asList(edge.connector)).add((AdjunctionDerivationEdge) edge);
 				} else {
 					LinkedList<AdjunctionDerivationEdge> toadd = new LinkedList<AdjunctionDerivationEdge>();
 					toadd.add((AdjunctionDerivationEdge) edge);
-					result.put(edge.connector, toadd);
+					result.put(Arrays.asList(edge.connector), toadd);
 				}
 			}
 		}

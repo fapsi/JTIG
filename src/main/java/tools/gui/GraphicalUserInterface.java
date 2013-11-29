@@ -1,10 +1,7 @@
 package tools.gui;
 
-import grammar.buildJtigGrammar.ElementaryTree;
-import grammar.buildJtigGrammar.Lexicon;
-import grammar.derivationtree.DependentDerivationTree;
-import grammar.derivationtree.DerivationTree;
-import grammar.derivationtree.IndependentDerivationTree;
+import grammar.buildjtiggrammar.ElementaryTree;
+import grammar.buildjtiggrammar.Lexicon;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,6 +28,10 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 
+import parser.derivationtree.DependentDerivationTree;
+import parser.derivationtree.DerivationTree;
+import parser.derivationtree.IndependentDerivationTree;
+import parser.derivedtree.DerivedTree;
 import parser.early.Item;
 import parser.early.JTIGParser;
 import parser.early.ParseRun;
@@ -179,6 +180,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// TODO improve code style
 		if (e.getSource() == parse_button){   
 			MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 			Token[] tokens = st.getTokens(parse_input.getText());
@@ -188,17 +190,21 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				
 				List<IndependentDerivationTree> tmpidt = run.retrieveIndependentDerivationTrees();
 				
-				List<DependentDerivationTree> tmpddt = run.retrieveDependentDerivationTrees();				
+				List<DependentDerivationTree> tmpddt = run.retrieveDependentDerivationTrees();	
+				
+				List<DerivedTree> tmpdt = run.retrieveDerivedTrees();
 				
 				mainpanel.removeAll();
 				
 				addLogPanel(run.getLog());
-				
-				printItems(run.getItemList());
-
-				printDerivationTrees(tmpidt);
-				
-				printDerivationTrees(tmpddt);
+				if (JTIGParser.getBooleanProperty("gui.forest.show"))
+					printItems(run.getItemList());
+				if (JTIGParser.getBooleanProperty("gui.independentderivationtree.show"))
+					printDerivationTrees(tmpidt);
+				if (JTIGParser.getBooleanProperty("gui.dependentderivationtree.show"))
+					printDerivationTrees(tmpddt);
+				if (JTIGParser.getBooleanProperty("gui.parsetree.show"))
+					printDerivedTrees(tmpdt);
 			} else {
 				addLogPanel("There exists no lexicon. Aborted.");
 			}
@@ -213,8 +219,9 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 				Token[] tokens = st.getTokens(result);
 				int i = 1;
+				// TODO use printDerivedTrees
 				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
-					ElementaryTreePanel tigrulepanel = new ElementaryTreePanel(r);
+					ElementaryTreePanel tigrulepanel = new ElementaryTreePanel(new DerivedTree(r));
 					addTab(result+" "+i,tigrulepanel);
 					i++;
 				}
@@ -230,6 +237,13 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			actualpanel.paint();
 			addTab(dtree.toString()+" "+i,actualpanel);
 			i++;
+		}
+	}
+	
+	private void printDerivedTrees(List<DerivedTree> trees){
+		for (DerivedTree dtree : trees ){
+			ElementaryTreePanel derivedtreepanel = new ElementaryTreePanel(dtree);
+			addTab("Parse tree",derivedtreepanel);
 		}
 	}
 

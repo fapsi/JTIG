@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
+package grammar.buildjtiggrammar;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +76,7 @@ public class ElementaryTree {
 				}
 			}
 		}
-		throw new UnvalidTreeException("A tree of type "+ type.toString() + " should have a FOOT-element.");
+		throw new UnvalidElementaryTreeException("A tree of type "+ type.toString() + " should have a FOOT-element.");
 	}
 	
 	
@@ -125,12 +125,22 @@ public class ElementaryTree {
 		return null;
 	}
 	
+	public Layer getChildLayer(Layer layer,Entry entry){
+		for (Layer element : layers){
+			int[] tmp = Arrays.copyOfRange(element.gornnumber, 0, element.gornnumber.length-1);
+			if (Arrays.equals(tmp, layer.gornnumber) && element.entrys[0].getLabel().equals(entry.getLabel())){
+				return element;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @return the nonterminal on the left side of the first production rule
 	 */
 	public String getRootSymbol() {
 		if (this.layers.size() <= 0)
-			throw new UnvalidTreeException("Elementary tree hasn't any production rules.");
+			throw new UnvalidElementaryTreeException("Elementary tree hasn't any production rules.");
 		Layer l = this.layers.get(0);
 		Entry e = l.entrys[0];
 		if (e != null)

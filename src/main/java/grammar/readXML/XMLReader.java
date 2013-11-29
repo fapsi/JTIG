@@ -3,9 +3,9 @@
  */
 package grammar.readXML;
 
-import grammar.buildJtigGrammar.AnchorStrategy;
-import grammar.buildJtigGrammar.DeepestLeftmostAnchor;
-import grammar.buildJtigGrammar.Lexicon;
+import grammar.buildjtiggrammar.AnchorStrategy;
+import grammar.buildjtiggrammar.DeepestLeftmostAnchor;
+import grammar.buildjtiggrammar.Lexicon;
 import grammar.transform.lisp2xml.LispParser;
 
 import java.io.File;

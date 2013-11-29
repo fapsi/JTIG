@@ -5,9 +5,9 @@ package tools.gui;
 
 import java.awt.GridBagConstraints;
 
-import grammar.derivationtree.DerivationTree;
-
 import javax.swing.JPanel;
+
+import parser.derivationtree.DerivationTree;
 
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.swing.mxGraphComponent;

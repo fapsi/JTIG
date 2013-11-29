@@ -16,6 +16,14 @@ public class GeneralTools {
 		return r;
 	}
 	
+	public static Integer[] IntArrayToIntegerArray(int[] old){
+		Integer[] result = new Integer[old.length];
+		for (int i = 0; i < old.length; i++){
+			result[i] = old[i];
+		}
+		return result;
+	}
+	
 	public static int[] AppendToIntArray(int[] toextend,int value){
 		int[] newarray = Arrays.copyOf(toextend,toextend.length+1);
 		newarray[toextend.length] = value;

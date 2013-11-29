@@ -17,6 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -241,10 +242,13 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	            File file = filechooser.getSelectedFile();
 	            JTIGParser.setProperty("grammar.lexicon.path", file.getAbsolutePath());
 
+	            boolean success = jtigparser.readLexicon();
 	            lexiconfile_label.setText(
-	            		jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
+	            		success?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
+	            if (!success)
+	            	JOptionPane.showMessageDialog(this, "Invalid lexicon. " + jtigparser.getLastError());
 	            pack();
-	        } 
+	        }
 		} else if(e.getSource() == stopcriterion_checkbox){
 			JTIGParser.setProperty("parser.stoponfirsttermitem", stopcriterion_checkbox.isSelected()?"true":"false");
 		} else if(e.getSource() == showprediction_checkbox){

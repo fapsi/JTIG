@@ -3,7 +3,7 @@
  */
 package parser.lookup;
 
-import grammar.buildJtigGrammar.Lexicon;
+import grammar.buildjtiggrammar.Lexicon;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -49,7 +49,6 @@ public class Chart {
 	}
 	
 	public List<Item> getChartItems(ItemFilter filter){
-		// TODO secure against invalid input
 		List<Item> result = new LinkedList<Item>();
 		
 		if (filter.getStart() >= 0){

@@ -6,9 +6,10 @@ package grammar.readXML;
 import java.util.HashSet;
 import java.util.Set;
 
-import grammar.buildJtigGrammar.AnchorStrategy;
-import grammar.buildJtigGrammar.Lexicon;
-import grammar.buildJtigGrammar.NodeType;
+import grammar.buildjtiggrammar.AnchorStrategy;
+import grammar.buildjtiggrammar.Lexicon;
+import grammar.buildjtiggrammar.NodeType;
+import grammar.buildjtiggrammar.IRTreeNode;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -40,7 +41,7 @@ public class XMLHandler extends DefaultHandler {
 	/**
 	 * Contains actual node in the tree, which should be parsed. 
 	 */
-	private TreeNode actnode;
+	private IRTreeNode actnode;
 	
 	/**
 	 * Stores the actual tree id
@@ -109,7 +110,7 @@ public class XMLHandler extends DefaultHandler {
 			this.treeprob = Double.parseDouble(attributes.getValue("prob"));
 			depth = 0;
 		} else if (qName.equals("node") && intree){
-			TreeNode n = createfromXMLNode(this.actnode,attributes);
+			IRTreeNode n = createfromXMLNode(this.actnode,attributes);
 			if (this.actnode != null)
 				this.actnode.addChild(n);
 			this.actnode = n;
@@ -140,20 +141,20 @@ public class XMLHandler extends DefaultHandler {
 			this.actnode = null;
 			intree = false;
 		} else if (qName.equals("node") && intree){
-			TreeNode parent = this.actnode.getParent();
+			IRTreeNode parent = this.actnode.getParent();
 			if (parent != null)
 				this.actnode = parent;
 			depth--;
 		}
 	}
 	/**
-	 * Converts the XML-node into an {@link TreeNode}.
+	 * Converts the XML-node into an {@link IRTreeNode}.
 	 * @param parent the parent tree node parsed out of the XML
 	 * @param attributes the attributes of the xml-node-element
 	 * @return the tree node for the xml node, with the specified type, label
 	 * @throws IllegalStateException if type is unknown.
 	 */
-	private TreeNode createfromXMLNode(TreeNode parent,Attributes attributes){
+	private IRTreeNode createfromXMLNode(IRTreeNode parent,Attributes attributes){
 		NodeType treenodetype = NodeType.SUBST;
 		boolean hascat = false;
 		for (NodeType nt : NodeType.values()){
@@ -169,7 +170,7 @@ public class XMLHandler extends DefaultHandler {
 			label = attributes.getValue("label");
 		else
 			label = attributes.getValue("cat");
-		return new TreeNode(parent,treenodetype,label,depth);
+		return new IRTreeNode(parent,treenodetype,label,depth);
 	}
 	
 	/**

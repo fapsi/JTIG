@@ -3,7 +3,7 @@
  */
 package parser.early.inferencerules;
 
-import grammar.buildJtigGrammar.NodeType;
+import grammar.buildjtiggrammar.NodeType;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;

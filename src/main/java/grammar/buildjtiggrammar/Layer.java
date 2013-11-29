@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
+package grammar.buildjtiggrammar;
 
 import java.util.Arrays;
 

@@ -17,9 +17,9 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import parser.derivationtree.DerivationTree;
 import tools.tokenizer.Token;
-import grammar.buildJtigGrammar.Lexicon;
-import grammar.derivationtree.DerivationTree;
+import grammar.buildjtiggrammar.Lexicon;
 import grammar.readXML.XMLReader;
 /**
  * 
@@ -36,6 +36,8 @@ public class JTIGParser {
 	private Lexicon lexicon;
 
 	private ParseRun lastrun;
+	
+	private String lasterror;
 	
 	public JTIGParser() throws IOException{
 		// Load preferences from property-file
@@ -54,6 +56,7 @@ public class JTIGParser {
 		try {
 			this.lexicon = xp.read();
 		} catch (SAXException | IOException | IllegalArgumentException | ParserConfigurationException | XMLStreamException e) {
+			lasterror = e.getMessage();
 			this.lexicon = null;
 			return false;
 		}
@@ -160,5 +163,9 @@ public class JTIGParser {
 
 	public ParseRun getLastRun() {
 		return lastrun;
+	}
+	
+	public String getLastError(){
+		return lasterror;
 	}
 }

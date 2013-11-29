@@ -1,14 +1,8 @@
 /**
  * 
  */
-package grammar.readXML;
+package grammar.buildjtiggrammar;
 
-import grammar.buildJtigGrammar.AnchorStrategy;
-import grammar.buildJtigGrammar.ElementaryTree;
-import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.Layer;
-import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.TreeType;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -21,7 +15,7 @@ import tools.GeneralTools;
  * @author Fabian Gallenkamp
  */
 
-public class TreeNode {
+public class IRTreeNode {
 
 	/**
 	 * Node type of this node. 
@@ -35,12 +29,12 @@ public class TreeNode {
 	/**
 	 * The parent for this tree node, NULL for root.
 	 */
-	private TreeNode parent;
+	private IRTreeNode parent;
 	
 	/**
 	 * Children 
 	 */
-	private List<TreeNode> children;
+	private List<IRTreeNode> children;
 	
 	/**
 	 * 
@@ -52,10 +46,10 @@ public class TreeNode {
 	 * @param parent the parent for this tree node, NULL for root.
 	 * @param label a label for this tree node
 	 */
-	public TreeNode(TreeNode parent,NodeType type, String label, int depth){
+	public IRTreeNode(IRTreeNode parent,NodeType type, String label, int depth){
 		this.parent = parent;
 		this.type = type;
-		this.children = new LinkedList<TreeNode>();
+		this.children = new LinkedList<IRTreeNode>();
 		this.label = label;
 		this.depth = depth;
 	}
@@ -64,14 +58,14 @@ public class TreeNode {
 	 * Adds a child to tree-node.
 	 * @param child the child to be added
 	 */
-	public void addChild(TreeNode child){
+	public void addChild(IRTreeNode child){
 		this.children.add(child);
 	}
 	
 	/**
 	 * @return the children of this node
 	 */
-	public List<TreeNode> getChildren(){
+	public List<IRTreeNode> getChildren(){
 		return children;
 	}
 	
@@ -87,7 +81,7 @@ public class TreeNode {
 	 * 
 	 * @return the parent of this tree node
 	 */
-	public TreeNode getParent(){
+	public IRTreeNode getParent(){
 		return this.parent;
 	}
 	
@@ -121,11 +115,11 @@ public class TreeNode {
 		
 		TreeType treetype = getTreeType();
 		
-		TreeInformation information = new TreeInformation(treetype);
+		IRTreeInformation information = new IRTreeInformation(treetype);
 		extractLayers(information,layers,gornnumbers);
 		
 		return new ElementaryTree(treetype,index, layers, 
-				strategy.getlexicalanchors(this), 
+				strategy.getLexicalAnchors(this), 
 				treefreq, prob);
 	}
 	
@@ -140,7 +134,7 @@ public class TreeNode {
 				return null;
 			}
 		} else {
-			for (TreeNode n: children){
+			for (IRTreeNode n: children){
 				TreeType treetype = n.getTreeType();
 				if (treetype != null)
 					return treetype;
@@ -158,7 +152,7 @@ public class TreeNode {
 	 * @param gornnumbers
 	 * @param spine
 	 */
-	private void extractLayers(TreeInformation information,List<Layer> layers, Stack<Integer> gornnumbers){
+	private void extractLayers(IRTreeInformation information,List<Layer> layers, Stack<Integer> gornnumbers){
 		if (hasChildren()){
 			
 			// Add 0th element of CFG Rule
@@ -166,7 +160,7 @@ public class TreeNode {
 			ruleentrys.add(new Entry(this.type,this.label));
 			
 			// Add other elemnts of cfg rule
-			for (TreeNode tn : this.children){
+			for (IRTreeNode tn : this.children){
 				ruleentrys.add(new Entry(tn.getType(),tn.getLabel()));
 			}
 			// Create layer out of rules and gornnumber and add to list
@@ -178,7 +172,7 @@ public class TreeNode {
 			//make recursive calls either from left to right or otherwise
 			if (information.getTreeType() != TreeType.LeftAuxiliary){
 				int i = 1;
-				for (TreeNode tn : this.children){
+				for (IRTreeNode tn : this.children){
 					gornnumbers.push(new Integer(i));
 					tn.extractLayers(information,layers, gornnumbers);
 					gornnumbers.pop();
@@ -186,7 +180,7 @@ public class TreeNode {
 				}
 			} else {
 				int i = this.children.size();
-				ListIterator<TreeNode> iterator = this.children.listIterator(i);
+				ListIterator<IRTreeNode> iterator = this.children.listIterator(i);
 				while (iterator.hasPrevious()){
 					gornnumbers.push(new Integer(i));
 					iterator.previous().extractLayers(information,layers, gornnumbers);

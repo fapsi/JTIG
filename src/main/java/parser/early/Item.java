@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.Layer;
-import grammar.buildJtigGrammar.NodeType;
-import grammar.buildJtigGrammar.TreeType;
+import grammar.buildjtiggrammar.Entry;
+import grammar.buildjtiggrammar.Layer;
+import grammar.buildjtiggrammar.NodeType;
+import grammar.buildjtiggrammar.TreeType;
 
 /**
  * 

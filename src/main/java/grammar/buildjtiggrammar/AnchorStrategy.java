@@ -1,9 +1,7 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
-
-import grammar.readXML.TreeNode;
+package grammar.buildjtiggrammar;
 
 import java.util.List;
 
@@ -17,5 +15,5 @@ public interface AnchorStrategy {
 	 * @param root
 	 * @return
 	 */
-	public List<String> getlexicalanchors(TreeNode root);
+	public List<String> getLexicalAnchors(IRTreeNode root);
 }

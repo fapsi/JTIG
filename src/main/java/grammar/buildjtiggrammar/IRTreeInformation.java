@@ -1,22 +1,21 @@
 /**
  * 
  */
-package grammar.readXML;
+package grammar.buildjtiggrammar;
 
 
-import grammar.buildJtigGrammar.TreeType;
 
 /**
  * 
  * @author Fabian Gallenkamp
  */
-public class TreeInformation {
+public class IRTreeInformation {
 	
 	boolean actualonspine;
 	
 	TreeType treetype;
 	
-	public TreeInformation (TreeType treetype){
+	public IRTreeInformation (TreeType treetype){
 		this.treetype = treetype;
 		this.actualonspine = this.treetype != TreeType.Initial;
 	}

@@ -5,10 +5,10 @@ package parser.lookup;
 
 
 import parser.early.Item;
-import grammar.buildJtigGrammar.ElementaryTree;
-import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.Layer;
-import grammar.buildJtigGrammar.TreeType;
+import grammar.buildjtiggrammar.ElementaryTree;
+import grammar.buildjtiggrammar.Entry;
+import grammar.buildjtiggrammar.Layer;
+import grammar.buildjtiggrammar.TreeType;
 
 /**
  * 

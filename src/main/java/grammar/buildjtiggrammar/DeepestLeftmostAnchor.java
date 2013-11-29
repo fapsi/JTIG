@@ -1,9 +1,7 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
-
-import grammar.readXML.TreeNode;
+package grammar.buildjtiggrammar;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,11 +22,11 @@ public class DeepestLeftmostAnchor implements AnchorStrategy {
 	 * @return the anchor elements satisfying the specification
 	 */	
 	@Override
-	public List<String> getlexicalanchors(TreeNode root) {
+	public List<String> getLexicalAnchors(IRTreeNode root) {
 		anchors = new LinkedList<String>();
 		interruptedchain = false;
 		lastdepth = -1;
-		findanchors(root);
+		findAnchors(root);
 		return anchors;
 	}
 
@@ -39,7 +37,7 @@ public class DeepestLeftmostAnchor implements AnchorStrategy {
 	 * use it if it is a deeper node than the previous ones.
 	 * @param node tree root of the tree to search in.
 	 */
-	private void findanchors(TreeNode node) {
+	private void findAnchors(IRTreeNode node) {
 		
 		if (node.getType() == NodeType.TERM && !interruptedchain){
 			anchors.add(node.getLabel());
@@ -54,8 +52,8 @@ public class DeepestLeftmostAnchor implements AnchorStrategy {
 				|| node.getType() == NodeType.RFOOT) && anchors.size() > 0){
 			interruptedchain = true;
 		}
-		for(TreeNode child : node.getChildren()){
-			findanchors(child);
+		for(IRTreeNode child : node.getChildren()){
+			findAnchors(child);
 		}
 	}
 

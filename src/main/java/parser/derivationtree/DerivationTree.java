@@ -1,13 +1,12 @@
 /**
  * 
  */
-package grammar.derivationtree;
+package parser.derivationtree;
 
-import grammar.buildJtigGrammar.ElementaryTree;
+import grammar.buildjtiggrammar.ElementaryTree;
 
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.Map.Entry;
 import com.mxgraph.view.mxGraph;
 
 import parser.lookup.ActivatedElementaryTree;
+import tools.GeneralTools;
 
 /**
  * 
@@ -39,15 +39,19 @@ public class DerivationTree {
 	protected List<DerivationEdge> edges;
 
 	private long index = -1;
+
+	protected ActivatedElementaryTree root;
 	
-	public DerivationTree() {
+	public DerivationTree(ActivatedElementaryTree root) {
 		this.edges = new LinkedList<DerivationEdge>();
 		this.nodesprinted = new HashMap<ActivatedElementaryTree, Object>();
+		this.root = root;
 	}
 
-	public DerivationTree(Map<ActivatedElementaryTree, Object> nodesprinted,List<DerivationEdge> edges) {
+	public DerivationTree(Map<ActivatedElementaryTree, Object> nodesprinted,List<DerivationEdge> edges,ActivatedElementaryTree root) {
 		this.edges = edges;
 		this.nodesprinted = nodesprinted;
+		this.root = root;
 	}
 	
 	public void addDerivation(DerivationEdge edge) {
@@ -87,7 +91,7 @@ public class DerivationTree {
 		});
 		// print them
 		for (DerivationEdge edge : edges) {
-			String description = edge instanceof SubstitutionDerivationEdge ? "Substitution": "Adjunction";
+			String description = (edge instanceof SubstitutionDerivationEdge ? "Substitution": "Adjunction");
 			graph.insertEdge(parent, Integer.toString(i++), description+"\n"+Arrays.toString(edge.getConnector()),nodesprinted.get(edge.first), nodesprinted.get(edge.second));
 		}
 	}
@@ -105,7 +109,7 @@ public class DerivationTree {
 		copynodesprinted.putAll(nodesprinted);
 		List<DerivationEdge> copyedges = new LinkedList<DerivationEdge>();
 		copyedges.addAll(edges);
-		return new IndependentDerivationTree( copynodesprinted,	copyedges);
+		return new IndependentDerivationTree( copynodesprinted,copyedges,root);
 	}
 	
 	public void copyFrom(IndependentDerivationTree derivtree){
@@ -122,6 +126,19 @@ public class DerivationTree {
 		return index;
 	}
 	
+	public ActivatedElementaryTree getRoot(){
+		return root;
+	}
+	
+	public Map<List<Integer>, DerivationEdge> getTreeForConnectors(ActivatedElementaryTree tree){
+		Map<List<Integer>,DerivationEdge> result = new HashMap<List<Integer>,DerivationEdge>();
+		for (DerivationEdge current : edges){
+			if (current.first.equals(tree)){
+				result.put(Arrays.asList(current.connector), current);
+			}
+		}
+		return result;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -1,14 +1,16 @@
 package tools.gui;
 
-import grammar.buildJtigGrammar.ElementaryTree;
-import grammar.buildJtigGrammar.Entry;
-import grammar.buildJtigGrammar.Layer;
-import grammar.buildJtigGrammar.NodeType;
+import grammar.buildjtiggrammar.ElementaryTree;
+import grammar.buildjtiggrammar.Entry;
+import grammar.buildjtiggrammar.Layer;
+import grammar.buildjtiggrammar.NodeType;
 
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JPanel;
+
+import parser.derivedtree.DerivedTree;
 
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.swing.mxGraphComponent;
@@ -21,13 +23,13 @@ public class ElementaryTreePanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private ElementaryTree rule;
+	private DerivedTree	 rule;
 
 	private mxGraph graph;
 
 	private Object parent;
 	
-	public ElementaryTreePanel(ElementaryTree rule) {
+	public ElementaryTreePanel(DerivedTree rule) {
 		this.rule = rule;
 		graph = new mxGraph();
 		parent = graph.getDefaultParent();
@@ -35,7 +37,7 @@ public class ElementaryTreePanel extends JPanel {
 		graph.getModel().beginUpdate();
 		try
 		{
-			visualize();
+			rule.paintWithJGraphX(graph);
 		}
 		finally
 		{
@@ -54,60 +56,4 @@ public class ElementaryTreePanel extends JPanel {
 		validate();
 		
 	}
-	
-	
-	private void visualize(){	
-		List<Layer> all = rule.getLayers();
-		Layer first = rule.getLayer(0);
-		String style = "shape=ellipse;";
-		if (first.isOnSpine())
-			style += "fontStyle=2;";
-		Object v1 = graph.insertVertex(parent, null, first.getEntry(0).getLabel(), 0, 0, 80,20, style);
-		visualize(first,all,v1);
-	}
-	
-	public void visualize(Layer beyond,List<Layer> all,Object p2){
-		int i = 0 ;
-		for (Entry entry : beyond.getEntrys()){
-			if (i == 0){
-				i++;
-				continue;
-				}
-			
-			Layer prod = findchildren(beyond,all,entry);
-			
-			String style = "shape=ellipse;";
-			if (entry.getNodeType() == NodeType.EPS)
-				style += "fillColor=green;";
-			if (entry.getNodeType() == NodeType.SUBST)
-				style += "fillColor=yellow;";
-			if (entry.getNodeType() == NodeType.TERM)
-				style += "fillColor=red;";
-			if(prod != null && prod.isOnSpine())
-				style += "fontStyle=2;";
-			String star = "";
-			if (entry.getNodeType() == NodeType.LFOOT || entry.getNodeType() == NodeType.RFOOT)
-				star="*";
-			Object v1 = graph.insertVertex(parent, null, entry.getLabel()+star, 0, 0, 80,20, style);
-			graph.insertEdge(parent, null, "", p2, v1);
-			
-			
-			if (prod != null)
-				visualize(prod,all,v1);
-			
-			i++;
-		}
-	}
-	
-	private Layer findchildren(Layer rule,List<Layer> all, Entry e){
-		for (Layer elem : all ){
-			int[] a = Arrays.copyOfRange(elem.getGornNumber(), 0, elem.getGornNumber().length-1);
-			int[] b = rule.getGornNumber();
-			if (Arrays.equals(a, b) && elem.getEntry(0).getLabel().equals(e.getLabel())){
-				return elem;
-			}
-		}
-		return null;
-	}
-
 }

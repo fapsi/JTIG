@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
+package grammar.buildjtiggrammar;
 
 /**
  * Possible types of nodes contained in a production rule.

@@ -1,15 +1,13 @@
 /**
  * 
  */
-package grammar.buildJtigGrammar;
-
-import grammar.readXML.TreeNode;
+package grammar.buildjtiggrammar;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Concrete strategy for finding a lexical anchor. (See for Description: {@link #getlexicalanchors(TreeNode)})
+ * Concrete strategy for finding a lexical anchor. (See for Description: {@link #getlexicalanchors(IRTreeNode)})
  * @author Fabian Gallenkamp
  */
 public class LeftmostAnchor implements AnchorStrategy {
@@ -23,17 +21,17 @@ public class LeftmostAnchor implements AnchorStrategy {
 	 * @param root root node of the tree to find anchors in
 	 * @return the anchor elements satisfying the specification
 	 */	
-	public List<String> getlexicalanchors(TreeNode root) {
+	public List<String> getLexicalAnchors(IRTreeNode root) {
 		anchors = new LinkedList<String>();
 		interruptedchain = false;
-		findanchors(root);
+		findAnchors(root);
 		return anchors;
 	}
 	/**
 	 * Traverses the tree in pre-order. Adds TERM nodes to anchor list, if there arn't other leaf nodes between them.
 	 * @param node tree root of the tree to search in.
 	 */
-	private void findanchors(TreeNode node){
+	private void findAnchors(IRTreeNode node){
 		
 		if (node.getType() == NodeType.TERM && !interruptedchain){
 			anchors.add(node.getLabel());
@@ -43,8 +41,8 @@ public class LeftmostAnchor implements AnchorStrategy {
 			interruptedchain = true;
 		}
 			
-		for(TreeNode child : node.getChildren()){
-			findanchors(child);
+		for(IRTreeNode child : node.getChildren()){
+			findAnchors(child);
 		}
 	}
 
