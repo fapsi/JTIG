@@ -28,6 +28,8 @@ import tools.tokenizer.Token;
  */
 public class ParseRun {
 	
+	private ParseLevel level = ParseLevel.INIT;
+	
 	/** helper variables **/
 	private final StringBuilder log;
 	private ArrayList<InferenceRule> inferencerules;
@@ -77,6 +79,7 @@ public class ParseRun {
 		
 		// prepare inference rules, setting needed classes
 		if (!prepareInferencerules()){
+			level = ParseLevel.FAILED;
 			appendToLog("No inference rules used in parsing process. Failure.");
 			return;
 		}
@@ -86,6 +89,7 @@ public class ParseRun {
 				
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda()){
+			level = ParseLevel.FAILED;
 			appendToLog("Agenda hasn't any start items. Failure.");
 			return;
 		}
@@ -125,18 +129,24 @@ public class ParseRun {
 		}
 		appendToLog("Finished main loop. "+factory.getAmountCreatedItems()+" items were created.");
 		
-		if (finishedgood)
+		if (finishedgood){
+			level = ParseLevel.FOREST;
 			appendToLog("Success.");
-		else 
+		} else {
+			level = ParseLevel.FAILED;
 			appendToLog("Failure.");
+		}
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
-		if (lexicon == null)
+		if (lexicon == null){
+			level = ParseLevel.FAILED;
 			throw new IllegalArgumentException("Please read some lexicon first.");
+		}
 		Lookup l = new Lookup();
 		ActivatedLexicon tmp = l.findlongestmatches(tokens , lexicon);
 		appendToLog("Found "+tmp.getSize()+" trees in lexicon which can possibly match in the sentence.");
+		level = ParseLevel.LOOKUP;
 		return tmp;
 	}
 	
@@ -187,16 +197,40 @@ public class ParseRun {
 	}
 	
 	private void extractIndependentDerivationTrees(){
+		if (level != ParseLevel.FOREST){
+			appendToLog("Could not extract independent-derivation-trees, because it requires status FOREST; Current value: "+level.toString());
+			return;
+		}
+		level = ParseLevel.INDEPENDENTDTREE;
 		appendToLog("Extracting independent-derivation-trees.");
 		this.id_derivationtrees = IndependentDerivationTree.createDerivationTrees(items);
 	}
 	
 	private void extractDependentDerivationTrees(){
+		if (level != ParseLevel.INDEPENDENTDTREE){
+			appendToLog("Could not extract dependent-derivation-trees, because it requires status INDEPENDENTDTREE; Current value: "+level.toString());
+			return;
+		}
 		appendToLog("Extracting dependent-derivation-trees.");
+		level = ParseLevel.DEPENDENTDTREE;
 		d_derivationtrees = new LinkedList<DependentDerivationTree>();
 		for (IndependentDerivationTree itree : id_derivationtrees){
 			d_derivationtrees.add(new DependentDerivationTree(itree));
 		}
+	}
+	
+	private void extractDerivedTrees() {
+		if (level != ParseLevel.DEPENDENTDTREE){
+			appendToLog("Could not extract derived/parse-trees, because it requires status DEPENDENTDTREE; Current value: "+level.toString());
+			return;
+		}
+		appendToLog("Extracting derived/parse-trees.");
+		level = ParseLevel.DERIVEDTREE;
+		derivedtrees = new LinkedList<DerivedTree>();
+		for (DependentDerivationTree ddtree : d_derivationtrees){
+			derivedtrees.add(new DerivedTree(ddtree));
+		}
+		
 	}
 	
 	public void appendToLog(String message) {
@@ -223,18 +257,8 @@ public class ParseRun {
 	}
 	
 	public List<DerivedTree> retrieveDerivedTrees(){
-		// TODO: check status
 		extractDerivedTrees();
 		return derivedtrees;
-	}
-
-	private void extractDerivedTrees() {
-		appendToLog("Extracting derived/parse-trees.");
-		derivedtrees = new LinkedList<DerivedTree>();
-		for (DependentDerivationTree ddtree : d_derivationtrees){
-			derivedtrees.add(new DerivedTree(ddtree));
-		}
-		
 	}
 	
 }

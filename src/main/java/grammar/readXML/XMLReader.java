@@ -98,7 +98,7 @@ public class XMLReader {
 			
 			// open xml file to parse
 	   	    File file = new File(inputpath);
-    	    InputStream inputStream= new FileInputStream(file);
+	   	    FileInputStream inputStream= new FileInputStream(file);
     	    Reader reader = new InputStreamReader(inputStream,"UTF-8");
     	    InputSource is = new InputSource(reader);
     	    is.setEncoding("UTF-8");
