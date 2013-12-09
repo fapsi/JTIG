@@ -13,7 +13,6 @@ import java.net.URL;
 import org.junit.Test;
 
 import parser.early.JTIGParser;
-
 /**
  * 
  * @author Fabian Gallenkamp
@@ -36,9 +35,13 @@ public class LexiconUnvalidTest {
 			fail("Couldn't read directory with unvalid lexicons.");
 		}
 		for (File nextFile : dir.listFiles()) {
-			System.out.println(nextFile);
+			if (nextFile.isFile() && (nextFile.getName().endsWith(".xml") || nextFile.getName().endsWith(".lisp"))){
+				JTIGParser.setProperty("grammar.lexicon.path", nextFile.getAbsolutePath());
+				if (parser.readLexicon()){
+					fail("The lexicon '"+nextFile.getName()+"' is unvalid, but not detected.");
+				}
+			}
 		}
-		//JTIGParser.setProperty("", "");
 	}
 
 }

@@ -36,18 +36,8 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
-	private JFileChooser filechooser;
-
-	private JLabel lexiconfile_label;
-
-	private JButton lexiconfile_button;
 
 	private JButton close_button;
-	
-	private JTIGParser jtigparser;
-
 
 	private JCheckBox stopcriterion_checkbox;
 
@@ -63,8 +53,8 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 
 	private JCheckBox drawforest_checkbox;
 	
-	public PreferencesDialog(JTIGParser jtigparser){
-		this.jtigparser = jtigparser;
+	public PreferencesDialog(){
+
 		setModalityType(DEFAULT_MODALITY_TYPE);
 		setTitle("JTIG Preferences");
 		setResizable(false);
@@ -153,46 +143,14 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 
 	private Component createGeneralPanel() {
 		JPanel panel_preferences = new JPanel(new GridBagLayout());
-		filechooser = new JFileChooser();
 		
 		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		
-		c.insets = new Insets(5,5,5,5);
-		c.weightx = 0;
-		c.weighty = 0;		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 2;
-		
-		JLabel lexiconfile_descriptionlabel = new JLabel("Lexicon path:");
-		panel_preferences.add(lexiconfile_descriptionlabel,c);
-		
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		c.gridy = 0;
-		c.weightx = 10;
-		c.weighty = 0;
-		c.gridheight = 1;
-		
-		lexiconfile_label = new JLabel(jtigparser.readLexicon()?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
-		panel_preferences.add(lexiconfile_label,c);
-		
-		c.weighty = 0;
-		c.anchor = GridBagConstraints.CENTER;
-		c.gridx = 1;
-		c.gridy = 1;
-		
-		lexiconfile_button = new JButton("Choose path");
-		lexiconfile_button.addActionListener(this);
-		panel_preferences.add(lexiconfile_button,c);
-		
+		c.fill = GridBagConstraints.NONE;		
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.weighty = 20;
 		c.weightx = 0;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 0;
 		c.gridwidth = 1;
 		
 		JLabel stopcriterion_descriptionlabel = new JLabel("Stop criterion:");
@@ -200,7 +158,7 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		c.anchor = GridBagConstraints.NORTH;
 		c.gridx = 1;
 		c.weightx = 10;
-		c.gridy = 2;
+		c.gridy = 0;
 		c.gridwidth = 2;
 		
 		stopcriterion_checkbox = new JCheckBox("Stop on first terminal element.");
@@ -234,22 +192,8 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == lexiconfile_button) {
-			
-			int returnVal = filechooser.showOpenDialog(this);
-
-	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            File file = filechooser.getSelectedFile();
-	            JTIGParser.setProperty("grammar.lexicon.path", file.getAbsolutePath());
-
-	            boolean success = jtigparser.readLexicon();
-	            lexiconfile_label.setText(
-	            		success?JTIGParser.getProperty("grammar.lexicon.path")+" (valid)":"Lexicon not found");
-	            if (!success)
-	            	JOptionPane.showMessageDialog(this, "Invalid lexicon. " + jtigparser.getLastError());
-	            pack();
-	        }
-		} else if(e.getSource() == stopcriterion_checkbox){
+		
+		if(e.getSource() == stopcriterion_checkbox){
 			JTIGParser.setProperty("parser.stoponfirsttermitem", stopcriterion_checkbox.isSelected()?"true":"false");
 		} else if(e.getSource() == showprediction_checkbox){
 			JTIGParser.setProperty("gui.forest.showpredictions", showprediction_checkbox.isSelected()?"true":"false");

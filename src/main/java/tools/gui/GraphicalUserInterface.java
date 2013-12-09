@@ -3,20 +3,27 @@ package tools.gui;
 import grammar.buildjtiggrammar.ElementaryTree;
 import grammar.buildjtiggrammar.Lexicon;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,8 +32,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import parser.derivationtree.DependentDerivationTree;
 import parser.derivationtree.DerivationTree;
@@ -35,6 +44,7 @@ import parser.derivedtree.DerivedTree;
 import parser.early.Item;
 import parser.early.JTIGParser;
 import parser.early.ParseRun;
+import tools.GeneralTools;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
 
@@ -47,7 +57,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		
 	private JTabbedPane mainpanel;
 		
-	private JTextArea parse_input;
+	private JTextField parse_input;
 
 	private JButton parse_button;
 	
@@ -64,6 +74,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	private JCheckBoxMenuItem menuItem_computeDDT;
 
 	private JCheckBoxMenuItem menuItem_computePT;
+
+	private JFileChooser filechooser;
+
+	private JLabel lexiconfile_label;
+
+	private JButton lexiconfile_button;
 	
 	public GraphicalUserInterface() throws IOException {
 		super("JTIG Parser");
@@ -79,15 +95,9 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	}
 
 	private void createBody() {
-		JPanel input_parse_panel = new JPanel();
-		input_parse_panel.setBorder(new TitledBorder("Input"));
-		
 		JPanel action_parse_panel = new JPanel();
 		action_parse_panel.setBorder(new TitledBorder("Actions"));
 		
-		parse_input = new JTextArea("a pretty pretty boy sleeps often",5,100);
-		parse_input.setSize(100, 10);
-		input_parse_panel.add(parse_input);
 		
 		fillActionParsePanel(action_parse_panel);
 		
@@ -100,32 +110,102 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		c.fill = GridBagConstraints.BOTH;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5,5,5,5);
-		c.weightx = 100;
-		c.weighty = 1;
+		
+		c.weightx = 5;
+		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridheight = 2;
-		c.gridwidth = 2;
-		
-		getContentPane().add(input_parse_panel,c);
-		
-		c.weighty = 1;
-		c.weightx = 0;
-		c.gridx = 2;
-		c.gridy = 0;
-		c.gridheight = 2;
+		c.gridheight = 1;
 		c.gridwidth = 1;
 		
+		getContentPane().add(createLexiconPanel(),c);
+		c.weightx = 10;
+		c.gridx = 1;
+		
+		getContentPane().add(createInputPanel(),c);
+		c.weightx = 0;
+		c.gridx = 2;
 		getContentPane().add(action_parse_panel,c);
 		
-		c.weighty = 100;
-		c.weightx = 100;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.weighty = 1000;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 1;
 		c.gridheight = 1;
 		c.gridwidth = 3;
 		
 		getContentPane().add(mainpanel,c);
+	}
+
+	private JPanel createLexiconPanel() {
+		filechooser = new JFileChooser();
+		filechooser.setDialogTitle("Choose lexicon path...");
+		filechooser.setAcceptAllFileFilterUsed(false);
+		filechooser.addChoosableFileFilter(new FileNameExtensionFilter("Lexicon files", "xml", "lisp"));
+		
+		JPanel lexicon_panel = new JPanel();
+		lexicon_panel.setBorder(new TitledBorder("Lexicon"));
+		lexicon_panel.setLayout(new GridBagLayout());
+		
+        
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		
+		c.insets = new Insets(5,5,5,5);
+		c.weightx = 0;
+		c.weighty = 0;		
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridheight = 1;
+		
+		boolean success = jtigparser.readLexicon();
+		if (!success)
+        	JOptionPane.showMessageDialog(this, "Invalid lexicon. " + jtigparser.getLastError());
+		
+		String description = "<html>"
+        		+(success?"<font color=green>"+GeneralTools.getEndOfPath(JTIGParser.getProperty("grammar.lexicon.path"))+" (valid)</font>":
+            			"<font color=red>Lexicon not found</font>")
+            		+"</html>";
+		
+		lexiconfile_label = new JLabel(description);
+		lexicon_panel.add(lexiconfile_label,c);
+		
+		c.weighty = 4;
+		c.gridx = 0;
+		c.gridy = 1;
+		
+		lexiconfile_button = new JButton("Choose...");
+		lexiconfile_button.addActionListener(this);
+		lexicon_panel.add(lexiconfile_button,c);
+		
+		
+		return lexicon_panel;
+	}
+
+	private JPanel createInputPanel() {
+		JPanel input_parse_panel = new JPanel();
+		input_parse_panel.setBorder(new TitledBorder("Input sentence"));
+		input_parse_panel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 0;
+				
+		parse_input = new JTextField("a pretty pretty boy sleeps often",80);
+		parse_input.setMinimumSize(parse_input.getPreferredSize());
+		input_parse_panel.add(parse_input,c);
+		
+		return input_parse_panel;
 	}
 
 	private void fillActionParsePanel(JPanel action_parse_panel) {
@@ -172,7 +252,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	}
 	
 	private void createDialogs() {
-		preferences = new PreferencesDialog(jtigparser);
+		preferences = new PreferencesDialog();
 		preferences.setLocationRelativeTo(this);
 	}
 
@@ -208,7 +288,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			} else {
 				addLogPanel("There exists no lexicon. Aborted.");
 			}
-				
+				//pack();
 		} else if (e.getSource() == menuItem_preferences){
 			
 			preferences.setVisible(true);
@@ -226,8 +306,25 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 					i++;
 				}
 			}
+		} else if (e.getSource() == lexiconfile_button) {
+			
+			int returnVal = filechooser.showOpenDialog(this);
+
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            File file = filechooser.getSelectedFile();
+	            JTIGParser.setProperty("grammar.lexicon.path", file.getAbsolutePath());
+
+	            boolean success = jtigparser.readLexicon();
+	            lexiconfile_label.setText(
+	            		"<html>"
+	            		+(success?"<font color=green>"+GeneralTools.getEndOfPath(JTIGParser.getProperty("grammar.lexicon.path"))+" (valid)</font>":
+	            			"<font color=red>Lexicon not found</font>")
+	            		+"</html>"
+	            		);
+	            if (!success)
+	            	JOptionPane.showMessageDialog(this, "Invalid lexicon. " + jtigparser.getLastError());
+	        }
 		}
-		
 	}
 
 	private void printDerivationTrees(List<? extends DerivationTree> trees) {

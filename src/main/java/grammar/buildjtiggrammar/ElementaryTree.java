@@ -53,12 +53,29 @@ public class ElementaryTree {
 	 * @param frequency {@link #frequency}
 	 * @param probability {@link #probability}
 	 */
-	public ElementaryTree(TreeType type,long index,List<Layer> productionrules, List<String> lexicalanchors,long frequency, double probability){
+	public ElementaryTree(TreeType type,long index,List<Layer> layers, List<String> lexicalanchors,long frequency, double probability){
+		if (type == null)
+			throw new UnvalidElementaryTreeException("Tree has type null.");
 		this.type = type;
+		
+		if (index < 0 )
+			throw new UnvalidElementaryTreeException("Index has to be greater than 0.");
 		this.index = index;
-		this.layers = productionrules;
+		
+		if (layers == null || layers.size() <= 0)
+			throw new UnvalidElementaryTreeException("No layers specified.");
+		this.layers = layers;
+		
+		if (lexicalanchors == null || lexicalanchors.size() <= 0)
+			throw new UnvalidElementaryTreeException("No lexical anchors specified.");
 		this.lexicalanchors = lexicalanchors;
+		
+		if (frequency < 0)
+			throw new UnvalidElementaryTreeException("Frequency has to be greater than 0.");
 		this.frequency = frequency;
+		
+		if (probability < 0 || probability > 1)
+			throw new UnvalidElementaryTreeException("Probability has to be between 0 and 1.");
 		this.probability = probability;
 	}
 	

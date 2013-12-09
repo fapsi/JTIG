@@ -11,6 +11,7 @@ import grammar.buildjtiggrammar.Lexicon;
 import grammar.buildjtiggrammar.NodeType;
 import grammar.buildjtiggrammar.IRTreeNode;
 import grammar.buildjtiggrammar.UnvalidElementaryTreeException;
+import grammar.buildjtiggrammar.UnvalidLexiconException;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -105,13 +106,16 @@ public class XMLHandler extends DefaultHandler {
 			Attributes attributes) throws SAXException {
 		
 		if (qName.equals("ltig")){
-			
+			if (instartsymbols || insymbol || intree)
+				throw new SAXException("Declaration of 'ltig' has to be in outer scope.");
+			if (lexicon.size() > 0)
+				throw new SAXException("Second definition of 'ltig' detected.");
 			inltig = true;
 		} else if (qName.equals("start-symbols")){
-			
-			if (!inltig)
+			if (!inltig || intree || insymbol)
 				throw new SAXException("Declaration of 'start-symbols' has to be in 'ltig'-scope.");
-			
+			if (startsymbols.size() > 0)
+				throw new SAXException("Second definition of 'start-symbols' detected.");
 			instartsymbols = true;
 		} else if (qName.equals("symbol")){
 			
@@ -121,19 +125,23 @@ public class XMLHandler extends DefaultHandler {
 			startsymbols.add(attributes.getValue("type"));
 			insymbol = true;
 		} else if (qName.equals("tree")){
-			
-			if (!inltig)
+			if (!inltig || instartsymbols || insymbol)
 				throw new SAXException("Declaration of 'tree' has to be in 'ltig'-scope.");
+			
+			if (startsymbols.size() <= 0)
+				throw new SAXException("Declaration of 'tree' has to be behind 'start-symbols' declaration.");
 			
 			intree = true;
 			tree_id = Long.parseLong(attributes.getValue("id"));
 			tree_frequency = Long.parseLong(attributes.getValue("freq"));
 			tree_probability = Double.parseDouble(attributes.getValue("prob"));
 			depth = 0;
+			actnode= null;
 		} else if (qName.equals("node")){
-			
-			if (!intree)
+			if (!inltig | !intree | instartsymbols | insymbol)
 				throw new SAXException("Declaration of 'node' has to be in 'tree'-scope.");
+			if (depth == 0 && this.actnode != null)
+				throw new UnvalidElementaryTreeException("Two root nodes in tree detected.");
 			
 			IRTreeNode n = createfromXMLNode(this.actnode,attributes);
 			if (actnode != null)
@@ -153,20 +161,22 @@ public class XMLHandler extends DefaultHandler {
 		if (qName.equals("ltig")){ // TODO: avoid new open "ltig"-tag
 			if (!inltig || intree || instartsymbols || insymbol)
 				throw new SAXException("Invalid 'start-symbols'-end tag in XML-file.");
+			if (lexicon.size() <= 0)
+				throw new UnvalidLexiconException("Lexicon needs at least one elementary tree.");
 			inltig = false;
 		} else if (qName.equals("start-symbols")){
 			if (!inltig || !instartsymbols || intree || insymbol)
 				throw new SAXException("Invalid 'start-symbols'-end tag in XML-file.");
 			instartsymbols = false;
-			lexicon.setStartSymbols(this.startsymbols);
-			
+			lexicon.setStartSymbols(startsymbols);
+			if (startsymbols.size() <= 0)
+				throw new UnvalidLexiconException("Lexicon needs at least one start symbol.");
 		} else if (qName.equals("symbol")){
 			if (!inltig || !instartsymbols || !insymbol || intree)
 				throw new SAXException("Invalid 'symbol'-end tag in XML-file.");
 			insymbol = false;
 			
 		} else if (qName.equals("tree") && inltig){
-			
 			//store RuleTree
 			lexicon.add(actnode.convertToElementaryTree(tree_id,tree_frequency,tree_probability,anchorstrategy));
 			//forget real tree representation

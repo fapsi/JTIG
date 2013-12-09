@@ -117,7 +117,7 @@ public class IRTreeNode {
 		
 		IRTreeInformation information = new IRTreeInformation(treetype);
 		extractLayers(information,layers,gornnumbers);
-		
+				
 		return new ElementaryTree(treetype,index, layers, 
 				strategy.getLexicalAnchors(this), 
 				treefreq, prob);
@@ -154,7 +154,8 @@ public class IRTreeNode {
 	 */
 	private void extractLayers(IRTreeInformation information,List<Layer> layers, Stack<Integer> gornnumbers){
 		if (hasChildren()){
-			
+			if (type != NodeType.NONTERM)
+				throw new UnvalidElementaryTreeException("Inner-nodes must have type 'NONTERM'.");
 			// Add 0th element of CFG Rule
 			List<Entry> ruleentrys = new LinkedList<Entry>();
 			ruleentrys.add(new Entry(this.type,this.label));
@@ -192,6 +193,12 @@ public class IRTreeNode {
 			//find auxiliary tree foot and flip actual on spine information
 			if (type == NodeType.RFOOT || type == NodeType.LFOOT){
 				information.setActualOnSpine(!information.getActualOnSpine());
+			} else {
+				if (type == NodeType.NONTERM)
+					throw new UnvalidElementaryTreeException("No leaf-nodes of type 'NONTERM' allowed.");
+				if (information.getActualOnSpine() && type == NodeType.TERM)
+					throw new UnvalidElementaryTreeException("Nodes lying beneath spine must be dominated by epsilon."
+							+ "Tree type: " + information.treetype.toString());
 			}
 		}
 	}

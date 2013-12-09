@@ -150,6 +150,7 @@ public class DerivedTreeNode {
 				throw new IllegalStateException();
 			parent.children.set(toreplace, head);
 			head.parent = this.parent;
+			head.entry = entry;
 			this.parent = null;
 		}		
 	}
@@ -163,11 +164,12 @@ public class DerivedTreeNode {
 				+ ", address=" + Arrays.toString(address) + "]";
 	}
 
-	public void replactNodeBeneath(DerivedTreeNode foot) {
+	public void replaceNodeBeneath(DerivedTreeNode foot) {
 		for (int i = 0; i < children.size(); i++){
 			children.get(i).parent = foot;
 		}
 		foot.children = children;
+		//foot.entry = entry;
 		children = null;
 	}
 	

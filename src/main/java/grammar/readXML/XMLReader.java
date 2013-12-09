@@ -82,7 +82,7 @@ public class XMLReader {
 			
 			// load anchor strategy dynamically from classname in properties-file
 			AnchorStrategy as = null;
-			String classname = "grammar.buildJtigGrammar.DeepestLeftmostAnchor";
+			String classname = "grammar.buildjtiggrammar.DeepestLeftmostAnchor";
 			try {
 				classname = JTIGParser.getProperty("grammar.build.anchorstrategy");
 				as = (AnchorStrategy) Class.forName(classname).newInstance();
@@ -90,7 +90,6 @@ public class XMLReader {
 					| ClassNotFoundException e) {
 				as = new DeepestLeftmostAnchor();
 			}
-			
 			// create sax equipment
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();

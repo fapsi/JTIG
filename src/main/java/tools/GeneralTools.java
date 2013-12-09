@@ -29,4 +29,11 @@ public class GeneralTools {
 		newarray[toextend.length] = value;
 		return newarray;
 	}
+	
+	public static String getEndOfPath(String path){
+		String[] tmp = path.split("/");
+		if (tmp.length <= 0)
+			return "";
+		return tmp[tmp.length-1];
+	}
 }

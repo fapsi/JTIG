@@ -67,7 +67,7 @@ public class DerivedTree {
 				
 					DerivedTreeNode foot = head.getAdjunctionFoot();
 					//connect beneath
-					currentnode.replactNodeBeneath(foot);
+					currentnode.replaceNodeBeneath(foot);
 					//currentnode.children = null;
 				} else if (tmp instanceof SubstitutionDerivationEdge){
 					head.entry.setType(NodeType.SUBST);

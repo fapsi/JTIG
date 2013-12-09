@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ltig>
+	<start-symbols>
+		<symbol type="s"></symbol>
+		<symbol type="np"></symbol>
+	</start-symbols>
+	<tree id="0" type="initial" prob="0.75" freq="1">
+		<node cat="s" type="nonterm">
+			<node type="subst" cat="np"></node>
+			<node cat="vp" type="nonterm">
+				<node cat="v" type="nonterm">
+					<node type="term" label="saw"></node>
+				</node>
+				<node type="subst" cat="np"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="1" type="initial" prob="0.25" freq="1">
+		<node cat="s" type="nonterm">
+			<node type="subst" cat="np"></node>
+			<node cat="vp" type="nonterm">
+				<node cat="v" type="nonterm">
+					<node type="term" label="saw"></node>
+				</node>
+			</node>
+			<node type="subst" cat="np"></node>
+		</node>
+	</tree>
+	<tree id="2" type="initial" prob="0.5" freq="1">
+		<node cat="np" type="nonterm">
+			<node type="subst" cat="det"></node>
+			<node cat="n" type="nonterm">
+				<node type="term" label="boy"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="3" type="initial" prob="0.5" freq="1">
+		<node cat="det" type="nonterm">
+			<node type="term" label="a"></node>
+		</node>
+	</tree>
+	<tree id="4" type="initial" prob="0.5" freq="1">
+		<node cat="n" type="nonterm">
+			<node type="term" label="a"></node>
+		</node>
+	</tree>
+	<tree id="5" type="initial" prob="0.33" freq="1">
+		<node cat="np" type="nonterm">
+			<node type="subst" cat="det"></node>
+			<node cat="n" type="nonterm">
+				<node type="term" label="woman"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="6" type="initial" prob="0.33" freq="1">
+		<node cat="np" type="nonterm">
+			<node type="subst" cat="n"></node>
+			<node cat="n" type="nonterm">
+				<node type="term" label="woman"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="7" type="initial" prob="0.33" freq="1">
+		<node cat="np" type="nonterm">
+			<node type="subst" cat="n"></node>
+			<node cat="n" type="nonterm">
+				<node type="term" label="red"></node>
+				<node type="term" label="woman"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="8" prob="0.5" freq="1">
+		<node cat="vp" type="nonterm">
+			<node cat="v" type="nonterm">
+				<node type="term" label="seems"></node>
+			</node>
+			<node type="lfoot" cat="vp"></node>
+		</node>
+	</tree>
+	<tree id="9" prob="0.5" freq="1">
+		<node cat="vp" type="nonterm">
+			<node type="rfoot" cat="vp"></node>
+			<node cat="adv" type="nonterm">
+				<node type="term" label="smoothly"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="10" prob="0.5" freq="1">
+		<node cat="vp" type="nonterm">
+			<node type="rfoot" cat="vp"></node>
+			<node cat="adv" type="nonterm">
+				<node type="term" label="above"></node>
+			</node>
+			<node type="subst" cat="np"></node>
+		</node>
+	</tree>
+	<tree id="11" prob="0.5" freq="1">
+		<node cat="vp" type="nonterm">
+			<node type="rfoot" cat="vp"></node>
+			<node cat="adv" type="nonterm">
+				<node type="term" label="above"></node>
+			</node>
+		</node>
+	</tree>
+	<tree id="12" prob="0.5" freq="1">
+		<node cat="vp" type="nonterm">
+			<node cat="xp" type="nonterm">
+				<node type="rfoot" cat="vp"></node>
+				<node cat="to" type="nonterm">
+					<node type="term" label="to"></node>
+				</node>
+			</node>
+			<node cat="yp" type="nonterm">
+				<node cat="adv" type="nonterm">
+					<node type="term" label="slowly"></node>
+				</node>
+			</node>
+		</node>
+	</tree>
+	<tree id="13" prob="0.25" freq="1">
+		<node cat="n" type="nonterm">
+			<node cat="adj" type="nonterm">
+				<node type="term" label="nice"></node>
+			</node>
+			<node type="lfoot" cat="n"></node>
+		</node>
+	</tree>
+	<tree id="14" prob="0.5" freq="1">
+		<node cat="n" type="nonterm">
+			<node cat="adj" type="nonterm">
+				<node type="term" label="tall"></node>
+			</node>
+			<node type="lfoot" cat="n"></node>
+		</node>
+	</tree>
+	<tree id="15" prob="0.25" freq="1">
+		<node cat="n" type="nonterm">
+			<node cat="adj" type="nonterm">
+				<node type="term" label="pretty"></node>
+			</node>
+			<node type="lfoot" cat="n"></node>
+		</node>
+	</tree>
+	<tree id="16" prob="0.5" freq="1">
+		<node cat="vp" type="nonterm">
+			<node cat="xp" type="nonterm">
+				<node type="rfoot" cat="vp"></node>
+			</node>
+			<node cat="adv" type="nonterm">
+				<node type="term" label="slowly"></node>
+			</node>
+		</node>
+	</tree>
+</ltig>

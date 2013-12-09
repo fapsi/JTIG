@@ -75,34 +75,4 @@
 			</node>
 		</node>
 	</tree>
-	<tree id="8" type="initial" prob="0.0017730496" freq="3">
-		<node cat="LH_OC" type="nonterm">
-			<node cat="*T-1*" type="eps"></node>
-			<node cat="RH_MO" type="nonterm">
-				<node type="subst" cat="RH_*T-1*"></node>
-				<node cat="RH_OA" type="nonterm">
-					<node type="subst" cat="LH_AG"></node>
-					<node cat="VVPP" type="nonterm">
-						<node type="term" label="bekanntgegeben"></node>
-					</node>
-				</node>
-			</node>
-		</node>
-	</tree>
-	<tree id="9" type="initial" prob="5.6513137E-4" freq="2">
-		<node cat="RH_MO" type="nonterm">
-			<node cat="LH_CC" type="nonterm">
-				<node cat="RH_*T-1*" type="nonterm">
-					<node cat="ADV" type="nonterm">
-						<node type="term" label="so"></node>
-					</node>
-					<node cat="ADJD" type="nonterm">
-						<node type="term" label="stark"></node>
-					</node>
-				</node>
-				<node type="subst" cat="RH_CM"></node>
-			</node>
-			<node cat="*T-1*" type="eps"></node>
-		</node>
-	</tree>
 </ltig>
