@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.jtig</groupId>
 	<artifactId>JTIG</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>JTIG Parser</name>
 	<description>A lexicalised tree insertion grammar parser</description>
 	<url>https://github.com/fapsi/JTIG</url>
