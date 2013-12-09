@@ -1,7 +1,9 @@
 /**
  * 
  */
-package grammar.buildjtiggrammar;
+package grammar.tiggrammar.intermediate;
+
+import grammar.tiggrammar.TreeType;
 
 
 

@@ -1,7 +1,10 @@
 /**
  * 
  */
-package grammar.buildjtiggrammar;
+package grammar.tiggrammar.anchors;
+
+import grammar.tiggrammar.NodeType;
+import grammar.tiggrammar.intermediate.IRTreeNode;
 
 import java.util.LinkedList;
 import java.util.List;

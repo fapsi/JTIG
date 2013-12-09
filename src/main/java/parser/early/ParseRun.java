@@ -3,7 +3,7 @@
  */
 package parser.early;
 
-import grammar.buildjtiggrammar.Lexicon;
+import grammar.tiggrammar.Lexicon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -1,9 +1,15 @@
 /**
  * 
  */
-package grammar.buildjtiggrammar;
+package grammar.tiggrammar.intermediate;
 
-import grammar.buildjtiggrammar.exceptions.UnvalidElementaryTreeException;
+import grammar.tiggrammar.ElementaryTree;
+import grammar.tiggrammar.Entry;
+import grammar.tiggrammar.Layer;
+import grammar.tiggrammar.NodeType;
+import grammar.tiggrammar.TreeType;
+import grammar.tiggrammar.anchors.AnchorStrategy;
+import grammar.tiggrammar.exceptions.UnvalidElementaryTreeException;
 
 import java.util.LinkedList;
 import java.util.List;

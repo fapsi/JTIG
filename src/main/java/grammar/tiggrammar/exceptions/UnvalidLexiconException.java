@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.buildjtiggrammar.exceptions;
+package grammar.tiggrammar.exceptions;
 
 /**
  * 

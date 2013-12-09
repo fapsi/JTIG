@@ -1,7 +1,7 @@
 package tools.gui;
 
-import grammar.buildjtiggrammar.ElementaryTree;
-import grammar.buildjtiggrammar.Lexicon;
+import grammar.tiggrammar.ElementaryTree;
+import grammar.tiggrammar.Lexicon;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

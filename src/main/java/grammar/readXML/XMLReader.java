@@ -3,16 +3,15 @@
  */
 package grammar.readXML;
 
-import grammar.buildjtiggrammar.AnchorStrategy;
-import grammar.buildjtiggrammar.DeepestLeftmostAnchor;
-import grammar.buildjtiggrammar.Lexicon;
+import grammar.tiggrammar.Lexicon;
+import grammar.tiggrammar.anchors.AnchorStrategy;
+import grammar.tiggrammar.anchors.DeepestLeftmostAnchor;
 import grammar.transform.lisp2xml.LispParser;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -82,7 +81,7 @@ public class XMLReader {
 			
 			// load anchor strategy dynamically from classname in properties-file
 			AnchorStrategy as = null;
-			String classname = "grammar.buildjtiggrammar.DeepestLeftmostAnchor";
+			String classname = "";
 			try {
 				classname = JTIGParser.getProperty("grammar.build.anchorstrategy");
 				as = (AnchorStrategy) Class.forName(classname).newInstance();

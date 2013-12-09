@@ -3,7 +3,7 @@
  */
 package parser.derivationtree;
 
-import grammar.buildjtiggrammar.Layer;
+import grammar.tiggrammar.Layer;
 
 import java.util.Arrays;
 import java.util.Collections;

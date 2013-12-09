@@ -3,8 +3,8 @@
  */
 package parser.early.inferencerules;
 
-import grammar.buildjtiggrammar.Layer;
-import grammar.buildjtiggrammar.NodeType;
+import grammar.tiggrammar.Layer;
+import grammar.tiggrammar.NodeType;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;

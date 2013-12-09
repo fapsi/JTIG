@@ -6,13 +6,13 @@ package grammar.readXML;
 import java.util.HashSet;
 import java.util.Set;
 
-import grammar.buildjtiggrammar.AnchorStrategy;
-import grammar.buildjtiggrammar.Lexicon;
-import grammar.buildjtiggrammar.NodeType;
-import grammar.buildjtiggrammar.IRTreeNode;
-import grammar.buildjtiggrammar.exceptions.UnvalidElementaryTreeException;
-import grammar.buildjtiggrammar.exceptions.UnvalidLexiconException;
-import grammar.buildjtiggrammar.exceptions.UnvalidXMLStructure;
+import grammar.tiggrammar.Lexicon;
+import grammar.tiggrammar.NodeType;
+import grammar.tiggrammar.anchors.AnchorStrategy;
+import grammar.tiggrammar.exceptions.UnvalidElementaryTreeException;
+import grammar.tiggrammar.exceptions.UnvalidLexiconException;
+import grammar.tiggrammar.exceptions.UnvalidXMLStructure;
+import grammar.tiggrammar.intermediate.IRTreeNode;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -158,23 +158,23 @@ public class XMLHandler extends DefaultHandler {
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
+			throws UnvalidXMLStructure {
 		if (qName.equals("ltig")){ // TODO: avoid new open "ltig"-tag
 			if (!inltig || intree || instartsymbols || insymbol)
-				throw new SAXException("Invalid 'start-symbols'-end tag in XML-file.");
+				throw new UnvalidXMLStructure("Invalid 'start-symbols'-end tag in XML-file.");
 			if (lexicon.size() <= 0)
 				throw new UnvalidLexiconException("Lexicon needs at least one elementary tree.");
 			inltig = false;
 		} else if (qName.equals("start-symbols")){
 			if (!inltig || !instartsymbols || intree || insymbol)
-				throw new SAXException("Invalid 'start-symbols'-end tag in XML-file.");
+				throw new UnvalidXMLStructure("Invalid 'start-symbols'-end tag in XML-file.");
 			instartsymbols = false;
 			lexicon.setStartSymbols(startsymbols);
 			if (startsymbols.size() <= 0)
 				throw new UnvalidLexiconException("Lexicon needs at least one start symbol.");
 		} else if (qName.equals("symbol")){
 			if (!inltig || !instartsymbols || !insymbol || intree)
-				throw new SAXException("Invalid 'symbol'-end tag in XML-file.");
+				throw new UnvalidXMLStructure("Invalid 'symbol'-end tag in XML-file.");
 			insymbol = false;
 			
 		} else if (qName.equals("tree") && inltig){

@@ -4,9 +4,9 @@
 package parser.early;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.buildjtiggrammar.Entry;
-import grammar.buildjtiggrammar.Layer;
-import grammar.buildjtiggrammar.NodeType;
+import grammar.tiggrammar.Entry;
+import grammar.tiggrammar.Layer;
+import grammar.tiggrammar.NodeType;
 
 /**
  * 

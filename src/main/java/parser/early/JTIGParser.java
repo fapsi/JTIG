@@ -19,8 +19,8 @@ import org.xml.sax.SAXException;
 
 import parser.derivationtree.DerivationTree;
 import tools.tokenizer.Token;
-import grammar.buildjtiggrammar.Lexicon;
 import grammar.readXML.XMLReader;
+import grammar.tiggrammar.Lexicon;
 /**
  * 
  * @author Fabian Gallenkamp

@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import grammar.buildjtiggrammar.ElementaryTree;
-import grammar.buildjtiggrammar.NodeType;
+import grammar.tiggrammar.ElementaryTree;
+import grammar.tiggrammar.NodeType;
 
 import com.mxgraph.view.mxGraph;
 

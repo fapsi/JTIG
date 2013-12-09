@@ -1,9 +1,9 @@
 /**
  * 
  */
-package grammar.buildjtiggrammar;
+package grammar.tiggrammar;
 
-import grammar.buildjtiggrammar.exceptions.UnvalidElementaryTreeException;
+import grammar.tiggrammar.exceptions.UnvalidElementaryTreeException;
 
 import java.util.Arrays;
 import java.util.List;

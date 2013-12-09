@@ -1,9 +1,9 @@
 package tools.gui;
 
-import grammar.buildjtiggrammar.ElementaryTree;
-import grammar.buildjtiggrammar.Entry;
-import grammar.buildjtiggrammar.Layer;
-import grammar.buildjtiggrammar.NodeType;
+import grammar.tiggrammar.ElementaryTree;
+import grammar.tiggrammar.Entry;
+import grammar.tiggrammar.Layer;
+import grammar.tiggrammar.NodeType;
 
 import java.util.Arrays;
 import java.util.List;
