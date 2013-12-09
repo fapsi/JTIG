@@ -10,8 +10,9 @@ import grammar.buildjtiggrammar.AnchorStrategy;
 import grammar.buildjtiggrammar.Lexicon;
 import grammar.buildjtiggrammar.NodeType;
 import grammar.buildjtiggrammar.IRTreeNode;
-import grammar.buildjtiggrammar.UnvalidElementaryTreeException;
-import grammar.buildjtiggrammar.UnvalidLexiconException;
+import grammar.buildjtiggrammar.exceptions.UnvalidElementaryTreeException;
+import grammar.buildjtiggrammar.exceptions.UnvalidLexiconException;
+import grammar.buildjtiggrammar.exceptions.UnvalidXMLStructure;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -103,33 +104,33 @@ public class XMLHandler extends DefaultHandler {
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+			Attributes attributes) throws UnvalidXMLStructure {
 		
 		if (qName.equals("ltig")){
 			if (instartsymbols || insymbol || intree)
-				throw new SAXException("Declaration of 'ltig' has to be in outer scope.");
+				throw new UnvalidXMLStructure("Declaration of 'ltig' has to be in outer scope.");
 			if (lexicon.size() > 0)
-				throw new SAXException("Second definition of 'ltig' detected.");
+				throw new UnvalidXMLStructure("Second definition of 'ltig' detected.");
 			inltig = true;
 		} else if (qName.equals("start-symbols")){
 			if (!inltig || intree || insymbol)
-				throw new SAXException("Declaration of 'start-symbols' has to be in 'ltig'-scope.");
+				throw new UnvalidXMLStructure("Declaration of 'start-symbols' has to be in 'ltig'-scope.");
 			if (startsymbols.size() > 0)
-				throw new SAXException("Second definition of 'start-symbols' detected.");
+				throw new UnvalidXMLStructure("Second definition of 'start-symbols' detected.");
 			instartsymbols = true;
 		} else if (qName.equals("symbol")){
 			
 			if (!instartsymbols)
-				throw new SAXException("Declaration of 'symbol' has to be in 'start-symbols'-scope.");
+				throw new UnvalidXMLStructure("Declaration of 'symbol' has to be in 'start-symbols'-scope.");
 			
 			startsymbols.add(attributes.getValue("type"));
 			insymbol = true;
 		} else if (qName.equals("tree")){
 			if (!inltig || instartsymbols || insymbol)
-				throw new SAXException("Declaration of 'tree' has to be in 'ltig'-scope.");
+				throw new UnvalidXMLStructure("Declaration of 'tree' has to be in 'ltig'-scope.");
 			
 			if (startsymbols.size() <= 0)
-				throw new SAXException("Declaration of 'tree' has to be behind 'start-symbols' declaration.");
+				throw new UnvalidXMLStructure("Declaration of 'tree' has to be behind 'start-symbols' declaration.");
 			
 			intree = true;
 			tree_id = Long.parseLong(attributes.getValue("id"));
@@ -139,7 +140,7 @@ public class XMLHandler extends DefaultHandler {
 			actnode= null;
 		} else if (qName.equals("node")){
 			if (!inltig | !intree | instartsymbols | insymbol)
-				throw new SAXException("Declaration of 'node' has to be in 'tree'-scope.");
+				throw new UnvalidXMLStructure("Declaration of 'node' has to be in 'tree'-scope.");
 			if (depth == 0 && this.actnode != null)
 				throw new UnvalidElementaryTreeException("Two root nodes in tree detected.");
 			
@@ -149,7 +150,7 @@ public class XMLHandler extends DefaultHandler {
 			actnode = n;
 			depth++;
 		} else
-			throw new SAXException("Unknown qualified name '" + qName+"' in XML-file."+uri);
+			throw new UnvalidXMLStructure("Unknown qualified name '" + qName+"' in XML-file."+uri);
 	}
 	
 	/**

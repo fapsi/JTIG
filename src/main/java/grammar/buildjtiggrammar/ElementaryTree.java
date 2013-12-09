@@ -3,6 +3,8 @@
  */
 package grammar.buildjtiggrammar;
 
+import grammar.buildjtiggrammar.exceptions.UnvalidElementaryTreeException;
+
 import java.util.Arrays;
 import java.util.List;
 
