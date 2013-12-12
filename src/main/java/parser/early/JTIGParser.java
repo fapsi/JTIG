@@ -4,10 +4,17 @@
 package parser.early;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
@@ -29,7 +36,7 @@ public class JTIGParser {
 	
 	private static final String parserpropertypath = "resources/parser.properties";
 	
-	private static final StringBuilder stringbuilder = new StringBuilder();
+	private final StringBuilder log = new StringBuilder();
 	
 	private static final Properties  parserproperties = new Properties();
 	
@@ -40,8 +47,22 @@ public class JTIGParser {
 	private String lasterror;
 	
 	public JTIGParser() throws IOException{
+		createLogDirectory();
+		
+		createRunsDirectory();
+		
 		// Load preferences from property-file
 		readproperties();
+	}
+
+	private void createLogDirectory() throws IOException{
+		File dir = new File("data/log/");
+		dir.mkdirs();
+	}
+
+	private void createRunsDirectory() {
+		File dir = new File("data/runs/");
+		dir.mkdirs();
 	}
 
 	private void readproperties() throws InvalidPropertiesFormatException, IOException {
@@ -55,8 +76,10 @@ public class JTIGParser {
 		XMLReader xp = new XMLReader(getLexiconPaths()[0]);
 		try {
 			this.lexicon = xp.read();
+			writeIntoLog("Read lexicon '" + getLexiconPaths()[0] + "' successfully.");
 		} catch (SAXException | IOException | IllegalArgumentException | ParserConfigurationException | XMLStreamException e) {
 			lasterror = e.getMessage();
+			writeIntoLog("Can't read lexicon. Error: "+lasterror);
 			this.lexicon = null;
 			return false;
 		}
@@ -67,7 +90,9 @@ public class JTIGParser {
 		//TODO multithreading => synchro in lexicon
 		ParseRun parserun = new ParseRun(lexicon, originalsentence, tokens);
 		
-		parserun.run();
+		writeIntoLog("Parsing sentence: '"+originalsentence+"'.");
+		
+		parserun.parse();
 		
 		lastrun = parserun;
 		
@@ -91,38 +116,36 @@ public class JTIGParser {
 	public Lexicon getLexicon(){
 		return lexicon;
 	}
-	
 
-	
-	public String getLog() {
-		return lastrun != null? lastrun.getLog():"";
-	}
-	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		return sb.toString();
 	}
-/*
+
+	
 	public static void main(String[] args) throws IOException {
 		String input = null;
+		boolean gui = false;
 		
 		for (int i = 0;i<args.length;i++){
 			if ("-h".equals(args[i])){
-				
-				System.out.println("Usage: jtig [OPTIONS] text\n"
-						+ "Options:\n"
+				System.out.println("Usage: jtig -g | jtig lexicon_file (input_sentence|input_file)\n"
 						+ "See recources/parser.properties");
 				return;			
-			} else if (i == (args.length-1)){
-				input = args[i];
+			} else if ("-g".equals(args[i])){
+				gui = true;
+			} else if ("-l".equals(args[i])){
+				
+			} else if ("-i".equals(args[i])){
+				
 			} else {
 				System.err.println("Wrong usage. Use -h for detailed description.");
 				return;
 			}
 		}
 		//Create components
-		MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
+		/*MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 		JTIGParser parser = new JTIGParser();
 		// get tokens out of string
 		Token[] tokens = st.getTokens(input);
@@ -132,10 +155,8 @@ public class JTIGParser {
 			//System.out.println();
 		}
 		
-		//System.out.println(parser.toString());
+		//System.out.println(parser.toString());*/
 	}
-
-	*/
 	public boolean hasLexicon() {
 		return lexicon != null;
 	}
@@ -149,16 +170,50 @@ public class JTIGParser {
 	
 	public static void setProperty(String key,String value){
 		JTIGParser.parserproperties.setProperty(key,value);
-		//os = new FileInputStream(parserpropertypath);
-		//JTIGParser.parserproperties.storeToXML(parserpropertypath,null );
 	}
 	
 	public static boolean getBooleanProperty(String key){
 		return "true".equals(JTIGParser.getProperty(key).toLowerCase());
 	}
 	
-	public static StringBuilder getStringBuilder(){
-		return JTIGParser.stringbuilder;
+	public static boolean canExecute(ParseLevel want){
+		String prop = getProperty("parser.core.parselevel");
+		ParseLevel can = ParseLevel.valueOf(prop);
+		if (can == null || can == ParseLevel.INIT || can == ParseLevel.FAILED)
+			throw new IllegalArgumentException("Property parser.core.parselevel not valid.");
+		switch(want){
+			case LOOKUP:
+				return true;
+			case FOREST:
+				return !(can == ParseLevel.LOOKUP);
+			case INDEPENDENTDTREE:
+				return !(can == ParseLevel.LOOKUP || can == ParseLevel.FOREST);
+			case DEPENDENTDTREE:
+				return !(can == ParseLevel.LOOKUP || can == ParseLevel.FOREST 
+				|| can == ParseLevel.INDEPENDENTDTREE);
+			case DERIVEDTREE:
+				return !(can == ParseLevel.LOOKUP || can == ParseLevel.FOREST 
+				|| can == ParseLevel.INDEPENDENTDTREE || can == ParseLevel.DEPENDENTDTREE);
+			default: 
+				return false;
+		}
+	}
+	
+	public StringBuilder getLog(){
+		return log;
+	}
+
+	public void writeIntoLog(String message) {
+		try {
+			File file = new File("data/log/log");
+			BufferedWriter output = new BufferedWriter(new FileWriter(file,true));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			output.write(sdf.format(new Date()) + " : " +message);
+			output.newLine();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ParseRun getLastRun() {

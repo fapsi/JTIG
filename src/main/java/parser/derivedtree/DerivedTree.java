@@ -3,11 +3,18 @@
  */
 package parser.derivedtree;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import javax.xml.stream.XMLEventFactory;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 
 import grammar.tiggrammar.ElementaryTree;
 import grammar.tiggrammar.NodeType;
@@ -80,5 +87,27 @@ public class DerivedTree {
 	
 	public void paintWithJGraphX(mxGraph graph) {
 		root.paintWithJGraphX(graph);
+	}
+	
+	public void loadFromXML(InputStream in){
+		
+	}
+	
+	public void storeToXML(OutputStream stream, String comment) throws XMLStreamException {
+		System.out.println("Write XML");
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLEventWriter writer = outputFactory.createXMLEventWriter(
+		  stream );
+		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+		
+		writer.add(eventFactory.createStartDocument());		
+		
+		writer.add(eventFactory.createComment(comment));
+		
+		root.storeToXML(writer, eventFactory);
+		
+		writer.add(eventFactory.createEndDocument());
+		
+		writer.close();
 	}
 }

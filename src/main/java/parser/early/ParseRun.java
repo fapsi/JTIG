@@ -5,12 +5,22 @@ package parser.early;
 
 import grammar.tiggrammar.Lexicon;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import javax.xml.stream.XMLStreamException;
 
 import parser.derivationtree.DependentDerivationTree;
 import parser.derivationtree.DerivationTree;
@@ -28,10 +38,11 @@ import tools.tokenizer.Token;
  */
 public class ParseRun {
 	
+	private String name;
+	
 	private ParseLevel level = ParseLevel.INIT;
 	
 	/** helper variables **/
-	private final StringBuilder log;
 	private ArrayList<InferenceRule> inferencerules;
 
 	private DefaultItemFactory factory;
@@ -49,10 +60,11 @@ public class ParseRun {
 	private List<DependentDerivationTree> d_derivationtrees = null;
 	private LinkedList<DerivedTree> derivedtrees = null;
 	
-	public ParseRun(Lexicon lexicon,String originalsentence, Token[] tokens){
+	public ParseRun(Lexicon lexicon,String originalsentence, Token[] tokens){		
+		createRunDirectory();
+		
 		this.tokens = tokens;
 		
-		this.log = new StringBuilder();
 		appendToLog("Starting parse-process.");
 		// extract all important Elementary Tree's and store in activatedlexicon
 		this.activatedlexicon = preprocessSentence(tokens,lexicon);
@@ -66,16 +78,31 @@ public class ParseRun {
 		
 		ItemComparator itemcomp = new ItemComparator(isterm);
 		this.agenda = new PriorityQueue<Item>(10, itemcomp);
-		
 	}
 	
-	public String getLog() {
-		return log.toString();
+	private void createRunDirectory() {
+		int max = 0;
+		File runs_dir = new File("data/runs/");
+		if (runs_dir.isDirectory()){
+			
+			for (File f : runs_dir.listFiles()){
+				if (f.isDirectory() && f.getName().startsWith("run")){
+					int i = Integer.parseInt(f.getName().substring(3));
+					max = Math.max(max, i);
+				}	
+			}
+		}
+		name = "run"+(++max);
+		File dir = new File("data/runs/"+name+"/");
+		dir.mkdirs();
 	}
 	
-	public void run(){
+	public void parse(){
 		items = new LinkedList<Item>();
 		boolean finishedgood = false;
+		
+		if (!JTIGParser.canExecute(ParseLevel.FOREST))
+			return;
 		
 		// prepare inference rules, setting needed classes
 		if (!prepareInferencerules()){
@@ -197,6 +224,8 @@ public class ParseRun {
 	}
 	
 	private void extractIndependentDerivationTrees(){
+		if (!JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE))
+			return;
 		if (level != ParseLevel.FOREST){
 			appendToLog("Could not extract independent-derivation-trees, because it requires status FOREST; Current value: "+level.toString());
 			return;
@@ -207,6 +236,8 @@ public class ParseRun {
 	}
 	
 	private void extractDependentDerivationTrees(){
+		if (!JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE))
+			return;
 		if (level != ParseLevel.INDEPENDENTDTREE){
 			appendToLog("Could not extract dependent-derivation-trees, because it requires status INDEPENDENTDTREE; Current value: "+level.toString());
 			return;
@@ -219,7 +250,9 @@ public class ParseRun {
 		}
 	}
 	
-	private void extractDerivedTrees() {
+	private void extractDerivedTrees() throws FileNotFoundException, XMLStreamException {
+		if (!JTIGParser.canExecute(ParseLevel.DERIVEDTREE))
+			return;
 		if (level != ParseLevel.DEPENDENTDTREE){
 			appendToLog("Could not extract derived/parse-trees, because it requires status DEPENDENTDTREE; Current value: "+level.toString());
 			return;
@@ -227,15 +260,51 @@ public class ParseRun {
 		appendToLog("Extracting derived/parse-trees.");
 		level = ParseLevel.DERIVEDTREE;
 		derivedtrees = new LinkedList<DerivedTree>();
+		int i = 1;
 		for (DependentDerivationTree ddtree : d_derivationtrees){
-			derivedtrees.add(new DerivedTree(ddtree));
+			DerivedTree newone = new DerivedTree(ddtree);
+			// extract from dependent derivation tree
+			derivedtrees.add(newone);
+			
+			// store them if necessary
+			if (JTIGParser.getBooleanProperty("parser.derivedtree.store")){
+				File f = new File("data/runs/"+name+"/derivedtree"+i+".xml");
+				newone.storeToXML(new FileOutputStream(f , false), "Derived tree " + i);
+				appendToLog("Saving parsetree 'data/runs/"+name+"/derivedtree"+i+".xml'.");
+			}
+			i++;
 		}
 		
 	}
 	
 	public void appendToLog(String message) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		log.append( sdf.format(new Date()) + " : " + message + "\n");
+		try {
+			File file = new File("data/runs/"+name+"/log");
+			BufferedWriter output = new BufferedWriter(new FileWriter(file,true));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			output.write(sdf.format(new Date()) + " : " +message);
+			output.write(System.getProperty("line.separator"));
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getLog() {
+		StringBuilder sb = new StringBuilder();
+		File file = new File("data/runs/"+name+"/log");
+		try {
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String line = "";
+		while ((line = reader.readLine()) != null){
+			sb.append(line);
+			sb.append(System.getProperty("line.separator"));
+		}
+		reader.close();
+		} catch (IOException e) {
+			sb.append("Error reading the log-file.");
+		}
+		return sb.toString();
 	}
 
 	public List<Item> getItemList() {
@@ -256,7 +325,7 @@ public class ParseRun {
 		return d_derivationtrees;
 	}
 	
-	public List<DerivedTree> retrieveDerivedTrees(){
+	public List<DerivedTree> retrieveDerivedTrees() throws FileNotFoundException, XMLStreamException{
 		extractDerivedTrees();
 		return derivedtrees;
 	}

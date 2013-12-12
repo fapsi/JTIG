@@ -202,8 +202,6 @@ public class LispParser {
 	}
 	
 	public boolean parse() throws XMLStreamException, FileNotFoundException {
-		
-	    long time1 = System.currentTimeMillis();
 	    
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		writer = outputFactory.createXMLEventWriter(
@@ -229,10 +227,6 @@ public class LispParser {
 		
 		writer.close();
 		
-		time1 = System.currentTimeMillis() - time1;
-		if (JTIGParser.getBooleanProperty("grammar.transform.lisp2xml.output"))
-			JTIGParser.getStringBuilder().append("Tranformed "+treecount+" trees from LISP-format into XML-format. ("+time1+" ms)\n"
-				+ "Output file: "+outputpath);
 		return true;
 	}
 	

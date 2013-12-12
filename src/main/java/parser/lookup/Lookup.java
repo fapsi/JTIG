@@ -21,7 +21,7 @@ public class Lookup {
 	}
 	
 	public ActivatedLexicon findlongestmatches(Token[] tokens,Lexicon lexicon){
-		boolean all = "true".equals(JTIGParser.getProperty("parser.lookup.findalllongestmatches"));
+		boolean all = "true".equals(JTIGParser.getProperty("parser.lookup.exhaustive"));
 		
 		ActivatedLexicon slexicon = new ActivatedLexicon(lexicon,tokens);
 		List<Token> searchwords = new LinkedList<Token>();

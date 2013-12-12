@@ -13,8 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -36,6 +38,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.XMLStreamException;
 
 import parser.derivationtree.DependentDerivationTree;
 import parser.derivationtree.DerivationTree;
@@ -43,6 +46,7 @@ import parser.derivationtree.IndependentDerivationTree;
 import parser.derivedtree.DerivedTree;
 import parser.early.Item;
 import parser.early.JTIGParser;
+import parser.early.ParseLevel;
 import parser.early.ParseRun;
 import tools.GeneralTools;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
@@ -80,6 +84,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	private JLabel lexiconfile_label;
 
 	private JButton lexiconfile_button;
+
+	private JCheckBoxMenuItem menuItem_computeFOREST;
 	
 	public GraphicalUserInterface() throws IOException {
 		super("JTIG Parser");
@@ -224,17 +230,26 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		menu_lexicon.setMnemonic(KeyEvent.VK_L);
 		menuBar.add(menu_lexicon);
 		
+		JMenuItem parselevel = new JMenu("Level");
+		menu_parser.add(parselevel);
+		
+		menuItem_computeFOREST = new JCheckBoxMenuItem("forest");
+		menuItem_computeFOREST.addActionListener(this);
+		parselevel.add(menuItem_computeFOREST);
+		
 		menuItem_computeIDT = new JCheckBoxMenuItem("independent derivation trees");
 		menuItem_computeIDT.addActionListener(this);
-		menu_parser.add(menuItem_computeIDT);
+		parselevel.add(menuItem_computeIDT);
 		
 		menuItem_computeDDT = new JCheckBoxMenuItem("dependent derivation trees");
 		menuItem_computeDDT.addActionListener(this);
-		menu_parser.add(menuItem_computeDDT);
+		parselevel.add(menuItem_computeDDT);
 		
 		menuItem_computePT = new JCheckBoxMenuItem("parse trees");
 		menuItem_computePT.addActionListener(this);
-		menu_parser.add(menuItem_computePT);
+		parselevel.add(menuItem_computePT);
+		
+		setParseLevelMenuItems();
 		
 		menu_parser.addSeparator();
 		
@@ -272,7 +287,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				
 				List<DependentDerivationTree> tmpddt = run.retrieveDependentDerivationTrees();	
 				
-				List<DerivedTree> tmpdt = run.retrieveDerivedTrees();
+				List<DerivedTree> tmpdt = new LinkedList<DerivedTree>();
+				try {
+					tmpdt = run.retrieveDerivedTrees();
+				} catch (FileNotFoundException | XMLStreamException exc) {
+					JOptionPane.showMessageDialog(this, exc.getMessage());
+				}
 				
 				mainpanel.removeAll();
 				
@@ -283,7 +303,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 					printDerivationTrees(tmpidt);
 				if (JTIGParser.getBooleanProperty("gui.dependentderivationtree.show"))
 					printDerivationTrees(tmpddt);
-				if (JTIGParser.getBooleanProperty("gui.parsetree.show"))
+				if (JTIGParser.getBooleanProperty("gui.derivedtree.show"))
 					printDerivedTrees(tmpdt);
 			} else {
 				addLogPanel("There exists no lexicon. Aborted.");
@@ -301,7 +321,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				int i = 1;
 				// TODO use printDerivedTrees
 				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
-					ElementaryTreePanel tigrulepanel = new ElementaryTreePanel(new DerivedTree(r));
+					DerivedTreePanel tigrulepanel = new DerivedTreePanel(new DerivedTree(r));
 					addTab(result+" "+i,tigrulepanel);
 					i++;
 				}
@@ -324,7 +344,26 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	            if (!success)
 	            	JOptionPane.showMessageDialog(this, "Invalid lexicon. " + jtigparser.getLastError());
 	        }
+		} else if (e.getSource() == menuItem_computeFOREST) {
+			JTIGParser.setProperty("parser.core.parselevel",JTIGParser.canExecute(ParseLevel.FOREST)?ParseLevel.LOOKUP.toString():ParseLevel.FOREST.toString());
+			setParseLevelMenuItems();
+		} else if (e.getSource() == menuItem_computeIDT) {
+			JTIGParser.setProperty("parser.core.parselevel",JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE)?ParseLevel.FOREST.toString():ParseLevel.INDEPENDENTDTREE.toString());
+			setParseLevelMenuItems();
+		} else if (e.getSource() == menuItem_computeDDT) {
+			JTIGParser.setProperty("parser.core.parselevel",JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE)?ParseLevel.INDEPENDENTDTREE.toString():ParseLevel.DEPENDENTDTREE.toString());
+			setParseLevelMenuItems();
+		} else if (e.getSource() == menuItem_computePT) {
+			JTIGParser.setProperty("parser.core.parselevel",JTIGParser.canExecute(ParseLevel.DERIVEDTREE)?ParseLevel.DEPENDENTDTREE.toString():ParseLevel.DERIVEDTREE.toString());
+			setParseLevelMenuItems();
 		}
+	}
+
+	private void setParseLevelMenuItems() {
+		menuItem_computeFOREST.setSelected(JTIGParser.canExecute(ParseLevel.FOREST));
+		menuItem_computeIDT.setSelected(JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE));
+		menuItem_computeDDT.setSelected(JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE));
+		menuItem_computePT.setSelected(JTIGParser.canExecute(ParseLevel.DERIVEDTREE));
 	}
 
 	private void printDerivationTrees(List<? extends DerivationTree> trees) {
@@ -339,13 +378,13 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	
 	private void printDerivedTrees(List<DerivedTree> trees){
 		for (DerivedTree dtree : trees ){
-			ElementaryTreePanel derivedtreepanel = new ElementaryTreePanel(dtree);
+			DerivedTreePanel derivedtreepanel = new DerivedTreePanel(dtree);
 			addTab("Parse tree",derivedtreepanel);
 		}
 	}
 
-	private void addLogPanel(String alternative){
-		LogPanel logpanel = new LogPanel(alternative == null?jtigparser.getLog():alternative);
+	private void addLogPanel(String log){
+		LogPanel logpanel = new LogPanel(log);
 		addTab("Log",logpanel);
 	}
 	

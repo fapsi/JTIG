@@ -77,7 +77,6 @@ public class XMLReader {
 			transformtoXML();
 		
 			Lexicon lexicon = null;
-			long time1 = System.currentTimeMillis();
 			
 			// load anchor strategy dynamically from classname in properties-file
 			AnchorStrategy as = null;
@@ -106,11 +105,6 @@ public class XMLReader {
 			
 			// store resulting lexicon
 			lexicon = handler.getLexicon();
-			
-			time1 = System.currentTimeMillis() - time1;
-			
-			if (JTIGParser.getBooleanProperty("grammar.readXML.output"))
-				JTIGParser.getStringBuilder().append("Read "+lexicon.size()+" grammar rule trees from XML-file. ("+time1+" ms)");
 			
 		return lexicon;
 	}

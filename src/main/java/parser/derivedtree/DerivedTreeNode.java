@@ -15,6 +15,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+import javax.xml.stream.XMLEventFactory;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamException;
+
 import tools.GeneralTools;
 
 import com.mxgraph.view.mxGraph;
@@ -69,8 +73,18 @@ public class DerivedTreeNode {
 		
 	}
 	
-	protected void storeToXML(OutputStream stream, String comment) {
-
+	protected void storeToXML(XMLEventWriter writer, XMLEventFactory eventFactory) throws XMLStreamException {
+		
+		writer.add(eventFactory.createStartElement( "", "", "node" ));
+		
+		writer.add(eventFactory.createAttribute("type",entry.getNodeType().toString()));
+		writer.add(eventFactory.createAttribute("label",entry.getLabel()));
+		
+		for (DerivedTreeNode child : children){
+			child.storeToXML(writer, eventFactory);
+		}
+		
+		writer.add(eventFactory.createEndElement( "", "", "node" ));
 	}
 	
 	protected void paintWithJGraphX(mxGraph graph) {
@@ -85,6 +99,7 @@ public class DerivedTreeNode {
 			switch (element.entry.getNodeType()){
 			case EPS:
 				style += "fillColor=#008080;";
+				description = "\u0395";
 				break;
 			case SUBST:
 				style += "fillColor=#FF8C00;";

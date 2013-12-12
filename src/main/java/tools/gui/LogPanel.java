@@ -32,7 +32,9 @@ public class LogPanel extends JPanel {
 		log.setForeground(Color.WHITE);
 		log.setEditable(false);
 		//log.setFont(Font.getFont("Courier New"));
-		log.setText(message);
+		//message.replaceAll(System.getProperty("line.separator"), "\n");
+		log.append(message);
+		//log.setLineWrap(true);
 		add(new JScrollPane(log),gbc);
 		gbc.weightx = 0.5;
 		gbc.gridx = 1;

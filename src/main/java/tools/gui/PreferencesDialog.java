@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -51,7 +52,15 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 	private DefaultTableModel tm;
 
 
-	private JCheckBox drawforest_checkbox;
+	private JCheckBox show_forest_checkbox;
+
+	private JCheckBox store_derivedtrees_checkbox;
+
+	private JCheckBox show_derivedtrees_checkbox;
+
+	private JCheckBox show_independent_dtrees_checkbox;
+
+	private JCheckBox show_dependent_dtrees_checkbox;
 	
 	public PreferencesDialog(){
 
@@ -64,7 +73,8 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		tabbedpane.add( "General" , createGeneralPanel());
 		tabbedpane.add( "Inference Rules" , createInferenceRulesPanel());
 		tabbedpane.add( "Forest" , createIFRPanel());
-		tabbedpane.add( "Outputs" , new JPanel());
+		tabbedpane.add( "Derivation trees" , createDTPanel());
+		tabbedpane.add( "Derived trees" , createPTPanel());
 		
 		JPanel panel_tabbed = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -92,6 +102,100 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		pack();
 	}
 
+	private JPanel createDTPanel() {
+		JPanel pane =  new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.insets = new Insets(5,5,5,5);
+		{
+			c.weightx = 1;
+			c.weighty = 0;
+			c.gridx = 0;
+			c.gridy = 0;
+		
+			JLabel show_iderivationtrees_descriptionlabel = new JLabel("General:");
+			pane.add(show_iderivationtrees_descriptionlabel,c);
+			
+			c.weightx = 1;
+			c.gridx = 1;
+			c.gridy = 0;
+
+		
+			show_independent_dtrees_checkbox = new JCheckBox("Draw independent derivation trees.");
+			show_independent_dtrees_checkbox.addActionListener(this);
+			show_independent_dtrees_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.independentderivationtree.show"));
+			pane.add(show_independent_dtrees_checkbox,c);
+		}
+		{
+			c.weightx = 1;
+			c.weighty = 100;
+			c.gridx = 0;
+			c.gridy = 1;
+		
+			JLabel show_dderivationtrees_descriptionlabel = new JLabel("");
+			pane.add(show_dderivationtrees_descriptionlabel,c);
+			
+			c.weightx = 1;
+			c.gridx = 1;
+			c.gridy = 1;
+
+		
+			show_dependent_dtrees_checkbox = new JCheckBox("Draw dependent derivation trees.");
+			show_dependent_dtrees_checkbox.addActionListener(this);
+			show_dependent_dtrees_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.dependentderivationtree.show"));
+			pane.add(show_dependent_dtrees_checkbox,c);
+		}
+		return pane;
+	}
+
+	private JPanel createPTPanel() {
+		JPanel pane =  new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.insets = new Insets(5,5,5,5);
+		{
+			c.weightx = 1;
+			c.weighty = 0;
+			c.gridx = 0;
+			c.gridy = 0;
+		
+			JLabel show_derivedtrees_descriptionlabel = new JLabel("General:");
+			pane.add(show_derivedtrees_descriptionlabel,c);
+			
+			c.weightx = 1;
+			c.gridx = 1;
+			c.gridy = 0;
+
+		
+			show_derivedtrees_checkbox = new JCheckBox("Draw parse trees.");
+			show_derivedtrees_checkbox.addActionListener(this);
+			show_derivedtrees_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.derivedtree.show"));
+			pane.add(show_derivedtrees_checkbox,c);
+		}
+		{
+			c.weightx = 1;
+			c.weighty = 100;
+			c.gridx = 0;
+			c.gridy = 1;
+		
+			JLabel store_derivedtrees_descriptionlabel = new JLabel("Save:");
+			pane.add(store_derivedtrees_descriptionlabel,c);
+		
+			c.weightx = 1;
+			c.gridx = 1;
+			c.gridy = 1;
+
+		
+			store_derivedtrees_checkbox = new JCheckBox("Store created parse trees.");
+			store_derivedtrees_checkbox.addActionListener(this);
+			store_derivedtrees_checkbox.setSelected(JTIGParser.getBooleanProperty("parser.derivedtree.store"));
+			pane.add(store_derivedtrees_checkbox,c);
+		}
+		return pane;
+	}
+
 	private JPanel createIFRPanel() {
 		JPanel ifrpanel = new JPanel(new GridBagLayout());
 		
@@ -99,45 +203,46 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(5,5,5,5);
-		c.weighty = 0;
-		c.weightx = 0;
-		c.gridx = 0;
-		c.gridy = 0;
+		{
+			c.weighty = 0;
+			c.weightx = 0;
+			c.gridx = 0;
+			c.gridy = 0;
 		
-		JLabel showgeneral_descriptionlabel = new JLabel("General:");
-		ifrpanel.add(showgeneral_descriptionlabel,c);
+			JLabel showgeneral_descriptionlabel = new JLabel("General:");
+			ifrpanel.add(showgeneral_descriptionlabel,c);
 		
-		c.weighty = 1;
-		c.weightx = 1;
-		c.gridx = 1;
-		c.gridy = 0;
+			c.weighty = 1;
+			c.weightx = 1;
+			c.gridx = 1;
+			c.gridy = 0;
 
 		
-		drawforest_checkbox = new JCheckBox("Draw item forest");
-		drawforest_checkbox.addActionListener(this);
-		drawforest_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.forest.showpredictions"));
-		ifrpanel.add(drawforest_checkbox,c);
-		
-		c.weighty = 0;
-		c.weightx = 0;
-		c.gridx = 0;
-		c.gridy = 1;
+			show_forest_checkbox = new JCheckBox("Draw item forest");
+			show_forest_checkbox.addActionListener(this);
+			show_forest_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.forest.show"));
+			ifrpanel.add(show_forest_checkbox,c);
+		}
+		{
+			c.weighty = 0;
+			c.weightx = 0;
+			c.gridx = 0;
+			c.gridy = 1;
 
-		
-		JLabel showprediction_descriptionlabel = new JLabel("Prediction:");
-		ifrpanel.add(showprediction_descriptionlabel,c);
+			JLabel showprediction_descriptionlabel = new JLabel("Prediction:");
+			ifrpanel.add(showprediction_descriptionlabel,c);
 
-		c.weighty = 10;
-		c.weightx = 10;
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridwidth = 1;
+			c.weighty = 10;
+			c.weightx = 10;
+			c.gridx = 1;
+			c.gridy = 1;
+			c.gridwidth = 1;
 		
-		showprediction_checkbox = new JCheckBox("Show predicted items in graph");
-		showprediction_checkbox.addActionListener(this);
-		showprediction_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.forest.showpredictions"));
-		ifrpanel.add(showprediction_checkbox,c);
-		
+			showprediction_checkbox = new JCheckBox("Show predicted items in graph");
+			showprediction_checkbox.addActionListener(this);
+			showprediction_checkbox.setSelected(JTIGParser.getBooleanProperty("gui.forest.showpredictions"));
+			ifrpanel.add(showprediction_checkbox,c);
+		}
 		return ifrpanel;
 	}
 
@@ -165,6 +270,8 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 		stopcriterion_checkbox.addActionListener(this);
 		stopcriterion_checkbox.setSelected(JTIGParser.getBooleanProperty("parser.stoponfirsttermitem"));
 		panel_preferences.add(stopcriterion_checkbox,c);
+		
+		//TODO parser.lookup.exhaustive
 		
 		return panel_preferences;
 	}
@@ -197,8 +304,18 @@ public class PreferencesDialog extends JDialog implements ActionListener {
 			JTIGParser.setProperty("parser.stoponfirsttermitem", stopcriterion_checkbox.isSelected()?"true":"false");
 		} else if(e.getSource() == showprediction_checkbox){
 			JTIGParser.setProperty("gui.forest.showpredictions", showprediction_checkbox.isSelected()?"true":"false");
+		} else if(e.getSource() == show_forest_checkbox){
+			JTIGParser.setProperty("gui.forest.show", show_forest_checkbox.isSelected()?"true":"false");
 		} else if(e.getSource() == close_button){
 			setVisible(false);
+		} else if (e.getSource() == store_derivedtrees_checkbox){
+			JTIGParser.setProperty("parser.derivedtree.store", store_derivedtrees_checkbox.isSelected()?"true":"false");
+		} else if (e.getSource() == show_derivedtrees_checkbox){
+			JTIGParser.setProperty("gui.derivedtree.show", show_derivedtrees_checkbox.isSelected()?"true":"false");
+		} else if (e.getSource() == show_independent_dtrees_checkbox){
+			JTIGParser.setProperty("gui.independentderivationtree.show", show_independent_dtrees_checkbox.isSelected()?"true":"false");
+		} else if (e.getSource() == show_dependent_dtrees_checkbox){
+			JTIGParser.setProperty("gui.dependentderivationtree.show", show_dependent_dtrees_checkbox.isSelected()?"true":"false");
 		}
 	}
 
