@@ -39,6 +39,7 @@ public class LexiconValidTest {
 			}
 			for (File nextFile : dir.listFiles()) {
 				if (nextFile.isFile() && (nextFile.getName().endsWith(".xml") || nextFile.getName().endsWith(".lisp"))){
+					System.out.println(nextFile.getName());
 					JTIGParser.setProperty("grammar.lexicon.path", nextFile.getAbsolutePath());
 					if (!parser.readLexicon()){
 						System.out.println(parser.getLastError());

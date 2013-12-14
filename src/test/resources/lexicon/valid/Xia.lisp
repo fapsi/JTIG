@@ -16,6 +16,8 @@
 (("vp" ("vbn" "got") (:subst . "np")) 1 . 0.5)
 ;; erzeugt Satzambiguitaet
 (("s" (:subst . "np-sbj") ("vp" ("vbp" "'ve") (:subst . "vp")) (:subst . "np")) 1 . 0.33333334)
+
+
 (("vp" ("vbn" "got") (:subst . "np")) 1 . 0.5)
 (("np" ("jj" "limited") ("nn" "production") ) 1 . 0.33333334)
 (("np" ("jj" "limited") ("nn" "production") (:LFOOT . "np")) 1 . 0.33333334)

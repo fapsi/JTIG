@@ -3,20 +3,19 @@
  */
 package grammar.transform.lisp2xml;
 
-import java.io.BufferedReader;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
-
-import parser.early.JTIGParser;
 
 /**
  * Transforms a Lisp-file into a XML-file.
@@ -33,7 +32,7 @@ public class LispParser {
 	 */
 	private Map<String, TokenType> keywords;
 	
-	private BufferedReader br;
+	private Scanner scanner;
 	
 	private String actline;
 	
@@ -69,8 +68,10 @@ public class LispParser {
 		keywords.put(":eps", TokenType.EPS);
 		keywords.put("setq", TokenType.SETQ);
 		
-		br = new BufferedReader(new FileReader(this.inputpath));
-		actline = br.readLine();
+		scanner = new Scanner(new FileInputStream(this.inputpath));
+		if (!scanner.hasNextLine())
+			throw new IllegalStateException("File is empty.");
+		actline = scanner.nextLine();
 		actpos = 0;
 		actlinecnt = 1;
 		mode = LexMode.DEFAULT;
@@ -83,7 +84,7 @@ public class LispParser {
 	}
 
 	private Token next(){
-		if (actline == null)
+		if (!scanner.hasNextLine() && actpos >= actline.length())
 			return null;
 		boolean eol = actpos == (actline.length() - 1);
 		char actchar = actline.charAt(actpos);
@@ -121,7 +122,7 @@ public class LispParser {
 			}
 			break;
 		case STRING:
-			if ("\"".equals(String.valueOf(actchar))) {
+			if ("\"".equals(String.valueOf(actchar)) && (actpos > 1 && !"\\".equals(String.valueOf(actline.charAt(actpos-1))))) {
 				String found = actstr.toString();
 				if (keywords.containsKey(found))
 					next = new Token(found, keywords.get(found) , actlinecnt , actpos);
@@ -182,19 +183,18 @@ public class LispParser {
 		
 		actpos++;
 		
-		if (actpos >= actline.length()){
-			try {
-				actline = br.readLine();
+		if (actpos >= actline.length() && scanner.hasNextLine()){
+			actline = scanner.nextLine();
+			actlinecnt++;
+			while (actline.isEmpty()){
+				actline = scanner.nextLine();
 				actlinecnt++;
-				actpos = 0;
-				mode  = LexMode.DEFAULT;
-			} catch (IOException e) {
-				actline = null;
 			}
-			if (actline == null)
-				return null;
+			actpos = 0;
+			mode  = LexMode.DEFAULT;
 		}
 		if (mode == LexMode.DEFAULT && next != null){
+			System.out.println(next);
 			return next;
 		}
 		else 
@@ -218,7 +218,10 @@ public class LispParser {
 		expect(TokenType.RBRACE);
 
 		expect(TokenType.LBRACE);
+		
 		parseTrees();
+		
+		expect(TokenType.RBRACE);
 
 		
 		writer.add(eventFactory.createEndElement( "", "", "ltig" ));
