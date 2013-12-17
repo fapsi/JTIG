@@ -13,7 +13,7 @@ public class SubstitutionDerivationEdge extends DerivationEdge {
 
 
 
-	protected SubstitutionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second, Integer[] connector) {
+	public SubstitutionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second, Integer[] connector) {
 		super(first, second, connector);
 	}
 	

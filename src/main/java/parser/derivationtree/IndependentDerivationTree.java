@@ -22,14 +22,7 @@ import tools.GeneralTools;
 public class IndependentDerivationTree extends DerivationTree{
 
 	public static long multiple_derivations = 1;
-	/**
-	 * 
-	 * @param items
-	 *            - a list with all {@link Item} representing different
-	 *            derivations.
-	 * @return All {@link IndependentDerivationTree}'s resulting from the item-structure
-	 *         obtained by the parsing process.
-	 */
+
 	public static boolean derivationAllowed(){
 		String prop = JTIGParser.getProperty("parser.core.amountderivations");
 		if ("infinity".equals(prop))
@@ -40,6 +33,14 @@ public class IndependentDerivationTree extends DerivationTree{
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param items
+	 *            - a list with all {@link Item} representing different
+	 *            derivations.
+	 * @return All {@link IndependentDerivationTree}'s resulting from the item-structure
+	 *         obtained by the parsing process.
+	 */
 	public static List<IndependentDerivationTree> createDerivationTrees(List<Item> items) {
 		// list for result
 		List<IndependentDerivationTree> derivationtrees = new LinkedList<IndependentDerivationTree>();

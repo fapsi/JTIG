@@ -11,7 +11,7 @@ import parser.lookup.ActivatedElementaryTree;
  */
 public class AdjunctionDerivationEdge extends DerivationEdge {
 
-	protected AdjunctionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second ,Integer[] connector) {
+	public AdjunctionDerivationEdge(ActivatedElementaryTree first, ActivatedElementaryTree second ,Integer[] connector) {
 		super(first, second, connector);
 		
 	}

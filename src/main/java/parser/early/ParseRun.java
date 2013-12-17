@@ -30,6 +30,7 @@ import parser.early.inferencerules.InferenceRule;
 import parser.lookup.ActivatedElementaryTree;
 import parser.lookup.ActivatedLexicon;
 import parser.lookup.Lookup;
+import parser.output.forest.Forest;
 import tools.tokenizer.Token;
 
 /**
@@ -55,7 +56,8 @@ public class ParseRun {
 
 	/** result variables**/
 	
-	private List<Item> items;
+	//private List<Item> items;
+	private Forest forest;
 	private List<IndependentDerivationTree> id_derivationtrees = null;
 	private List<DependentDerivationTree> d_derivationtrees = null;
 	private LinkedList<DerivedTree> derivedtrees = null;
@@ -98,16 +100,19 @@ public class ParseRun {
 	}
 	
 	public void parse(){
-		items = new LinkedList<Item>();
+		List<Item> items = new LinkedList<Item>();
 		boolean finishedgood = false;
 		
-		if (!JTIGParser.canExecute(ParseLevel.FOREST))
+		if (!JTIGParser.canExecute(ParseLevel.FOREST)){
+			forest = new Forest(items, tokens);
 			return;
+		}
 		
 		// prepare inference rules, setting needed classes
 		if (!prepareInferencerules()){
 			level = ParseLevel.FAILED;
 			appendToLog("No inference rules used in parsing process. Failure.");
+			forest = new Forest(items, tokens);
 			return;
 		}
 		
@@ -118,6 +123,7 @@ public class ParseRun {
 		if (!initializeAgenda()){
 			level = ParseLevel.FAILED;
 			appendToLog("Agenda hasn't any start items. Failure.");
+			forest = new Forest(items, tokens);
 			return;
 		}
 		
@@ -163,6 +169,7 @@ public class ParseRun {
 			level = ParseLevel.FAILED;
 			appendToLog("Failure.");
 		}
+		forest = new Forest(items, tokens);
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
@@ -232,7 +239,7 @@ public class ParseRun {
 		}
 		level = ParseLevel.INDEPENDENTDTREE;
 		appendToLog("Extracting independent-derivation-trees.");
-		this.id_derivationtrees = IndependentDerivationTree.createDerivationTrees(items);
+		this.id_derivationtrees = forest.createDerivationTrees();
 	}
 	
 	private void extractDependentDerivationTrees(){
@@ -307,8 +314,8 @@ public class ParseRun {
 		return sb.toString();
 	}
 
-	public List<Item> getItemList() {
-		return items;
+	public Forest getForest() {
+		return forest;
 	}
 	
 	public List<IndependentDerivationTree> retrieveIndependentDerivationTrees(){

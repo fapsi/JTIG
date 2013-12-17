@@ -48,6 +48,7 @@ import parser.early.Item;
 import parser.early.JTIGParser;
 import parser.early.ParseLevel;
 import parser.early.ParseRun;
+import parser.output.forest.Forest;
 import tools.GeneralTools;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
@@ -298,7 +299,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				
 				addLogPanel(run.getLog());
 				if (JTIGParser.getBooleanProperty("gui.forest.show"))
-					printItems(run.getItemList());
+					printItems(run.getForest());
 				if (JTIGParser.getBooleanProperty("gui.independentderivationtree.show"))
 					printDerivationTrees(tmpidt);
 				if (JTIGParser.getBooleanProperty("gui.dependentderivationtree.show"))
@@ -388,13 +389,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		addTab("Log",logpanel);
 	}
 	
-	private void printItems(List<Item> items) {
-				
-		int i = 1;
-		for (Item item : items){
-			ItemPanel actualpanel = new ItemPanel(item);
+	private void printItems(Forest forest) {
+
+		for (int i = 0; i < forest.getRootDimension(); i++){
+			ForestPanel actualpanel = new ForestPanel(forest,i);
 			actualpanel.drawItem();
-			addTab("Forest item "+i,actualpanel);
+			addTab("Forest item "+(i+1),actualpanel);
 			i++;
 		}
 		
