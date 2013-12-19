@@ -19,12 +19,16 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
 import parser.derivationtree.DerivationTree;
+import tools.gui.GraphicalUserInterface;
+import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
 import grammar.readXML.XMLReader;
 import grammar.tiggrammar.Lexicon;
@@ -124,38 +128,90 @@ public class JTIGParser {
 	}
 
 	
-	public static void main(String[] args) throws IOException {
-		String input = null;
-		boolean gui = false;
+	public static void main(String[] args) throws IOException, XMLStreamException {
+		String input_sentence = "";
+		String lexicon_filepath = "";
+		int input_file_line = -1;
+		String input_filepath = null;
 		
-		for (int i = 0;i<args.length;i++){
-			if ("-h".equals(args[i])){
-				System.out.println("Usage: jtig -g | jtig lexicon_file (input_sentence|input_file)\n"
-						+ "See recources/parser.properties");
-				return;			
-			} else if ("-g".equals(args[i])){
-				gui = true;
-			} else if ("-l".equals(args[i])){
-				
-			} else if ("-i".equals(args[i])){
-				
-			} else {
+		boolean fileinput =  false;
+		
+		if (args.length < 1) {
+			System.err.println("Wrong usage. Use -h for detailed description.");
+			return;
+		}
+		
+		if ("-h".equals(args[0])){
+			System.out.println("Usage: jtig -g | jtig lexicon_file (input_sentence|input_file)\n"
+					+ "See recources/parser.properties");
+			return;			
+		} else if ("-g".equals(args[0])){
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GraphicalUserInterface frame = null;
+						try {
+							frame = new GraphicalUserInterface();
+							frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+							frame.setVisible(true);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+			return;
+		} else {
+			lexicon_filepath = args[0];
+		}
+		
+		if (args.length < 2){
+			System.err.println("Wrong usage. Use -h for detailed description.");
+			return;
+		}
+		
+		if ("-f".equals(args[1])){
+			if (args.length != 4) {
 				System.err.println("Wrong usage. Use -h for detailed description.");
 				return;
 			}
-		}
-		//Create components
-		/*MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
-		JTIGParser parser = new JTIGParser();
-		// get tokens out of string
-		Token[] tokens = st.getTokens(input);
-		// read lexicon
-		if (parser.readLexicon()){
-			parser.parseSentence(input, tokens);
-			//System.out.println();
+			fileinput = true;
+			input_filepath = args[2];
+			try{
+				input_file_line = Integer.parseInt(args[3]);
+			} catch (NumberFormatException nfe){
+				System.err.println("Wrong usage. Use -h for detailed description.");
+				return;
+			}
+		} else {
+			if (args.length != 2) {
+				System.err.println("Wrong usage. Use -h for detailed description.");
+				return;
+			}
+			input_sentence = args[1];
 		}
 		
-		//System.out.println(parser.toString());*/
+		//Create components
+		MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
+		
+		JTIGParser parser = new JTIGParser();
+		
+		// get tokens out of string
+		Token[] tokens = null;
+		if (fileinput)
+			tokens = st.getTokens(input_filepath,input_file_line);
+		else 
+			tokens = st.getTokens(input_sentence);
+		
+		// set lexicon
+		JTIGParser.setProperty("grammar.lexicon.path", lexicon_filepath);	
+		
+		// read lexicon
+		parser.readLexicon();
+		
+		ParseRun run = parser.parseSentence(input_sentence, tokens);
+
 	}
 	public boolean hasLexicon() {
 		return lexicon != null;

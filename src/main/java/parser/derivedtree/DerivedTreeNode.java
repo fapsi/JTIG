@@ -59,10 +59,9 @@ public class DerivedTreeNode {
 			parent = newnode;
 		} else 
 			parent = this;
-		
 		for (int i = 1;i < actlayer.getEntrys().length; i++){
 			
-			Layer child = tree.getChildLayer(actlayer, actlayer.getEntry(i));
+			Layer child = tree.getChildLayer(actlayer, i);
 			if (child == null){
 				DerivedTreeNode leaf = new DerivedTreeNode(parent,actlayer.getEntry(i),GeneralTools.AppendToIntArray(actlayer.getGornNumber(), i));
 				parent.children.add(leaf);

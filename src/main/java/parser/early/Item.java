@@ -76,6 +76,10 @@ public class Item {
 		return layer.getEntry(0);
 	}
 	
+	public boolean inLexicalAnchors(String label){
+		return activatedruletree.getLexicalAnchors().contains(label);
+	}
+	
 	public boolean hasParentGornNumber(Item item){
 		if (layer == null)
 			return false;

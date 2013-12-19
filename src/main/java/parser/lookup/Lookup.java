@@ -21,36 +21,28 @@ public class Lookup {
 	}
 	
 	public ActivatedLexicon findlongestmatches(Token[] tokens,Lexicon lexicon){
-		boolean all = "true".equals(JTIGParser.getProperty("parser.lookup.exhaustive"));
+		boolean all = JTIGParser.getBooleanProperty("parser.lookup.exhaustive");
 		
 		ActivatedLexicon slexicon = new ActivatedLexicon(lexicon,tokens);
 		List<Token> searchwords = new LinkedList<Token>();
-		
-		int p = 0;
 		List<ElementaryTree> results;
 		
 		for (int i = 0; i < tokens.length; i++){
 			searchwords.clear();
-			searchwords.add(tokens[i]);
-			p = i + 1;
 			
-			results = lexicon.find(searchwords,0);
-			while ( (results == null || results.size()<=0) && p < tokens.length){
-				
+			// TODO: add exhaustive distinction
+			for (int p = i; p < tokens.length; p++){
 				searchwords.add(tokens[p]);
-				p++;
-				results = lexicon.find(searchwords,0);
-			}
-
-			if (results != null && results.size() > 0){
 				
-				for (ElementaryTree result : results){
-					slexicon.add(result.getRootSymbol(), new ActivatedElementaryTree(result, i, p));
+				results = lexicon.find(searchwords,0);
+				
+				if (results != null && results.size() > 0){
+					
+					for (ElementaryTree result : results){
+						slexicon.add(result.getRootSymbol(), new ActivatedElementaryTree(result, i, p+1));
+					}
 				}
-				if(!all)
-					i = p - 1;
-			}
-			
+			}			
 		}
 		return slexicon;
 	}

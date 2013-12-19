@@ -284,16 +284,12 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				
 				ParseRun run = jtigparser.parseSentence(parse_input.getText(), tokens);
 				
-				List<IndependentDerivationTree> tmpidt = run.retrieveIndependentDerivationTrees();
+				List<IndependentDerivationTree> tmpidt = run.getIndependentDerivationTrees();
 				
-				List<DependentDerivationTree> tmpddt = run.retrieveDependentDerivationTrees();	
+				List<DependentDerivationTree> tmpddt = run.getDependentDerivationTrees();	
 				
-				List<DerivedTree> tmpdt = new LinkedList<DerivedTree>();
-				try {
-					tmpdt = run.retrieveDerivedTrees();
-				} catch (FileNotFoundException | XMLStreamException exc) {
-					JOptionPane.showMessageDialog(this, exc.getMessage());
-				}
+				List<DerivedTree> tmpdt = run.getDerivedTrees();
+				
 				
 				mainpanel.removeAll();
 				
@@ -368,6 +364,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	}
 
 	private void printDerivationTrees(List<? extends DerivationTree> trees) {
+		if (trees == null)
+			return;
 		int i = 1;
 		for (DerivationTree dtree :  trees){
 			DerivationTreePanel actualpanel = new DerivationTreePanel(dtree);
@@ -378,6 +376,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 	}
 	
 	private void printDerivedTrees(List<DerivedTree> trees){
+		if (trees == null)
+			return;
 		for (DerivedTree dtree : trees ){
 			DerivedTreePanel derivedtreepanel = new DerivedTreePanel(dtree);
 			addTab("Parse tree",derivedtreepanel);
@@ -404,12 +404,5 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		mainpanel.add(description,tab);
 		mainpanel.setTabComponentAt(mainpanel.getTabCount()-1,new ButtonTabComponent(mainpanel));
 		
-	}
-	
-	public static void main(String[] args) throws IOException {
-		GraphicalUserInterface frame = new GraphicalUserInterface();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setVisible(true);
 	}
 }

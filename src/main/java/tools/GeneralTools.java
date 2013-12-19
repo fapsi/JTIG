@@ -1,5 +1,6 @@
 package tools;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,5 +36,20 @@ public class GeneralTools {
 		if (tmp.length <= 0)
 			return "";
 		return tmp[tmp.length-1];
+	}
+	
+	public static boolean deleteDirectory(File path) {
+		if (path.exists()) {
+
+			File[] files = path.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory()) {
+					GeneralTools.deleteDirectory(files[i]);
+				} else {
+					files[i].delete();
+				}
+			}
+		}
+		return (path.delete());
 	}
 }

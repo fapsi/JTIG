@@ -56,8 +56,9 @@ public class Scanning extends InferenceRule {
 				public boolean apply(Item x) {
 					return x.getActivatedElementaryTree() == null && 
 							//TODO: ask if it's correct
+							(!item.inLexicalAnchors(x.getLeftHandSide().getLabel()) || (
 							item.getActivatedElementaryTree().getLeft() <= x.getLeft() && 
-							item.getActivatedElementaryTree().getRight() >= x.getRight() && 
+							item.getActivatedElementaryTree().getRight() >= x.getRight() )) &&
 							item.getNextEntry().getLabel().equals(x.getLeftHandSide().getLabel());
 				}
 			};

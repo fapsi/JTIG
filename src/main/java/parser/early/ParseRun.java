@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +69,8 @@ public class ParseRun {
 		this.tokens = tokens;
 		
 		appendToLog("Starting parse-process.");
+		appendToLog("Sentence: "+ originalsentence);
+		appendToLog("Tokens: "+ Arrays.toString(tokens));
 		// extract all important Elementary Tree's and store in activatedlexicon
 		this.activatedlexicon = preprocessSentence(tokens,lexicon);
 		
@@ -118,6 +121,7 @@ public class ParseRun {
 		
 		// initialize the chart with items created by the tokens
 		chart.initialize(tokens , factory);
+		appendToLog("Chart width: "+ tokens.length);
 				
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda()){
@@ -131,7 +135,7 @@ public class ParseRun {
 		appendToLog("Started main loop using following inference rules: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
-			if (factory.getAmountCreatedItems() > 10000){
+			if (factory.getAmountCreatedItems() > 1000000){
 				appendToLog("Too many items created. Stopping!");
 				break;
 			}
@@ -170,6 +174,21 @@ public class ParseRun {
 			appendToLog("Failure.");
 		}
 		forest = new Forest(items, tokens);
+		
+		if (JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE)){
+			extractIndependentDerivationTrees();
+		}
+		if (JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE)){
+			extractDependentDerivationTrees();
+		}
+		if (JTIGParser.canExecute(ParseLevel.DERIVEDTREE)){
+			try {
+				extractDerivedTrees();
+			} catch (FileNotFoundException | XMLStreamException e) {
+				appendToLog("Exception while extracting derived trees: "+ e.getMessage());
+			}
+		}
+		
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
@@ -180,6 +199,7 @@ public class ParseRun {
 		Lookup l = new Lookup();
 		ActivatedLexicon tmp = l.findlongestmatches(tokens , lexicon);
 		appendToLog("Found "+tmp.getSize()+" trees in lexicon which can possibly match in the sentence.");
+		appendToLog(tmp.toString());
 		level = ParseLevel.LOOKUP;
 		return tmp;
 	}
@@ -318,22 +338,15 @@ public class ParseRun {
 		return forest;
 	}
 	
-	public List<IndependentDerivationTree> retrieveIndependentDerivationTrees(){
-		if (id_derivationtrees == null)
-			extractIndependentDerivationTrees();
+	public List<IndependentDerivationTree> getIndependentDerivationTrees(){
 		return id_derivationtrees;
 	}
 	
-	public List<DependentDerivationTree> retrieveDependentDerivationTrees(){
-		if (id_derivationtrees == null)
-			return new LinkedList<DependentDerivationTree>();
-		if (d_derivationtrees == null)
-			extractDependentDerivationTrees();
+	public List<DependentDerivationTree> getDependentDerivationTrees(){
 		return d_derivationtrees;
 	}
 	
-	public List<DerivedTree> retrieveDerivedTrees() throws FileNotFoundException, XMLStreamException{
-		extractDerivedTrees();
+	public List<DerivedTree> getDerivedTrees() {
 		return derivedtrees;
 	}
 	

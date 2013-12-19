@@ -144,10 +144,11 @@ public class ElementaryTree {
 		return null;
 	}
 	
-	public Layer getChildLayer(Layer layer,Entry entry){
+	public Layer getChildLayer(Layer layer,int pos){
 		for (Layer element : layers){
-			int[] tmp = Arrays.copyOfRange(element.gornnumber, 0, element.gornnumber.length-1);
-			if (Arrays.equals(tmp, layer.gornnumber) && element.entrys[0].getLabel().equals(entry.getLabel())){
+			int end = element.gornnumber.length-1;
+			int[] tmp = Arrays.copyOfRange(element.gornnumber, 0, end);
+			if (Arrays.equals(tmp, layer.gornnumber) && element.gornnumber[end] == pos){
 				return element;
 			}
 		}
