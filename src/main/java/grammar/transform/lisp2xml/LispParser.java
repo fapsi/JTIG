@@ -124,9 +124,9 @@ public class LispParser {
 		case STRING:
 			if ("\"".equals(String.valueOf(actchar)) && (actpos > 1 && !"\\".equals(String.valueOf(actline.charAt(actpos-1))))) {
 				String found = actstr.toString();
-				if (keywords.containsKey(found))
-					next = new Token(found, keywords.get(found) , actlinecnt , actpos);
-				else
+				//if (keywords.containsKey(found))
+					//next = new Token(found, keywords.get(found) , actlinecnt , actpos);
+				//else
 					next = new Token(found, TokenType.LABEL , actlinecnt , actpos);
 
 				mode = LexMode.DEFAULT;
@@ -194,7 +194,6 @@ public class LispParser {
 			mode  = LexMode.DEFAULT;
 		}
 		if (mode == LexMode.DEFAULT && next != null){
-			System.out.println(next);
 			return next;
 		}
 		else 

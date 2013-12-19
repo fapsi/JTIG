@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser.derivationtree;
+package parser.output.derivationtree;
 
 import grammar.tiggrammar.ElementaryTree;
 
@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 import com.mxgraph.view.mxGraph;
 
 import parser.lookup.ActivatedElementaryTree;
-import tools.GeneralTools;
 
 /**
  * 

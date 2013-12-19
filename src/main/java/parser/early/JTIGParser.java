@@ -7,16 +7,12 @@ package parser.early;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
-import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JFrame;
@@ -26,7 +22,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import parser.derivationtree.DerivationTree;
 import tools.gui.GraphicalUserInterface;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
@@ -211,6 +206,8 @@ public class JTIGParser {
 		parser.readLexicon();
 		
 		ParseRun run = parser.parseSentence(input_sentence, tokens);
+		
+		System.out.println(run.getLog());
 
 	}
 	public boolean hasLexicon() {

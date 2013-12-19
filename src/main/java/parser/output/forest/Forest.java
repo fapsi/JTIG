@@ -13,16 +13,15 @@ import javax.xml.stream.XMLStreamException;
 
 import com.mxgraph.view.mxGraph;
 
-import edu.northwestern.at.morphadorner.corpuslinguistics.lexicon.Lexicon;
-import parser.derivationtree.AdjunctionDerivationEdge;
-import parser.derivationtree.DerivationEdge;
-import parser.derivationtree.IndependentDerivationTree;
-import parser.derivationtree.SubstitutionDerivationEdge;
 import parser.early.DerivationType;
 import parser.early.Item;
 import parser.early.ItemDerivation;
 import parser.early.JTIGParser;
 import parser.lookup.ActivatedElementaryTree;
+import parser.output.derivationtree.AdjunctionDerivationEdge;
+import parser.output.derivationtree.DerivationEdge;
+import parser.output.derivationtree.IndependentDerivationTree;
+import parser.output.derivationtree.SubstitutionDerivationEdge;
 import tools.GeneralTools;
 import tools.tokenizer.Token;
 
@@ -34,16 +33,12 @@ public class Forest {
 
 	// TODO: field with lexicon for storing in xml-file
 	
-	
-	private Token[] tokens;
-	
 	private List<Item> graphs;
 	
 	public long multiple_derivations = 1;
 	
 	public Forest(List<Item> graphs,Token[] tokens){
 		this.graphs = graphs;
-		this.tokens = tokens;
 	}
 	
 	/**

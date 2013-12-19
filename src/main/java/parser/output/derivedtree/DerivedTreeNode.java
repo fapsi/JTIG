@@ -1,19 +1,17 @@
 /**
  * 
  */
-package parser.derivedtree;
+package parser.output.derivedtree;
 
 import grammar.tiggrammar.ElementaryTree;
 import grammar.tiggrammar.Entry;
 import grammar.tiggrammar.Layer;
 import grammar.tiggrammar.NodeType;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;

@@ -19,7 +19,6 @@ import parser.early.ParseRun;
 import tools.GeneralTools;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
-import edu.northwestern.at.utils.FileUtils;
 
 /**
  * 

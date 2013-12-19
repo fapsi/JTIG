@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser.derivationtree;
+package parser.output.derivationtree;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import parser.derivedtree.DerivedTree;
+import parser.output.derivedtree.DerivedTree;
 
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.swing.mxGraphComponent;
@@ -22,8 +22,6 @@ public class DerivedTreePanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private DerivedTree	 rule;
 
 	private mxGraph graph;
 
@@ -39,7 +37,6 @@ public class DerivedTreePanel extends JPanel {
 		//gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.NORTH;
 		
-		this.rule = rule;
 		graph = new mxGraph();
 		parent = graph.getDefaultParent();
 

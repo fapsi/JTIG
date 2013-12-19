@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser.derivedtree;
+package parser.output.derivedtree;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,11 +21,11 @@ import grammar.tiggrammar.NodeType;
 
 import com.mxgraph.view.mxGraph;
 
-import parser.derivationtree.AdjunctionDerivationEdge;
-import parser.derivationtree.DependentDerivationTree;
-import parser.derivationtree.DerivationEdge;
-import parser.derivationtree.SubstitutionDerivationEdge;
 import parser.lookup.ActivatedElementaryTree;
+import parser.output.derivationtree.AdjunctionDerivationEdge;
+import parser.output.derivationtree.DependentDerivationTree;
+import parser.output.derivationtree.DerivationEdge;
+import parser.output.derivationtree.SubstitutionDerivationEdge;
 import tools.GeneralTools;
 
 /**

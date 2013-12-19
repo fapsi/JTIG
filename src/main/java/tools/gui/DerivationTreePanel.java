@@ -7,7 +7,7 @@ import java.awt.GridBagConstraints;
 
 import javax.swing.JPanel;
 
-import parser.derivationtree.DerivationTree;
+import parser.output.derivationtree.DerivationTree;
 
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.swing.mxGraphComponent;

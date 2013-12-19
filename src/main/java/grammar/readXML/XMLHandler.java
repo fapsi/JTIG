@@ -15,7 +15,6 @@ import grammar.tiggrammar.exceptions.UnvalidXMLStructure;
 import grammar.tiggrammar.intermediate.IRTreeNode;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**

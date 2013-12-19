@@ -23,14 +23,13 @@ import java.util.PriorityQueue;
 
 import javax.xml.stream.XMLStreamException;
 
-import parser.derivationtree.DependentDerivationTree;
-import parser.derivationtree.DerivationTree;
-import parser.derivationtree.IndependentDerivationTree;
-import parser.derivedtree.DerivedTree;
 import parser.early.inferencerules.InferenceRule;
 import parser.lookup.ActivatedElementaryTree;
 import parser.lookup.ActivatedLexicon;
 import parser.lookup.Lookup;
+import parser.output.derivationtree.DependentDerivationTree;
+import parser.output.derivationtree.IndependentDerivationTree;
+import parser.output.derivedtree.DerivedTree;
 import parser.output.forest.Forest;
 import tools.tokenizer.Token;
 

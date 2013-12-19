@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import lexicon.unvalid.LexiconUnvalidTest;
-
 import org.junit.Test;
 
 import parser.early.JTIGParser;
