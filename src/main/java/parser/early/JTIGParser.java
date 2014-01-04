@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
@@ -20,10 +21,13 @@ import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.TTCCLayout;
 import org.xml.sax.SAXException;
 
 import tools.gui.GraphicalUserInterface;
-import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
 import grammar.readXML.XMLReader;
 import grammar.tiggrammar.Lexicon;
@@ -35,23 +39,33 @@ public class JTIGParser {
 	
 	private static final String parserpropertypath = "resources/parser.properties";
 	
-	private final StringBuilder log = new StringBuilder();
+	public static final Logger logger = Logger.getRootLogger();
 	
 	private static final Properties  parserproperties = new Properties();
 	
 	private Lexicon lexicon;
 
-	private ParseRun lastrun;
+	//private ParseRun lastrun;
 	
 	private String lasterror;
 	
 	public JTIGParser() throws IOException{
 		createLogDirectory();
 		
+		createLogProperties();
+		
 		createRunsDirectory();
 		
 		// Load preferences from property-file
 		readproperties();
+		
+		logger.info("JTIG parser started.");
+	}
+
+	private void createLogProperties() throws IOException {
+		TTCCLayout layout = new TTCCLayout();
+		FileAppender fileAppender = new FileAppender( layout, "data/log/main.log", false );
+	    logger.addAppender(fileAppender);
 	}
 
 	private void createLogDirectory() throws IOException{
@@ -75,27 +89,32 @@ public class JTIGParser {
 		XMLReader xp = new XMLReader(getLexiconPaths()[0]);
 		try {
 			this.lexicon = xp.read();
-			writeIntoLog("Read lexicon '" + getLexiconPaths()[0] + "' successfully.");
+			logger.info("Read lexicon '" + getLexiconPaths()[0] + "' successfully.");
 		} catch (SAXException | IOException | IllegalArgumentException | ParserConfigurationException | XMLStreamException e) {
 			lasterror = e.getMessage();
-			writeIntoLog("Can't read lexicon. Error: "+lasterror);
+			logger.error("Can't read lexicon. Error: "+lasterror);
 			this.lexicon = null;
 			return false;
 		}
 		return true;
 	}
 	
-	public ParseRun parseSentence(String originalsentence, Token[] tokens){
-		//TODO multithreading => synchro in lexicon
+	public ParseResult parseSentence(String originalsentence, Token[] tokens){
+		
+		logger.info("Start prepocessing sentence: '"+originalsentence+"'.");
+		logger.info("Tokenized: " +Arrays.toString(tokens));
+		
 		ParseRun parserun = new ParseRun(lexicon, originalsentence, tokens);
 		
-		writeIntoLog("Parsing sentence: '"+originalsentence+"'.");
+		logger.info("Start parsing sentence: '"+originalsentence+"'.");
 		
-		parserun.parse();
+		ParseResult result = parserun.parse();
 		
-		lastrun = parserun;
+		logger.info("Result: '"+result.toString()+"'.");
 		
-		return parserun;
+		//lastrun = parserun;
+		
+		return result;
 	}
 	
 	
@@ -124,12 +143,12 @@ public class JTIGParser {
 
 	
 	public static void main(String[] args) throws IOException, XMLStreamException {
-		String input_sentence = "";
+		/*String input_sentence = "";
 		String lexicon_filepath = "";
 		int input_file_line = -1;
 		String input_filepath = null;
 		
-		boolean fileinput =  false;
+		boolean fileinput =  false;*/
 		
 		if (args.length < 1) {
 			System.err.println("Wrong usage. Use -h for detailed description.");
@@ -157,10 +176,10 @@ public class JTIGParser {
 				});
 			}
 			return;
-		} else {
-			lexicon_filepath = args[0];
+		} else { // if ("-f".equals(args[0])){{
+			//lexicon_filepath = args[0];
 		}
-		
+		/*
 		if (args.length < 2){
 			System.err.println("Wrong usage. Use -h for detailed description.");
 			return;
@@ -208,7 +227,7 @@ public class JTIGParser {
 		ParseRun run = parser.parseSentence(input_sentence, tokens);
 		
 		System.out.println(run.getLog());
-
+*/
 	}
 	public boolean hasLexicon() {
 		return lexicon != null;
@@ -229,11 +248,16 @@ public class JTIGParser {
 		return "true".equals(JTIGParser.getProperty(key).toLowerCase());
 	}
 	
-	public static boolean canExecute(ParseLevel want){
+	public static ParseLevel getParseLevel(){
 		String prop = getProperty("parser.core.parselevel");
 		ParseLevel can = ParseLevel.valueOf(prop);
 		if (can == null || can == ParseLevel.INIT || can == ParseLevel.FAILED)
 			throw new IllegalArgumentException("Property parser.core.parselevel not valid.");
+		return can;
+	}
+	
+	public static boolean canExecute(ParseLevel want){
+		ParseLevel can = getParseLevel();
 		switch(want){
 			case LOOKUP:
 				return true;
@@ -250,27 +274,6 @@ public class JTIGParser {
 			default: 
 				return false;
 		}
-	}
-	
-	public StringBuilder getLog(){
-		return log;
-	}
-
-	public void writeIntoLog(String message) {
-		try {
-			File file = new File("data/log/log");
-			BufferedWriter output = new BufferedWriter(new FileWriter(file,true));
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-			output.write(sdf.format(new Date()) + " : " +message);
-			output.newLine();
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public ParseRun getLastRun() {
-		return lastrun;
 	}
 	
 	public String getLastError(){

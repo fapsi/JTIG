@@ -7,9 +7,22 @@
 	<name>JTIG Parser</name>
 	<description>A lexicalised tree insertion grammar parser</description>
 	<url>https://github.com/fapsi/JTIG</url>
+	<developers>
+		<developer>
+			<id>Fabian Gallenkamp</id>
+			<email>fapsi@go4more.de</email>
+			<url>https://github.com/fapsi/</url>
+			<organization></organization>
+			<organizationUrl></organizationUrl>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 	<scm>
 		<url>https://github.com/fapsi/JTIG/issues</url>
 	</scm>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -26,6 +39,11 @@
 			<groupId>org.tinyjee.jgraphx</groupId>
 			<artifactId>jgraphx</artifactId>
 			<version>2.0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
 	</dependencies>
 	<build>

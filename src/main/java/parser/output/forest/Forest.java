@@ -37,7 +37,7 @@ public class Forest {
 	
 	public long multiple_derivations = 1;
 	
-	public Forest(List<Item> graphs,Token[] tokens){
+	public Forest(List<Item> graphs){
 		this.graphs = graphs;
 	}
 	

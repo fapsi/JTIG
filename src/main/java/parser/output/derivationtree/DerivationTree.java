@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.mxgraph.view.mxGraph;
 
@@ -45,6 +46,9 @@ public class DerivationTree {
 		this.edges = new LinkedList<DerivationEdge>();
 		this.nodesprinted = new HashMap<ActivatedElementaryTree, Object>();
 		this.root = root;
+		// special case !
+		if (!nodesprinted.containsKey(this.root))
+			nodesprinted.put(this.root, null);
 	}
 
 	public DerivationTree(Map<ActivatedElementaryTree, Object> nodesprinted,List<DerivationEdge> edges,ActivatedElementaryTree root) {
@@ -138,6 +142,21 @@ public class DerivationTree {
 		}
 		return result;
 	}
+	
+	public List<ActivatedElementaryTree> getChildTrees(ActivatedElementaryTree tree){
+		List<ActivatedElementaryTree> result = new LinkedList<ActivatedElementaryTree>();
+		for (DerivationEdge current : edges){
+			if (current.first.equals(tree)){
+				result.add(current.second);
+			}
+		}
+		return result;
+	}
+	
+	public Set<ActivatedElementaryTree> getActivatedElementaryTrees(){
+		return nodesprinted.keySet();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

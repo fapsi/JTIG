@@ -32,6 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import parser.early.JTIGParser;
 import parser.early.ParseLevel;
+import parser.early.ParseResult;
 import parser.early.ParseRun;
 import parser.output.derivationtree.DependentDerivationTree;
 import parser.output.derivationtree.DerivationTree;
@@ -271,20 +272,20 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			Token[] tokens = st.getTokens(parse_input.getText());
 			if(jtigparser.hasLexicon()){
 				
-				ParseRun run = jtigparser.parseSentence(parse_input.getText(), tokens);
+				ParseResult result = jtigparser.parseSentence(parse_input.getText(), tokens);
 				
-				List<IndependentDerivationTree> tmpidt = run.getIndependentDerivationTrees();
+				List<IndependentDerivationTree> tmpidt = result.getIndependentDerivationTrees();
 				
-				List<DependentDerivationTree> tmpddt = run.getDependentDerivationTrees();	
+				List<DependentDerivationTree> tmpddt = result.getDependentDerivationTrees();	
 				
-				List<DerivedTree> tmpdt = run.getDerivedTrees();
+				List<DerivedTree> tmpdt = result.getDerivedTrees();
 				
 				
 				mainpanel.removeAll();
 				
-				addLogPanel(run.getLog());
+				addLogPanel(result.getLog());
 				if (JTIGParser.getBooleanProperty("gui.forest.show"))
-					printItems(run.getForest());
+					printItems(result.getForest());
 				if (JTIGParser.getBooleanProperty("gui.independentderivationtree.show"))
 					printDerivationTrees(tmpidt);
 				if (JTIGParser.getBooleanProperty("gui.dependentderivationtree.show"))
@@ -308,7 +309,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				// TODO use printDerivedTrees
 				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
 					DerivedTreePanel tigrulepanel = new DerivedTreePanel(new DerivedTree(r));
-					addTab(result+" "+i,tigrulepanel);
+					addTab(result+" "+r.getIndex(),tigrulepanel);
 					i++;
 				}
 			}
@@ -384,7 +385,6 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 			ForestPanel actualpanel = new ForestPanel(forest,i);
 			actualpanel.drawItem();
 			addTab("Forest item "+(i+1),actualpanel);
-			i++;
 		}
 		
 	}

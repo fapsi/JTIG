@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import parser.early.JTIGParser;
+import parser.early.ParseResult;
 import parser.early.ParseRun;
 import tools.GeneralTools;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
@@ -60,7 +61,7 @@ public class ParserTests {
 		
 		parser.readLexicon();
 		
-		ParseRun run = null;
+		ParseResult run = null;
 		try {
 			Token[] tokens = st.getTokens(url_input_file.toURI().getPath(), 1);
 			

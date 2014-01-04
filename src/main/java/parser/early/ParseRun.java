@@ -6,22 +6,23 @@ package parser.early;
 import grammar.tiggrammar.Lexicon;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
 import javax.xml.stream.XMLStreamException;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
 import parser.early.inferencerules.InferenceRule;
 import parser.lookup.ActivatedElementaryTree;
@@ -46,30 +47,31 @@ public class ParseRun {
 	/** helper variables **/
 	private ArrayList<InferenceRule> inferencerules;
 
-	private DefaultItemFactory factory;
+	protected DefaultItemFactory factory;
 	private Chart chart;
 	private PriorityQueue<Item> agenda;
 	private ActivatedLexicon activatedlexicon;
 
-	private final TerminationCriterion isterm;
+	private TerminationCriterion isterm;
 	private Token[] tokens;
 
-	/** result variables**/
+	private Logger logger;
 	
-	//private List<Item> items;
-	private Forest forest;
-	private List<IndependentDerivationTree> id_derivationtrees = null;
-	private List<DependentDerivationTree> d_derivationtrees = null;
-	private LinkedList<DerivedTree> derivedtrees = null;
+	private boolean executed = false;
 	
 	public ParseRun(Lexicon lexicon,String originalsentence, Token[] tokens){		
 		createRunDirectory();
+		try {
+			createLogger();
+		} catch (IOException e) {
+			
+		}
 		
 		this.tokens = tokens;
 		
-		appendToLog("Starting parse-process.");
-		appendToLog("Sentence: "+ originalsentence);
-		appendToLog("Tokens: "+ Arrays.toString(tokens));
+		logger.info("Starting parse-process.");
+		logger.info("Sentence: "+ originalsentence);
+		logger.info("Tokens: "+ Arrays.toString(tokens));
 		// extract all important Elementary Tree's and store in activatedlexicon
 		this.activatedlexicon = preprocessSentence(tokens,lexicon);
 		
@@ -83,7 +85,7 @@ public class ParseRun {
 		ItemComparator itemcomp = new ItemComparator(isterm);
 		this.agenda = new PriorityQueue<Item>(10, itemcomp);
 	}
-	
+
 	private void createRunDirectory() {
 		int max = 0;
 		File runs_dir = new File("data/runs/");
@@ -101,45 +103,62 @@ public class ParseRun {
 		dir.mkdirs();
 	}
 	
-	public void parse(){
+	private void createLogger() throws IOException {
+		logger = Logger.getLogger(name);
+		SimpleLayout layout = new SimpleLayout();
+	//    ConsoleAppender consoleAppender = new ConsoleAppender( layout );
+	//      logger.addAppender( consoleAppender );
+	      FileAppender fileAppender = new FileAppender( layout, "data/runs/"+name+"/"+name+".log", false );
+	      logger.addAppender( fileAppender );
+	      logger.setLevel(Level.ERROR);
+	}
+	
+	public ParseResult parse(){
+		ParseLevel goallevel = JTIGParser.getParseLevel();
 		List<Item> items = new LinkedList<Item>();
 		boolean finishedgood = false;
 		
+		if (executed){
+			logger.error("Only one run per instance allowed.");
+			return new ParseResult(this, level, goallevel, new Forest(items));
+		}
+		executed = true;
+		
 		if (!JTIGParser.canExecute(ParseLevel.FOREST)){
-			forest = new Forest(items, tokens);
-			return;
+			destroy();
+			return new ParseResult(this, level, goallevel, new Forest(items));
 		}
 		
 		// prepare inference rules, setting needed classes
 		if (!prepareInferencerules()){
 			level = ParseLevel.FAILED;
-			appendToLog("No inference rules used in parsing process. Failure.");
-			forest = new Forest(items, tokens);
-			return;
+			logger.error("No inference rules used in parsing process.");
+			destroy();
+			return new ParseResult(this, level, goallevel, new Forest(items));
 		}
 		
 		// initialize the chart with items created by the tokens
 		chart.initialize(tokens , factory);
-		appendToLog("Chart width: "+ tokens.length);
+		logger.info("Chart width: "+ tokens.length);
 				
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda()){
 			level = ParseLevel.FAILED;
-			appendToLog("Agenda hasn't any start items. Failure.");
-			forest = new Forest(items, tokens);
-			return;
+			logger.error("Agenda hasn't any start items.");
+			destroy();
+			return new ParseResult(this, level, goallevel, new Forest(items));
 		}
 		
 		// Main loop
-		appendToLog("Started main loop using following inference rules: "+inferencerules.toString());
+		logger.info("Started main loop using following inference rules: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
 			if (factory.getAmountCreatedItems() > 1000000){
-				appendToLog("Too many items created. Stopping!");
+				logger.error("Too many items created. Stopping!");
 				break;
 			}
 				
-			appendToLog("Actual element: "+current.toStringUgly()+"\n");
+			logger.debug("Actual element: "+current.toStringUgly()+"\n");
 			boolean inserted = chart.addItem(current);
 			
 			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
@@ -163,31 +182,35 @@ public class ParseRun {
 			if (items.size() > 0)
 				finishedgood = true;
 		}
-		appendToLog("Finished main loop. "+factory.getAmountCreatedItems()+" items were created.");
+		logger.info("Finished main loop. "+factory.getAmountCreatedItems()+" items were created.");
 		
 		if (finishedgood){
 			level = ParseLevel.FOREST;
-			appendToLog("Success.");
+			logger.info("Success.");
 		} else {
 			level = ParseLevel.FAILED;
-			appendToLog("Failure.");
+			logger.error("Failure.");
 		}
-		forest = new Forest(items, tokens);
+		Forest forest = new Forest(items);
 		
+		List<IndependentDerivationTree> id_derivationtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE)){
-			extractIndependentDerivationTrees();
+			id_derivationtrees = extractIndependentDerivationTrees(forest);
 		}
+		List<DependentDerivationTree> d_derivationtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE)){
-			extractDependentDerivationTrees();
+			d_derivationtrees = extractDependentDerivationTrees(id_derivationtrees);
 		}
+		List<DerivedTree> derivedtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.DERIVEDTREE)){
 			try {
-				extractDerivedTrees();
+				derivedtrees = extractDerivedTrees(d_derivationtrees);
 			} catch (FileNotFoundException | XMLStreamException e) {
-				appendToLog("Exception while extracting derived trees: "+ e.getMessage());
+				logger.error("Exception while extracting derived trees: "+ e.getMessage());
 			}
 		}
-		
+		destroy();
+		return new ParseResult(this, level, goallevel, forest, id_derivationtrees, d_derivationtrees, derivedtrees);
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
@@ -197,8 +220,8 @@ public class ParseRun {
 		}
 		Lookup l = new Lookup();
 		ActivatedLexicon tmp = l.findlongestmatches(tokens , lexicon);
-		appendToLog("Found "+tmp.getSize()+" trees in lexicon which can possibly match in the sentence.");
-		appendToLog(tmp.toString());
+		logger.info("Found "+tmp.getSize()+" trees in lexicon which can possibly match in the sentence.");
+		logger.info(tmp.toString());
 		level = ParseLevel.LOOKUP;
 		return tmp;
 	}
@@ -227,7 +250,7 @@ public class ParseRun {
 				inferencerules.add((InferenceRule) Class.forName(rulefullqualifiednames[i]).newInstance());
 			} catch (InstantiationException | IllegalAccessException
 					| ClassNotFoundException e) {
-				appendToLog("Could not instantiate class with name: '"+rulefullqualifiednames[i]+"'");
+				logger.error("Could not instantiate class with name: '"+rulefullqualifiednames[i]+"'");
 			}
 		}
 	}
@@ -249,43 +272,44 @@ public class ParseRun {
 		return added;
 	}
 	
-	private void extractIndependentDerivationTrees(){
-		if (!JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE))
-			return;
+	private List<IndependentDerivationTree> extractIndependentDerivationTrees(Forest forest){
+		if (!JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE) || forest == null)
+			return null;
 		if (level != ParseLevel.FOREST){
-			appendToLog("Could not extract independent-derivation-trees, because it requires status FOREST; Current value: "+level.toString());
-			return;
+			logger.error("Could not extract independent-derivation-trees, because it requires status FOREST; Current value: "+level.toString());
+			return null;
 		}
 		level = ParseLevel.INDEPENDENTDTREE;
-		appendToLog("Extracting independent-derivation-trees.");
-		this.id_derivationtrees = forest.createDerivationTrees();
+		logger.info("Extracting independent-derivation-trees.");
+		return forest.createDerivationTrees();
 	}
 	
-	private void extractDependentDerivationTrees(){
-		if (!JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE))
-			return;
+	private List<DependentDerivationTree> extractDependentDerivationTrees(List<IndependentDerivationTree> id_derivationtrees){
+		if (!JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE) || id_derivationtrees == null)
+			return null;
 		if (level != ParseLevel.INDEPENDENTDTREE){
-			appendToLog("Could not extract dependent-derivation-trees, because it requires status INDEPENDENTDTREE; Current value: "+level.toString());
-			return;
+			logger.error("Could not extract dependent-derivation-trees, because it requires status INDEPENDENTDTREE; Current value: "+level.toString());
+			return null;
 		}
-		appendToLog("Extracting dependent-derivation-trees.");
+		logger.info("Extracting dependent-derivation-trees.");
 		level = ParseLevel.DEPENDENTDTREE;
-		d_derivationtrees = new LinkedList<DependentDerivationTree>();
+		List<DependentDerivationTree> d_derivationtrees = new LinkedList<DependentDerivationTree>();
 		for (IndependentDerivationTree itree : id_derivationtrees){
 			d_derivationtrees.add(new DependentDerivationTree(itree));
 		}
+		return d_derivationtrees;
 	}
 	
-	private void extractDerivedTrees() throws FileNotFoundException, XMLStreamException {
-		if (!JTIGParser.canExecute(ParseLevel.DERIVEDTREE))
-			return;
+	private List<DerivedTree> extractDerivedTrees(List<DependentDerivationTree> d_derivationtrees) throws FileNotFoundException, XMLStreamException {
+		if (!JTIGParser.canExecute(ParseLevel.DERIVEDTREE) || d_derivationtrees == null)
+			return null;
 		if (level != ParseLevel.DEPENDENTDTREE){
-			appendToLog("Could not extract derived/parse-trees, because it requires status DEPENDENTDTREE; Current value: "+level.toString());
-			return;
+			logger.error("Could not extract derived/parse-trees, because it requires status DEPENDENTDTREE; Current value: "+level.toString());
+			return null;
 		}
-		appendToLog("Extracting derived/parse-trees.");
+		logger.info("Extracting derived/parse-trees.");
 		level = ParseLevel.DERIVEDTREE;
-		derivedtrees = new LinkedList<DerivedTree>();
+		List<DerivedTree> derivedtrees = new LinkedList<DerivedTree>();
 		int i = 1;
 		for (DependentDerivationTree ddtree : d_derivationtrees){
 			DerivedTree newone = new DerivedTree(ddtree);
@@ -296,29 +320,27 @@ public class ParseRun {
 			if (JTIGParser.getBooleanProperty("parser.derivedtree.store")){
 				File f = new File("data/runs/"+name+"/derivedtree"+i+".xml");
 				newone.storeToXML(new FileOutputStream(f , false), "Derived tree " + i);
-				appendToLog("Saving parsetree 'data/runs/"+name+"/derivedtree"+i+".xml'.");
+				logger.info("Saving parsetree 'data/runs/"+name+"/derivedtree"+i+".xml'.");
 			}
 			i++;
 		}
-		
+		return derivedtrees;
 	}
 	
-	public void appendToLog(String message) {
-		try {
-			File file = new File("data/runs/"+name+"/log");
-			BufferedWriter output = new BufferedWriter(new FileWriter(file,true));
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-			output.write(sdf.format(new Date()) + " : " +message);
-			output.write(System.getProperty("line.separator"));
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	private void destroy(){
+		if (executed){
+			//factory = null;
+			agenda = null;
+			chart = null;
+			inferencerules = null;
+			isterm=null;
+			//activatedlexicon = null;
 		}
 	}
 	
-	public String getLog() {
+	protected String getLog() {
 		StringBuilder sb = new StringBuilder();
-		File file = new File("data/runs/"+name+"/log");
+		File file = new File("data/runs/"+name+"/"+name+".log");
 		try {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = "";
@@ -332,21 +354,4 @@ public class ParseRun {
 		}
 		return sb.toString();
 	}
-
-	public Forest getForest() {
-		return forest;
-	}
-	
-	public List<IndependentDerivationTree> getIndependentDerivationTrees(){
-		return id_derivationtrees;
-	}
-	
-	public List<DependentDerivationTree> getDependentDerivationTrees(){
-		return d_derivationtrees;
-	}
-	
-	public List<DerivedTree> getDerivedTrees() {
-		return derivedtrees;
-	}
-	
 }

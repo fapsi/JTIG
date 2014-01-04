@@ -163,7 +163,7 @@ public class DerivedTreeNode {
 			parent.children.set(toreplace, head);
 			head.parent = this.parent;
 			head.entry = entry;
-			this.parent = null;
+			//this.parent = null;
 		}		
 	}
 
@@ -182,7 +182,7 @@ public class DerivedTreeNode {
 		}
 		foot.children = children;
 		//foot.entry = entry;
-		children = null;
+		children = new ArrayList<DerivedTreeNode>();
 	}
 	
 	
