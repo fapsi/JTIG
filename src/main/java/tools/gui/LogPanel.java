@@ -17,7 +17,7 @@ public class LogPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public LogPanel(String message){
+	public LogPanel(String message, String details){
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.weightx = 1;
@@ -36,9 +36,12 @@ public class LogPanel extends JPanel {
 		log.append(message);
 		//log.setLineWrap(true);
 		add(new JScrollPane(log),gbc);
-		gbc.weightx = 0.5;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
 		gbc.gridx = 1;
-		gbc.fill = GridBagConstraints.NONE;
-		add(new JLabel("Details:"),gbc);
+		
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		add(new JLabel(details),gbc);
 	}
 }

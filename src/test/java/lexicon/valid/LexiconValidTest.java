@@ -6,7 +6,6 @@ package lexicon.valid;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -24,8 +23,8 @@ public class LexiconValidTest {
 		public void testAllValidLexicon() {
 			JTIGParser parser = null;
 			try {
-				parser = new JTIGParser();
-			} catch (IOException e) {
+				parser = new JTIGParser("");
+			} catch (Exception e) {
 				fail("Parser couldn't be created.");
 			}
 			URL url = LexiconValidTest.class.getResource("./");

@@ -35,7 +35,7 @@ public class ParserTests {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		parser = new JTIGParser();
+		parser = new JTIGParser("");
 		st = new MorphAdornoSentenceTokenizer();
 	}
 

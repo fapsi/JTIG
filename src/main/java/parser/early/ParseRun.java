@@ -69,7 +69,7 @@ public class ParseRun {
 		
 		this.tokens = tokens;
 		
-		logger.info("Starting parse-process.");
+		logger.info("Starting parse-preprocess.");
 		logger.info("Sentence: "+ originalsentence);
 		logger.info("Tokens: "+ Arrays.toString(tokens));
 		// extract all important Elementary Tree's and store in activatedlexicon
@@ -114,6 +114,8 @@ public class ParseRun {
 	}
 	
 	public ParseResult parse(){
+		logger.info("Starting parse-process.");
+		long timeforest = System.currentTimeMillis();
 		ParseLevel goallevel = JTIGParser.getParseLevel();
 		List<Item> items = new LinkedList<Item>();
 		boolean finishedgood = false;
@@ -191,16 +193,22 @@ public class ParseRun {
 			level = ParseLevel.FAILED;
 			logger.error("Failure.");
 		}
+		timeforest = System.currentTimeMillis() - timeforest;
 		Forest forest = new Forest(items);
 		
+		long timeIDT = System.currentTimeMillis();
 		List<IndependentDerivationTree> id_derivationtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE)){
 			id_derivationtrees = extractIndependentDerivationTrees(forest);
 		}
+		timeIDT = System.currentTimeMillis() - timeIDT;
+		long timeDDT = System.currentTimeMillis();
 		List<DependentDerivationTree> d_derivationtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE)){
 			d_derivationtrees = extractDependentDerivationTrees(id_derivationtrees);
 		}
+		timeDDT = System.currentTimeMillis() - timeDDT;
+		long timeDT = System.currentTimeMillis();
 		List<DerivedTree> derivedtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.DERIVEDTREE)){
 			try {
@@ -209,8 +217,9 @@ public class ParseRun {
 				logger.error("Exception while extracting derived trees: "+ e.getMessage());
 			}
 		}
+		timeDT = System.currentTimeMillis() - timeDT;
 		destroy();
-		return new ParseResult(this, level, goallevel, forest, id_derivationtrees, d_derivationtrees, derivedtrees);
+		return new ParseResult(this, level, goallevel, forest, id_derivationtrees, d_derivationtrees, derivedtrees,timeforest,timeIDT,timeDDT,timeDT);
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
@@ -353,5 +362,9 @@ public class ParseRun {
 			sb.append("Error reading the log-file.");
 		}
 		return sb.toString();
+	}
+
+	public Logger getLogger() {
+		return logger;
 	}
 }

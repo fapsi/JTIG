@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,10 +77,10 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 
 	private JCheckBoxMenuItem menuItem_computeFOREST;
 	
-	public GraphicalUserInterface() throws IOException {
+	public GraphicalUserInterface(JTIGParser jtigparser) throws Exception {
 		super("JTIG Parser");
 		
-		jtigparser = new JTIGParser();
+		this.jtigparser = jtigparser;
 		
 		createMenu();
 		
@@ -283,7 +282,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				
 				mainpanel.removeAll();
 				
-				addLogPanel(result.getLog());
+				addLogPanel(result.getLog(),result.getParseDetails());
+				
 				if (JTIGParser.getBooleanProperty("gui.forest.show"))
 					printItems(result.getForest());
 				if (JTIGParser.getBooleanProperty("gui.independentderivationtree.show"))
@@ -293,7 +293,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				if (JTIGParser.getBooleanProperty("gui.derivedtree.show"))
 					printDerivedTrees(tmpdt);
 			} else {
-				addLogPanel("There exists no lexicon. Aborted.");
+				addLogPanel("There exists no lexicon. Aborted.","");
 			}
 				//pack();
 		} else if (e.getSource() == menuItem_preferences){
@@ -374,8 +374,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		}
 	}
 
-	private void addLogPanel(String log){
-		LogPanel logpanel = new LogPanel(log);
+	private void addLogPanel(String log,String details){
+		LogPanel logpanel = new LogPanel(log,details);
 		addTab("Log",logpanel);
 	}
 	
