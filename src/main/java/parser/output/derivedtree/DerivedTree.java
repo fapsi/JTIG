@@ -141,7 +141,7 @@ public class DerivedTree {
 					if (tmp instanceof AdjunctionDerivationEdge){
 					
 						DerivedTreeNode foot = head.getAdjunctionFoot();
-						System.out.println(currentnode.children);
+						//System.out.println(currentnode.children);
 						//connect beneath
 						currentnode.replaceNodeBeneath(foot);
 						//currentnode.children = null;
@@ -154,7 +154,7 @@ public class DerivedTree {
 			// insert result into map
 			totransform.put(current, transformed_into);
 		}
-		System.out.println(totransform);
+		//System.out.println(totransform);
 		root = totransform.get(ddt.getRoot());
 		
 	}

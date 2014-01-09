@@ -110,7 +110,7 @@ public class ParseRun {
 	//      logger.addAppender( consoleAppender );
 	      FileAppender fileAppender = new FileAppender( layout, "data/runs/"+name+"/"+name+".log", false );
 	      logger.addAppender( fileAppender );
-	      logger.setLevel(Level.ERROR);
+	      logger.setLevel(Level.INFO);
 	}
 	
 	public ParseResult parse(){
@@ -155,7 +155,7 @@ public class ParseRun {
 		logger.info("Started main loop using following inference rules: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
-			if (factory.getAmountCreatedItems() > 1000000){
+			if (factory.getAmountCreatedItems() > 10000000){ //TODO: add to properties
 				logger.error("Too many items created. Stopping!");
 				break;
 			}

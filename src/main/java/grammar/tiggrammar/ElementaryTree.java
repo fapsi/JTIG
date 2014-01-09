@@ -71,7 +71,7 @@ public class ElementaryTree {
 		if (lexicalanchors == null || lexicalanchors.size() <= 0)
 			throw new UnvalidElementaryTreeException("No lexical anchors specified.");
 		this.lexicalanchors = lexicalanchors;
-		
+
 		if (frequency < 0)
 			throw new UnvalidElementaryTreeException("Frequency has to be greater than 0.");
 		this.frequency = frequency;
