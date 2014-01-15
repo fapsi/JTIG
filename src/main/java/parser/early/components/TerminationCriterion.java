@@ -1,13 +1,9 @@
 /**
  * 
  */
-package parser.early.run;
+package parser.early.components;
 
 import java.util.Set;
-
-import parser.early.components.Item;
-import parser.early.components.ItemFilter;
-import parser.early.components.ItemStatus;
 
 /**
  * 

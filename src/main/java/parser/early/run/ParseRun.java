@@ -26,6 +26,7 @@ import parser.early.JTIGParser;
 import parser.early.components.Chart;
 import parser.early.components.DefaultItemFactory;
 import parser.early.components.Item;
+import parser.early.components.TerminationCriterion;
 import parser.early.components.agenda.Agenda;
 import parser.early.components.agenda.ItemComparator;
 import parser.early.inferencerules.InferenceRule;
