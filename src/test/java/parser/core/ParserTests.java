@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import parser.early.JTIGParser;
-import parser.early.ParseResult;
-import parser.early.ParseRun;
+import parser.early.run.ParseResult;
+import parser.early.run.ParseRun;
 import tools.GeneralTools;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;

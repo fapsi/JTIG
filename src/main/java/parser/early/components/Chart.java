@@ -1,9 +1,10 @@
 /**
  * 
  */
-package parser.early;
+package parser.early.components;
 import java.util.LinkedList;
 import java.util.List;
+
 import tools.tokenizer.Token;
 
 /**
@@ -18,6 +19,10 @@ public class Chart {
 	private ItemSet[] entrys;
 	
 	private int width;
+	
+	private long uniqueitems;
+	
+	private long processeditems;
 	
 	public Chart(){
 		
@@ -38,7 +43,15 @@ public class Chart {
 		int index = item.getRight() * width + item.getLeft();
 		if (entrys[index] == null)
 			entrys[index] = new ItemSet();
-		return entrys[index].add(item);
+		
+		processeditems++;
+		
+		boolean added = entrys[index].add(item);
+		
+		if (added)
+			uniqueitems++;
+		
+		return added;
 	}
 	
 	public ItemSet getItemset(int left, int right){
@@ -87,6 +100,14 @@ public class Chart {
 			}
 		}
 		return result;
+	}
+	
+	public long getAmountUniqueItems(){
+		return uniqueitems;
+	}
+	
+	public long getAmountProcessedItems(){
+		return processeditems;
 	}
 
 	/* (non-Javadoc)

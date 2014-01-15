@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,54 +45,6 @@ public class DerivedTree {
 	public DerivedTree(ElementaryTree tree){
 		root = new DerivedTreeNode(tree);
 	}
-
-	/**
-	 * @deprecated deprecated
-	 * @param ddt
-	 * @param current
-	 * @return
-	 */
-	private DerivedTreeNode createfromdependentderivationtree(DependentDerivationTree ddt,ActivatedElementaryTree current) {
-		// create tree for current elementarytree
-		DerivedTreeNode currenttreepart = new DerivedTreeNode(current);
-		
-		// get the derivations
-		Map<List<Integer>,DerivationEdge> derivs = ddt.getTreeForConnectors(current);
-		// traverse currenttreepart
-		
-		Queue<DerivedTreeNode> rem = new LinkedList<DerivedTreeNode>();
-		
-		rem.add(currenttreepart);
-		
-		while(!rem.isEmpty()){
-			DerivedTreeNode currentnode = rem.poll();
-			for (DerivedTreeNode child : currentnode.children){
-				rem.offer(child);
-			}
-			DerivationEdge tmp = derivs.get(Arrays.asList(GeneralTools.IntArrayToIntegerArray(currentnode.address)));
-			if (tmp != null){
-				DerivedTreeNode head = createfromdependentderivationtree(ddt, tmp.getSecond());
-				// connect beyond 
-				//TODO: what if address [0] !!!
-				// replace child of parent
-				//if (tmp instanceof SubstitutionDerivationEdge)
-					currentnode.replaceNodeBeyond(head);
-				
-				if (tmp instanceof AdjunctionDerivationEdge){
-				
-					DerivedTreeNode foot = head.getAdjunctionFoot();
-					System.out.println(currentnode.children);
-					//connect beneath
-					currentnode.replaceNodeBeneath(foot);
-					//currentnode.children = null;
-				} else if (tmp instanceof SubstitutionDerivationEdge){
-					head.entry.setType(NodeType.SUBST);
-				}
-			}
-		
-		}
-		return currenttreepart;
-	}
 	
 	/**
 	 * 
@@ -110,7 +61,7 @@ public class DerivedTree {
 		while (totransform.containsValue(null)){
 			// select a not transformed one, where all children are transformed
 			ActivatedElementaryTree current = selectCandidate(totransform,ddt);
-			
+
 			// build up the tree for current
 			DerivedTreeNode transformed_into = new DerivedTreeNode(current);
 			
@@ -196,8 +147,13 @@ public class DerivedTree {
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 	
+	/**
+	 * 
+	 * @param stream
+	 * @param comment
+	 * @throws XMLStreamException
+	 */
 	public void storeToXML(OutputStream stream, String comment) throws XMLStreamException {
-		System.out.println("Write XML");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLEventWriter writer = outputFactory.createXMLEventWriter(
 		  stream );

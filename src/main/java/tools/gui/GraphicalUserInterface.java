@@ -30,9 +30,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import parser.early.JTIGParser;
-import parser.early.ParseLevel;
-import parser.early.ParseResult;
-import parser.early.ParseRun;
+import parser.early.run.ParseLevel;
+import parser.early.run.ParseResult;
 import parser.output.derivationtree.DependentDerivationTree;
 import parser.output.derivationtree.DerivationTree;
 import parser.output.derivationtree.IndependentDerivationTree;
@@ -43,12 +42,12 @@ import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
 
 public class GraphicalUserInterface extends JFrame implements ActionListener {
-
+		
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-		
+	private static final long serialVersionUID = -2464216667581969610L;
+
 	private JTabbedPane mainpanel;
 		
 	private JTextField parse_input;
@@ -305,12 +304,10 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				Lexicon l = jtigparser.getLexicon();
 				MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 				Token[] tokens = st.getTokens(result);
-				int i = 1;
 				// TODO use printDerivedTrees
 				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
 					DerivedTreePanel tigrulepanel = new DerivedTreePanel(new DerivedTree(r));
 					addTab(result+" "+r.getIndex(),tigrulepanel);
-					i++;
 				}
 			}
 		} else if (e.getSource() == lexiconfile_button) {

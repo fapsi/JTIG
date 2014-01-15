@@ -23,6 +23,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.TTCCLayout;
 import org.xml.sax.SAXException;
 
+import parser.early.run.ParseLevel;
+import parser.early.run.ParseResult;
+import parser.early.run.ParseRun;
 import tools.gui.GraphicalUserInterface;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
@@ -42,8 +45,6 @@ public class JTIGParser {
 	private static final Properties parserproperties = new Properties();
 
 	private Lexicon lexicon;
-
-	// private ParseRun lastrun;
 
 	private String lasterror;
 
@@ -121,7 +122,7 @@ public class JTIGParser {
 
 		logger.info("Start parsing sentence: '" + originalsentence + "'.");
 
-		ParseResult result = parserun.parse();
+		ParseResult result = parserun.call();
 
 		logger.info("Result: '" + result.toString() + "'.");
 

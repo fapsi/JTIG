@@ -1,21 +1,19 @@
 /**
  * 
  */
-package parser.early;
+package parser.early.run;
 
 import grammar.tiggrammar.Lexicon;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.concurrent.Callable;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -24,6 +22,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
+import parser.early.JTIGParser;
+import parser.early.components.Chart;
+import parser.early.components.DefaultItemFactory;
+import parser.early.components.Item;
+import parser.early.components.agenda.Agenda;
+import parser.early.components.agenda.ItemComparator;
 import parser.early.inferencerules.InferenceRule;
 import parser.lookup.ActivatedElementaryTree;
 import parser.lookup.ActivatedLexicon;
@@ -38,26 +42,35 @@ import tools.tokenizer.Token;
  * 
  * @author Fabian Gallenkamp
  */
-public class ParseRun {
+public class ParseRun implements Callable<ParseResult> {
 	
-	private String name;
+	protected String name;
 	
-	private ParseLevel level = ParseLevel.INIT;
+	protected ParseLevel level = ParseLevel.INIT;
+	protected ParseLevel goallevel;
 	
 	/** helper variables **/
 	private ArrayList<InferenceRule> inferencerules;
 
 	protected DefaultItemFactory factory;
-	private Chart chart;
-	private PriorityQueue<Item> agenda;
+	protected Chart chart;
+	private Agenda agenda;
 	private ActivatedLexicon activatedlexicon;
 
 	private TerminationCriterion isterm;
-	private Token[] tokens;
+	protected Token[] tokens;
 
-	private Logger logger;
+	protected Logger logger;
 	
 	private boolean executed = false;
+
+	/**
+	 * Time measurement TODO : create class for them
+	 */
+	protected long timeforest = 0;
+	protected long timeIDT = 0;
+	protected long timeDDT = 0;
+	protected long timeDT = 0;
 	
 	public ParseRun(Lexicon lexicon,String originalsentence, Token[] tokens){		
 		createRunDirectory();
@@ -66,6 +79,8 @@ public class ParseRun {
 		} catch (IOException e) {
 			
 		}
+		
+		goallevel = JTIGParser.getParseLevel();
 		
 		this.tokens = tokens;
 		
@@ -83,7 +98,7 @@ public class ParseRun {
 		this.chart = new Chart();
 		
 		ItemComparator itemcomp = new ItemComparator(isterm);
-		this.agenda = new PriorityQueue<Item>(10, itemcomp);
+		this.agenda = new Agenda(10, itemcomp);
 	}
 
 	private void createRunDirectory() {
@@ -113,54 +128,54 @@ public class ParseRun {
 	      logger.setLevel(Level.INFO);
 	}
 	
-	public ParseResult parse(){
-		logger.info("Starting parse-process.");
-		long timeforest = System.currentTimeMillis();
-		ParseLevel goallevel = JTIGParser.getParseLevel();
+	public ParseResult call(){
+		timeforest = System.currentTimeMillis();
 		List<Item> items = new LinkedList<Item>();
 		boolean finishedgood = false;
 		
 		if (executed){
 			logger.error("Only one run per instance allowed.");
-			return new ParseResult(this, level, goallevel, new Forest(items));
+			return new ParseResult(this, new Forest(items));
 		}
 		executed = true;
 		
-		if (!JTIGParser.canExecute(ParseLevel.FOREST)){
-			destroy();
-			return new ParseResult(this, level, goallevel, new Forest(items));
+		if (goallevel == ParseLevel.LOOKUP){
+			timeforest = System.currentTimeMillis() - timeforest;
+			return new ParseResult(this, new Forest(items));
 		}
+		
+		logger.info("Starting parse-process.");
 		
 		// prepare inference rules, setting needed classes
 		if (!prepareInferencerules()){
+			timeforest = System.currentTimeMillis() - timeforest;
 			level = ParseLevel.FAILED;
 			logger.error("No inference rules used in parsing process.");
-			destroy();
-			return new ParseResult(this, level, goallevel, new Forest(items));
+			return new ParseResult(this, new Forest(items));
 		}
 		
 		// initialize the chart with items created by the tokens
 		chart.initialize(tokens , factory);
-		logger.info("Chart width: "+ tokens.length);
+		logger.info("Chart initialized. Chart width: "+ tokens.length);
 				
 		//initialize the agenda with items created by the activated ruletrees with start-symbols
 		if (!initializeAgenda()){
+			timeforest = System.currentTimeMillis() - timeforest;
 			level = ParseLevel.FAILED;
 			logger.error("Agenda hasn't any start items.");
-			destroy();
-			return new ParseResult(this, level, goallevel, new Forest(items));
+			return new ParseResult(this, new Forest(items));
 		}
 		
 		// Main loop
-		logger.info("Started main loop using following inference rules: "+inferencerules.toString());
+		logger.info("Started main loop using following inference rules in ordering: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
-			if (factory.getAmountCreatedItems() > 10000000){ //TODO: add to properties
+			if (chart.getAmountUniqueItems() > Long.parseLong(JTIGParser.getProperty("parser.core.bounduniqueitems"))){
 				logger.error("Too many items created. Stopping!");
 				break;
 			}
 				
-			logger.debug("Actual element: "+current.toStringUgly()+"\n");
+			//logger.debug("Actual element: "+current.toStringUgly()+"\n");
 			boolean inserted = chart.addItem(current);
 			
 			if (JTIGParser.getBooleanProperty("parser.stoponfirsttermitem") && isterm.apply(current)){
@@ -196,19 +211,19 @@ public class ParseRun {
 		timeforest = System.currentTimeMillis() - timeforest;
 		Forest forest = new Forest(items);
 		
-		long timeIDT = System.currentTimeMillis();
+		timeIDT = System.currentTimeMillis();
 		List<IndependentDerivationTree> id_derivationtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.INDEPENDENTDTREE)){
 			id_derivationtrees = extractIndependentDerivationTrees(forest);
 		}
 		timeIDT = System.currentTimeMillis() - timeIDT;
-		long timeDDT = System.currentTimeMillis();
+		timeDDT = System.currentTimeMillis();
 		List<DependentDerivationTree> d_derivationtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.DEPENDENTDTREE)){
 			d_derivationtrees = extractDependentDerivationTrees(id_derivationtrees);
 		}
 		timeDDT = System.currentTimeMillis() - timeDDT;
-		long timeDT = System.currentTimeMillis();
+		timeDT = System.currentTimeMillis();
 		List<DerivedTree> derivedtrees = null;
 		if (JTIGParser.canExecute(ParseLevel.DERIVEDTREE)){
 			try {
@@ -218,8 +233,7 @@ public class ParseRun {
 			}
 		}
 		timeDT = System.currentTimeMillis() - timeDT;
-		destroy();
-		return new ParseResult(this, level, goallevel, forest, id_derivationtrees, d_derivationtrees, derivedtrees,timeforest,timeIDT,timeDDT,timeDT);
+		return new ParseResult(this, forest, id_derivationtrees, d_derivationtrees, derivedtrees);
 	}
 	
 	private ActivatedLexicon preprocessSentence(Token[] tokens,Lexicon lexicon){
@@ -230,7 +244,7 @@ public class ParseRun {
 		Lookup l = new Lookup();
 		ActivatedLexicon tmp = l.findlongestmatches(tokens , lexicon);
 		logger.info("Found "+tmp.getSize()+" trees in lexicon which can possibly match in the sentence.");
-		logger.info(tmp.toString());
+		logger.debug(tmp.toString());
 		level = ParseLevel.LOOKUP;
 		return tmp;
 	}
@@ -336,35 +350,14 @@ public class ParseRun {
 		return derivedtrees;
 	}
 	
-	private void destroy(){
+	protected void destroy(){
 		if (executed){
-			//factory = null;
+			factory = null;
 			agenda = null;
 			chart = null;
 			inferencerules = null;
 			isterm=null;
-			//activatedlexicon = null;
+			activatedlexicon = null;
 		}
-	}
-	
-	protected String getLog() {
-		StringBuilder sb = new StringBuilder();
-		File file = new File("data/runs/"+name+"/"+name+".log");
-		try {
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line = "";
-		while ((line = reader.readLine()) != null){
-			sb.append(line);
-			sb.append(System.getProperty("line.separator"));
-		}
-		reader.close();
-		} catch (IOException e) {
-			sb.append("Error reading the log-file.");
-		}
-		return sb.toString();
-	}
-
-	public Logger getLogger() {
-		return logger;
 	}
 }

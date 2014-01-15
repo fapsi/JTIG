@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import parser.early.DerivationType;
-import parser.early.Item;
-import parser.early.ItemDerivation;
 import parser.early.JTIGParser;
+import parser.early.components.DerivationType;
+import parser.early.components.Item;
+import parser.early.components.ItemDerivation;
 import parser.lookup.ActivatedElementaryTree;
 import tools.GeneralTools;
 

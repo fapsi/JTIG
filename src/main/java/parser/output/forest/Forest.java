@@ -13,17 +13,16 @@ import javax.xml.stream.XMLStreamException;
 
 import com.mxgraph.view.mxGraph;
 
-import parser.early.DerivationType;
-import parser.early.Item;
-import parser.early.ItemDerivation;
 import parser.early.JTIGParser;
+import parser.early.components.DerivationType;
+import parser.early.components.Item;
+import parser.early.components.ItemDerivation;
 import parser.lookup.ActivatedElementaryTree;
 import parser.output.derivationtree.AdjunctionDerivationEdge;
 import parser.output.derivationtree.DerivationEdge;
 import parser.output.derivationtree.IndependentDerivationTree;
 import parser.output.derivationtree.SubstitutionDerivationEdge;
 import tools.GeneralTools;
-import tools.tokenizer.Token;
 
 /**
  * 

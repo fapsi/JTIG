@@ -1,10 +1,9 @@
 package parser.early.inferencerules;
 
-import java.util.PriorityQueue;
-
-import parser.early.Chart;
-import parser.early.DefaultItemFactory;
-import parser.early.Item;
+import parser.early.components.Chart;
+import parser.early.components.DefaultItemFactory;
+import parser.early.components.Item;
+import parser.early.components.agenda.Agenda;
 import parser.lookup.ActivatedLexicon;
 
 public abstract class InferenceRule {
@@ -13,7 +12,7 @@ public abstract class InferenceRule {
 	
 	protected Chart chart;
 	
-	protected PriorityQueue<Item> agenda;
+	protected Agenda agenda;
 
 	protected ActivatedLexicon activatedlexicon;
 	
@@ -35,7 +34,7 @@ public abstract class InferenceRule {
 		this.chart = chart;
 	}
 
-	public void setAgenda(PriorityQueue<Item> agenda) {
+	public void setAgenda(Agenda agenda) {
 		this.agenda = agenda;
 	}
 

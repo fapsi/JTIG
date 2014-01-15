@@ -4,7 +4,7 @@
 package parser.lookup;
 
 
-import parser.early.Item;
+import parser.early.components.Item;
 import grammar.tiggrammar.ElementaryTree;
 import grammar.tiggrammar.Entry;
 import grammar.tiggrammar.Layer;

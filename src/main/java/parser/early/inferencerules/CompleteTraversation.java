@@ -3,11 +3,11 @@
  */
 package parser.early.inferencerules;
 
-import parser.early.DerivationType;
-import parser.early.Item;
-import parser.early.ItemDerivation;
-import parser.early.ItemFilter;
-import parser.early.ItemStatus;
+import parser.early.components.DerivationType;
+import parser.early.components.Item;
+import parser.early.components.ItemDerivation;
+import parser.early.components.ItemFilter;
+import parser.early.components.ItemStatus;
 
 /**
  * 

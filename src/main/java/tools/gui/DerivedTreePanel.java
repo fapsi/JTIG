@@ -30,11 +30,9 @@ public class DerivedTreePanel extends JPanel {
 	public DerivedTreePanel(DerivedTree rule) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.weightx = 100;
+		gbc.weightx = 1;
 		gbc.weighty = 1;
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		//gbc.fill = GridBagConstraints.BOTH;
+		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.NORTH;
 		
 		graph = new mxGraph();
@@ -84,6 +82,7 @@ public class DerivedTreePanel extends JPanel {
 			field_normal.setEditable(false);
 			field_normal.setBackground(new Color(0xF5F5F5));
 			field_normal.setFocusable(false);
+			field_normal.setMinimumSize(field_normal.getPreferredSize());
 		
 			pane.add(field_normal,gbc);
 			
@@ -100,7 +99,8 @@ public class DerivedTreePanel extends JPanel {
 			field_term.setEditable(false);
 			field_term.setBackground(new Color(0x9ACD320));
 			field_term.setFocusable(false);
-		
+			field_term.setMinimumSize(field_term.getPreferredSize());
+			
 			pane.add(field_term,gbc);
 			
 			gbc.gridx = 1;
@@ -116,7 +116,8 @@ public class DerivedTreePanel extends JPanel {
 			field_subst.setEditable(false);
 			field_subst.setBackground(new Color(0xFF8C00));
 			field_subst.setFocusable(false);
-		
+			field_subst.setMinimumSize(field_subst.getPreferredSize());
+
 			pane.add(field_subst,gbc);
 			
 			gbc.gridx = 1;
@@ -132,6 +133,7 @@ public class DerivedTreePanel extends JPanel {
 			field_adj.setEditable(false);
 			field_adj.setBackground(new Color(0xDC143C));
 			field_adj.setFocusable(false);
+			field_adj.setMinimumSize(field_adj.getPreferredSize());
 		
 			pane.add(field_adj,gbc);
 			
@@ -148,6 +150,7 @@ public class DerivedTreePanel extends JPanel {
 			field_eps.setEditable(false);
 			field_eps.setBackground(new Color(0x008080));
 			field_eps.setFocusable(false);
+			field_eps.setMinimumSize(field_eps.getPreferredSize());
 		
 			pane.add(field_eps,gbc);
 			

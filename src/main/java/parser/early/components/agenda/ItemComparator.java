@@ -1,9 +1,12 @@
 /**
  * 
  */
-package parser.early;
+package parser.early.components.agenda;
 
 import java.util.Comparator;
+
+import parser.early.components.Item;
+import parser.early.components.ItemFilter;
 
 /**
  * 
@@ -38,11 +41,12 @@ public class ItemComparator implements Comparator<Item> {
 			return dotdistance;*/
 			
 		
-		int iddistance = Math.abs(a.getID() - b.getID());
-		if (a.getID() < b.getID())
-			return -iddistance;
-		if (a.getID() > b.getID())
-			return iddistance;
+		int distancea = Math.abs(a.getLeft() - a.getRight());
+		int distanceb = Math.abs(b.getLeft() - b.getRight());
+		if (distancea < distanceb)
+			return -Math.abs(distancea-distanceb);
+		if (distancea > distanceb)
+			return Math.abs(distancea-distanceb);
 			
 		return 0;
 	}

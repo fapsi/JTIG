@@ -1,7 +1,7 @@
 /**
  * 
  */
-package parser.early;
+package parser.early.components;
 
 import java.util.Arrays;
 

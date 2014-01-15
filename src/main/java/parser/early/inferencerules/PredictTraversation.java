@@ -5,9 +5,9 @@ package parser.early.inferencerules;
 
 import grammar.tiggrammar.Layer;
 import grammar.tiggrammar.NodeType;
-import parser.early.DerivationType;
-import parser.early.Item;
-import parser.early.ItemDerivation;
+import parser.early.components.DerivationType;
+import parser.early.components.Item;
+import parser.early.components.ItemDerivation;
 
 /**
  * 
