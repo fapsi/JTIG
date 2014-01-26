@@ -1,9 +1,9 @@
-grammar.readXML
-grammar.tiggrammar
-grammar.tiggrammar.anchors
-grammar.tiggrammar.exceptions
-grammar.tiggrammar.intermediate
-grammar.transform.lisp2xml
+grammar.treeinsertion
+grammar.treeinsertion.anchors
+grammar.treeinsertion.exceptions
+grammar.treeinsertion.intermediate
+grammar.treeinsertion.read
+grammar.treeinsertion.transform.lisp2xml
 lexicon.unvalid
 lexicon.valid
 parser.core
