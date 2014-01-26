@@ -1,15 +1,15 @@
 /**
  * 
  */
-package grammar.tiggrammar.intermediate;
+package grammar.treeinsertion.intermediate;
 
-import grammar.tiggrammar.ElementaryTree;
-import grammar.tiggrammar.Entry;
-import grammar.tiggrammar.Layer;
-import grammar.tiggrammar.NodeType;
-import grammar.tiggrammar.TreeType;
-import grammar.tiggrammar.anchors.AnchorStrategy;
-import grammar.tiggrammar.exceptions.UnvalidElementaryTreeException;
+import grammar.treeinsertion.ElementaryTree;
+import grammar.treeinsertion.Entry;
+import grammar.treeinsertion.Layer;
+import grammar.treeinsertion.NodeType;
+import grammar.treeinsertion.TreeType;
+import grammar.treeinsertion.anchors.AnchorStrategy;
+import grammar.treeinsertion.exceptions.UnvalidElementaryTreeException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -127,7 +127,7 @@ public class IRTreeNode {
 		extractLayers(information,layers,gornnumbers);
 				
 		return new ElementaryTree(treetype,index, layers, 
-				strategy.getLexicalAnchors(this), 
+				strategy.getLexicalAnchor(this), 
 				treefreq, prob);
 	}
 	

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.tiggrammar.exceptions;
+package grammar.treeinsertion.exceptions;
 
 /**
  * 

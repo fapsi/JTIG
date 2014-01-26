@@ -1,18 +1,18 @@
 /**
  * 
  */
-package grammar.readXML;
+package grammar.treeinsertion.read;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import grammar.tiggrammar.Lexicon;
-import grammar.tiggrammar.NodeType;
-import grammar.tiggrammar.anchors.AnchorStrategy;
-import grammar.tiggrammar.exceptions.UnvalidElementaryTreeException;
-import grammar.tiggrammar.exceptions.UnvalidLexiconException;
-import grammar.tiggrammar.exceptions.UnvalidXMLStructure;
-import grammar.tiggrammar.intermediate.IRTreeNode;
+import grammar.treeinsertion.Lexicon;
+import grammar.treeinsertion.NodeType;
+import grammar.treeinsertion.anchors.AnchorStrategy;
+import grammar.treeinsertion.exceptions.UnvalidElementaryTreeException;
+import grammar.treeinsertion.exceptions.UnvalidLexiconException;
+import grammar.treeinsertion.exceptions.UnvalidXMLStructure;
+import grammar.treeinsertion.intermediate.IRTreeNode;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;

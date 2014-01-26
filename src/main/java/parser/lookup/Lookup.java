@@ -8,8 +8,8 @@ import java.util.List;
 
 import parser.early.JTIGParser;
 import tools.tokenizer.Token;
-import grammar.tiggrammar.ElementaryTree;
-import grammar.tiggrammar.Lexicon;
+import grammar.treeinsertion.ElementaryTree;
+import grammar.treeinsertion.Lexicon;
 
 /**
  * 

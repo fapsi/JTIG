@@ -1,9 +1,9 @@
 /**
  * 
  */
-package grammar.tiggrammar.intermediate;
+package grammar.treeinsertion.intermediate;
 
-import grammar.tiggrammar.TreeType;
+import grammar.treeinsertion.TreeType;
 
 
 

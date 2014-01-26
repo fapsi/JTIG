@@ -3,7 +3,7 @@
  */
 package parser.early.components.agenda;
 
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.PriorityQueue;
 
 import parser.early.components.Item;
 
@@ -11,7 +11,7 @@ import parser.early.components.Item;
  * 
  * @author Fabian Gallenkamp
  */
-public class Agenda extends PriorityBlockingQueue<Item> {
+public class Agenda extends PriorityQueue<Item> {
 	
 	/**
 	 * 

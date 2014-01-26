@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.tiggrammar;
+package grammar.treeinsertion;
 
 import java.util.Arrays;
 
@@ -11,6 +11,7 @@ import java.util.Arrays;
  * @author Fabian Gallenkamp
  */
 public class Layer {
+	
 	/**
 	 * Gorn number.
 	 */
@@ -21,28 +22,53 @@ public class Layer {
 	 */
 	protected Entry[] entrys;
 
+	/**
+	 * 
+	 */
 	protected boolean isonspine;
 	
+	/**
+	 * @param gornnumber
+	 * @param entrys
+	 * @param isonspine
+	 */
 	public Layer(int[] gornnumber,Entry[] entrys, boolean isonspine){
 		this.entrys = entrys;
 		this.gornnumber = gornnumber;
 		this.isonspine = isonspine;
 	}
+	
+	/**
+	 * @return
+	 */
+	public int[] getGornNumber(){
+		return gornnumber;
+	}
 
+	/**
+	 * @return
+	 */
 	public Entry[] getEntrys(){
 		return this.entrys;
 	}
 
+	/**
+	 * @param i
+	 * @return
+	 */
 	public Entry getEntry(int i) {
 		if (i < this.entrys.length)
 			return this.entrys[i];
 		return null;
 	}
 	
-	public int[] getGornNumber(){
-		return gornnumber;
+	/**
+	 * @return
+	 */
+	public boolean isOnSpine() {
+		return isonspine;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -74,13 +100,13 @@ public class Layer {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Layer [" + Arrays.toString(gornnumber) + ","
 				+ Arrays.toString(entrys) + "]\n";
-	}
-
-	public boolean isOnSpine() {
-		return isonspine;
 	}
 }

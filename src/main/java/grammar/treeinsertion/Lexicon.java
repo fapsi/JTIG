@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.tiggrammar;
+package grammar.treeinsertion;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,23 +21,44 @@ import tools.tokenizer.Token;
  */
 public class Lexicon {
 
+	/**
+	 * 
+	 */
 	private List<ElementaryTree> content;
 	
+	/**
+	 * 
+	 */
 	private HashMap<String,Lexicon> entrys;
 	
+	/**
+	 * 
+	 */
 	private Set<String> startsymbols;
 	
+	/**
+	 * Creates an empty lexicon to store {@link ElementaryTree} of a tree insertion grammar.
+	 */
 	public Lexicon() {
 		content = new LinkedList<ElementaryTree>();
 		entrys = new HashMap<String,Lexicon>();
 	}
 	
+	/**
+	 * 
+	 * @param toadd -  {@link ElementaryTree} to be inserted
+	 */
 	public void add(ElementaryTree toadd){
 		List<String> remaining =  new LinkedList<String>();
-		remaining.addAll(toadd.getLexicalAnchors());
+		remaining.addAll(toadd.getLexicalAnchor());
 		add (toadd,remaining);
 	}
 	
+	/**
+	 * Helper-method for {@link Lexicon#add(ElementaryTree)}.
+	 * @param toadd
+	 * @param remaining
+	 */
 	private void add(ElementaryTree toadd,List<String> remaining){
 		if (remaining.size() <= 0)
 			return;
@@ -58,6 +79,12 @@ public class Lexicon {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 * @param pos
+	 * @return
+	 */
 	public List<ElementaryTree> find(List<Token> index,int pos){
 		if (index.size() == 0)
 			return this.content;
@@ -70,12 +97,24 @@ public class Lexicon {
 		return found.content;
 	}
 
+	/**
+	 * @param startsymbols
+	 */
 	public void setStartSymbols(Set<String> startsymbols){
 		this.startsymbols = startsymbols;
 	}
+	
+	/**
+	 * @return
+	 */
 	public Set<String> getStartSymbols(){
 		return this.startsymbols==null?new HashSet<String>():this.startsymbols;
 	}
+	
+	/**
+	 * Note: not very efficient TODO: create counter in {@link Lexicon#add(ElementaryTree)}
+	 * @return the amount of {@link ElementaryTree}'s stored in this lexicon.
+	 */
 	public int size() {
 		int i = this.content.size();
 		for (Entry<String, Lexicon> l : this.entrys.entrySet()){
@@ -84,12 +123,21 @@ public class Lexicon {
 		return i;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Lexicon: {Startymbols"+this.getStartSymbols()+"}<\n" + toString(0)+">";
 	}
 	
-	public String toString(int depth){
+	/**
+	 * Helper-method for {@link Lexicon#toString()}.
+	 * @param depth
+	 * @return
+	 */
+	private String toString(int depth){
 		StringBuilder sb = new StringBuilder();
 		sb.append("");
 
@@ -107,6 +155,11 @@ public class Lexicon {
 		return sb.toString();
 	}
 	
+	/**
+	 * Helper-method for {@link Lexicon#toString(int)}
+	 * @param sb
+	 * @param i
+	 */
 	private void indent(StringBuilder sb, int i){
 		for (int k=0;k < i;k++){
 			sb.append("\t");

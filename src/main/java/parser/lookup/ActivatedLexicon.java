@@ -3,7 +3,7 @@
  */
 package parser.lookup;
 
-import grammar.tiggrammar.Lexicon;
+import grammar.treeinsertion.Lexicon;
 
 import java.util.HashMap;
 import java.util.LinkedList;

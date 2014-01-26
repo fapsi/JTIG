@@ -18,8 +18,8 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
-import grammar.tiggrammar.ElementaryTree;
-import grammar.tiggrammar.NodeType;
+import grammar.treeinsertion.ElementaryTree;
+import grammar.treeinsertion.NodeType;
 
 import com.mxgraph.view.mxGraph;
 

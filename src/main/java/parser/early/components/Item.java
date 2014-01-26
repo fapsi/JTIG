@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.tiggrammar.Entry;
-import grammar.tiggrammar.Layer;
-import grammar.tiggrammar.NodeType;
-import grammar.tiggrammar.TreeType;
+import grammar.treeinsertion.Entry;
+import grammar.treeinsertion.Layer;
+import grammar.treeinsertion.NodeType;
+import grammar.treeinsertion.TreeType;
 
 /**
  * 
@@ -76,8 +76,8 @@ public class Item {
 		return layer.getEntry(0);
 	}
 	
-	public boolean inLexicalAnchors(String label){
-		return activatedruletree.getLexicalAnchors().contains(label);
+	public boolean inLexicalAnchor(String label){
+		return activatedruletree.getLexicalAnchor().contains(label);
 	}
 	
 	public boolean hasParentGornNumber(Item item){

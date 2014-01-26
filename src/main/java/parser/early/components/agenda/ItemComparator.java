@@ -5,7 +5,9 @@ package parser.early.components.agenda;
 
 import java.util.Comparator;
 
+import parser.early.components.DerivationType;
 import parser.early.components.Item;
+import parser.early.components.ItemDerivation;
 import parser.early.components.ItemFilter;
 
 /**
@@ -13,6 +15,27 @@ import parser.early.components.ItemFilter;
  * @author Fabian Gallenkamp
  */
 public class ItemComparator implements Comparator<Item> {
+	
+	private static int getWeight(DerivationType type){
+		switch(type){
+		case Consume:
+			return 50;
+		case PredictTraversation:
+			return 500;
+		case PredictSubstitution:
+		case PredictLeftAux: 
+		case PredictRightAux:
+			return 300;
+		case CompleteTraversation:
+			return 150;
+		case CompleteSubstitution:
+			return 100;
+		case CompleteLeftAdjunction:
+		case CompleteRightAdjunction:
+			return 100;
+		default: return 0;
+		}
+	}
 
 	private ItemFilter terminationcriterion;
 
@@ -30,24 +53,36 @@ public class ItemComparator implements Comparator<Item> {
 		if (term_a && term_b)
 			return 0;
 		if (term_a)
-			return -100;
+			return -100000;
 		if (term_b)
-			return 100;
+			return 100000;	
 		
-		/*int dotdistance = Math.abs(a.getDotPosition()-b.getDotPosition());
+		int imp_a = 0; int imp_b = 0;
+		for (ItemDerivation deriv : a.getDerivations()){
+			imp_a += getWeight(deriv.getType());
+		}
+		for (ItemDerivation deriv : b.getDerivations()){
+			imp_b += getWeight(deriv.getType());
+		}
+		int distance = Math.abs(imp_a - imp_b);
+		if (imp_a < imp_b)
+			return -distance*10;
+		if (imp_a > imp_b) 
+			return distance*10;
+		/*
+		int distancea = Math.abs(a.getLeft() - a.getRight());
+		int distanceb = Math.abs(b.getLeft() - b.getRight());
+		if (distancea < distanceb)
+			return -Math.abs(distancea-distanceb)*10;
+		if (distancea > distanceb)
+			return Math.abs(distancea-distanceb)*10;
+			*/
+		/*	
+		int dotdistance = Math.abs(a.getDotPosition()-b.getDotPosition());
 		if (a.getDotPosition() < b.getDotPosition())
 			return -dotdistance;
 		if (a.getDotPosition() > b.getDotPosition())
 			return dotdistance;*/
-			
-		
-		int distancea = Math.abs(a.getLeft() - a.getRight());
-		int distanceb = Math.abs(b.getLeft() - b.getRight());
-		if (distancea < distanceb)
-			return -Math.abs(distancea-distanceb);
-		if (distancea > distanceb)
-			return Math.abs(distancea-distanceb);
-			
 		return 0;
 	}
 

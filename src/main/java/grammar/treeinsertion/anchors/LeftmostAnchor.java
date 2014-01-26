@@ -1,10 +1,10 @@
 /**
  * 
  */
-package grammar.tiggrammar.anchors;
+package grammar.treeinsertion.anchors;
 
-import grammar.tiggrammar.NodeType;
-import grammar.tiggrammar.intermediate.IRTreeNode;
+import grammar.treeinsertion.NodeType;
+import grammar.treeinsertion.intermediate.IRTreeNode;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +14,11 @@ import java.util.List;
  * @author Fabian Gallenkamp
  */
 public class LeftmostAnchor implements AnchorStrategy {
-
-	private List<String> anchors;
+	
+	/**
+	 * All anchor-elements found so far.
+	 */
+	private List<String> anchor;
 	
 	private boolean interruptedchain;
 	
@@ -24,28 +27,28 @@ public class LeftmostAnchor implements AnchorStrategy {
 	 * @param root root node of the tree to find anchors in
 	 * @return the anchor elements satisfying the specification
 	 */	
-	public List<String> getLexicalAnchors(IRTreeNode root) {
-		anchors = new LinkedList<String>();
+	public List<String> getLexicalAnchor(IRTreeNode root) {
+		anchor = new LinkedList<String>();
 		interruptedchain = false;
-		findAnchors(root);
-		return anchors;
+		findAnchor(root);
+		return anchor;
 	}
 	/**
 	 * Traverses the tree in pre-order. Adds TERM nodes to anchor list, if there arn't other leaf nodes between them.
 	 * @param node tree root of the tree to search in.
 	 */
-	private void findAnchors(IRTreeNode node){
+	private void findAnchor(IRTreeNode node){
 		
 		if (node.getType() == NodeType.TERM && !interruptedchain){
-			anchors.add(node.getLabel());
+			anchor.add(node.getLabel());
 		} else if ((node.getType() == NodeType.SUBST 
 				|| node.getType() == NodeType.LFOOT 
-				|| node.getType() == NodeType.RFOOT) && anchors.size() > 0){
+				|| node.getType() == NodeType.RFOOT) && anchor.size() > 0){
 			interruptedchain = true;
 		}
 			
 		for(IRTreeNode child : node.getChildren()){
-			findAnchors(child);
+			findAnchor(child);
 		}
 	}
 

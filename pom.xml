@@ -64,7 +64,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>parser.early.Parser</mainClass>
+							<mainClass>parser.early.JTIGParser</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

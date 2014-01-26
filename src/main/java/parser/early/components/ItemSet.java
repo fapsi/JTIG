@@ -27,7 +27,7 @@ public class ItemSet {
 
 		if (addto.containsKey(item)){
 			Item identicalitem = addto.get(item);
-			addto.remove(item);
+			addto.remove(item); // TODO: necessary?
 			identicalitem.addDerivations(item.getDerivations());
 			addto.put(identicalitem, identicalitem);
 			return false;
@@ -45,6 +45,7 @@ public class ItemSet {
 				if (filter.apply(kvpair.getKey()))
 					result.add(kvpair.getKey());
 			}
+			// Note: here is no break;
 		case Active:
 			for (Map.Entry<Item,Item> kvpair : activeitems.entrySet()){
 				if (filter.apply(kvpair.getKey()))

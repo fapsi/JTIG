@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grammar.tiggrammar;
+package grammar.treeinsertion;
 
 
 /**
@@ -11,29 +11,41 @@ package grammar.tiggrammar;
 public class Entry {
 
 	/**
-	 * Type of the Entry. Possible values, see :{@link NodeType}.
+	 * type of the Entry. Possible values, see :{@link NodeType}.
 	 */
-	protected NodeType nodetype;
+	protected NodeType type;
+	
 	/**
 	 * Label of the Entry.
 	 */
 	protected String label;
 	
-	public Entry (NodeType nodetype,String label){
+	public Entry (NodeType type,String label){
 		this.label = label;
-		this.nodetype = nodetype;
+		this.type = type;
 	}
 	
+	/**
+	 * @return the {@link #label} of this {@link Entry}
+	 */
 	public String getLabel() {
 		return label;
 	}
 	
+	/**
+	 * @return the {@link #type} of this {@link Entry}
+	 */
 	public NodeType getNodeType() {
-		return nodetype;
+		return type;
 	}
 	
-	public void setType(NodeType nodetype) {
-		this.nodetype = nodetype;
+	
+	/**
+	 * Sets the {@link #type} of this {@link Entry}
+	 * @param type
+	 */
+	public void setType(NodeType type) {
+		this.type = type;
 	}
 
 	/* (non-Javadoc)
@@ -44,8 +56,7 @@ public class Entry {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
-		result = prime * result
-				+ ((nodetype == null) ? 0 : nodetype.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -66,14 +77,18 @@ public class Entry {
 				return false;
 		} else if (!label.equals(other.label))
 			return false;
-		if (nodetype != other.nodetype)
+		if (type != other.type)
 			return false;
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "(" + nodetype + ", '" + label + "')";
+		return "(" + type + ", '" + label + "')";
 	}
 
 

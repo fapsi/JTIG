@@ -4,9 +4,9 @@
 package parser.early.components;
 
 import parser.lookup.ActivatedElementaryTree;
-import grammar.tiggrammar.Entry;
-import grammar.tiggrammar.Layer;
-import grammar.tiggrammar.NodeType;
+import grammar.treeinsertion.Entry;
+import grammar.treeinsertion.Layer;
+import grammar.treeinsertion.NodeType;
 
 /**
  * 
@@ -56,11 +56,11 @@ public class DefaultItemFactory {
 		return newitem;
 	}
 	
-	private synchronized void increase(){
+	private void increase(){
 		item_cnt++;
 	}
 
-	public synchronized void reset() {
+	public void reset() {
 		item_cnt = 0;
 	}
 	public int getAmountCreatedItems(){

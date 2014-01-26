@@ -3,7 +3,7 @@
  */
 package parser.early.run;
 
-import grammar.tiggrammar.Lexicon;
+import grammar.treeinsertion.Lexicon;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -171,6 +171,7 @@ public class ParseRun implements Callable<ParseResult> {
 		logger.info("Started main loop using following inference rules in ordering: "+inferencerules.toString());
 		Item current;
 		while ((current = agenda.poll()) != null){
+
 			if (chart.getAmountUniqueItems() > Long.parseLong(JTIGParser.getProperty("parser.core.bounduniqueitems"))){
 				logger.error("Too many items created. Stopping!");
 				break;

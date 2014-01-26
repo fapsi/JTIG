@@ -3,7 +3,7 @@
  */
 package parser.early.inferencerules;
 
-import grammar.tiggrammar.NodeType;
+import grammar.treeinsertion.NodeType;
 
 import java.util.List;
 

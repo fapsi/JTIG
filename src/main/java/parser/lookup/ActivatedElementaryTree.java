@@ -5,10 +5,10 @@ package parser.lookup;
 
 
 import parser.early.components.Item;
-import grammar.tiggrammar.ElementaryTree;
-import grammar.tiggrammar.Entry;
-import grammar.tiggrammar.Layer;
-import grammar.tiggrammar.TreeType;
+import grammar.treeinsertion.ElementaryTree;
+import grammar.treeinsertion.Entry;
+import grammar.treeinsertion.Layer;
+import grammar.treeinsertion.TreeType;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class ActivatedElementaryTree extends ElementaryTree{
 	 * @param right
 	 */
 	public ActivatedElementaryTree(ElementaryTree tree,int left,int right){
-		super(tree.getType(),tree.getIndex(), tree.getLayers(), tree.getLexicalAnchors(), tree.getFrequency(), tree.getProbability());
+		super(tree.getType(),tree.getIndex(), tree.getLayers(), tree.getLexicalAnchor(), tree.getFrequency(), tree.getProbability());
 		this.left = left;
 		this.right = right;
 	}

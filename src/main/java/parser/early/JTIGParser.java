@@ -29,8 +29,8 @@ import parser.early.run.ParseRun;
 import tools.gui.GraphicalUserInterface;
 import tools.tokenizer.MorphAdornoSentenceTokenizer;
 import tools.tokenizer.Token;
-import grammar.readXML.XMLReader;
-import grammar.tiggrammar.Lexicon;
+import grammar.treeinsertion.Lexicon;
+import grammar.treeinsertion.read.XMLReader;
 
 /**
  * 
@@ -38,11 +38,12 @@ import grammar.tiggrammar.Lexicon;
  */
 public class JTIGParser {
 
+	@Deprecated
 	private static final String parserpropertypath = "resources/parser.properties";
 
 	public static final Logger logger = Logger.getRootLogger();
 
-	private static final Properties parserproperties = new Properties();
+	private static Properties parserproperties = new Properties();
 
 	private Lexicon lexicon;
 
@@ -82,17 +83,20 @@ public class JTIGParser {
 	private void readproperties(String propertypath)
 			throws InvalidPropertiesFormatException, IOException,
 			URISyntaxException {
-		if (propertypath == null || propertypath.trim().isEmpty()) {
-			// load default
-			URL url = JTIGParser.class.getResource("default.properties");
-			InputStream is = null;
-			is = new FileInputStream(url.toURI().getPath());
-			JTIGParser.parserproperties.loadFromXML(is);
-		} else {
+		// load default
+		URL url = JTIGParser.class.getResource("default.properties");
+		InputStream is = null;
+		is = new FileInputStream(url.toURI().getPath());
+		JTIGParser.parserproperties.loadFromXML(is);
+		
+		// create child property-file if desired
+		if (propertypath != null && !propertypath.trim().isEmpty()) {
 			// load given property file
-			InputStream is = null;
-			is = new FileInputStream(parserpropertypath);
-			JTIGParser.parserproperties.loadFromXML(is);
+			is = null;
+			is = new FileInputStream(propertypath);
+			Properties p = new Properties(JTIGParser.parserproperties);
+			p.loadFromXML(is);
+			JTIGParser.parserproperties = p;
 		}
 	}
 

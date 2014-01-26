@@ -1,12 +1,12 @@
 /**
  * 
  */
-package grammar.readXML;
+package grammar.treeinsertion.read;
 
-import grammar.tiggrammar.Lexicon;
-import grammar.tiggrammar.anchors.AnchorStrategy;
-import grammar.tiggrammar.anchors.DeepestLeftmostAnchor;
-import grammar.transform.lisp2xml.LispParser;
+import grammar.treeinsertion.Lexicon;
+import grammar.treeinsertion.anchors.AnchorStrategy;
+import grammar.treeinsertion.anchors.DeepestLeftmostAnchor;
+import grammar.treeinsertion.transform.lisp2xml.LispParser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +46,7 @@ public class XMLReader {
 	}
 	/**
 	 * If the input file ends with ".lisp" the lisp format is transformed into an xml file.
-	 * See also {@link grammar.transform.lisp2xml.LispParser}
+	 * See also {@link grammar.treeinsertion.transform.lisp2xml.LispParser}
 	 * @throws FileNotFoundException 
 	 * @throws XMLStreamException 
 	 */

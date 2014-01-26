@@ -1,7 +1,7 @@
 package tools.gui;
 
-import grammar.tiggrammar.ElementaryTree;
-import grammar.tiggrammar.Lexicon;
+import grammar.treeinsertion.ElementaryTree;
+import grammar.treeinsertion.Lexicon;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -305,10 +305,13 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 				MorphAdornoSentenceTokenizer st = new MorphAdornoSentenceTokenizer();
 				Token[] tokens = st.getTokens(result);
 				// TODO use printDerivedTrees
+				int i = 0;
 				for (ElementaryTree r : l.find(Arrays.asList(tokens), 0)){
 					DerivedTreePanel tigrulepanel = new DerivedTreePanel(new DerivedTree(r));
 					addTab(result+" "+r.getIndex(),tigrulepanel);
+					i++;
 				}
+				System.out.println(i);
 			}
 		} else if (e.getSource() == lexiconfile_button) {
 			

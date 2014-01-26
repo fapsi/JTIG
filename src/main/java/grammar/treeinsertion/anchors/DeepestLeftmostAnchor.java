@@ -1,22 +1,33 @@
 /**
  * 
  */
-package grammar.tiggrammar.anchors;
+package grammar.treeinsertion.anchors;
 
-import grammar.tiggrammar.NodeType;
-import grammar.tiggrammar.intermediate.IRTreeNode;
+import grammar.treeinsertion.NodeType;
+import grammar.treeinsertion.intermediate.IRTreeNode;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  
+ * See: {@link DeepestLeftmostAnchor#getLexicalAnchors(IRTreeNode)}.
  * @author Fabian Gallenkamp
  */
 public class DeepestLeftmostAnchor implements AnchorStrategy {
 
-	private LinkedList<String> anchors;
+	/**
+	 * All anchor-elements found so far.
+	 */
+	private LinkedList<String> anchor;
+	
+	/**
+	 * Indicates if a terminal-chain gets interrupted.
+	 */
 	private boolean interruptedchain;
+	
+	/**
+	 * Stores the current depth.
+	 */
 	private int lastdepth;
 
 	/**
@@ -25,12 +36,12 @@ public class DeepestLeftmostAnchor implements AnchorStrategy {
 	 * @return the anchor elements satisfying the specification
 	 */	
 	@Override
-	public List<String> getLexicalAnchors(IRTreeNode root) {
-		anchors = new LinkedList<String>();
+	public List<String> getLexicalAnchor(IRTreeNode root) {
+		anchor = new LinkedList<String>();
 		interruptedchain = false;
 		lastdepth = -1;
 		findAnchors(root);
-		return anchors;
+		return anchor;
 	}
 
 	/**
@@ -43,16 +54,16 @@ public class DeepestLeftmostAnchor implements AnchorStrategy {
 	private void findAnchors(IRTreeNode node) {
 		
 		if (node.getType() == NodeType.TERM && !interruptedchain){
-			anchors.add(node.getLabel());
+			anchor.add(node.getLabel());
 			lastdepth = Math.max(lastdepth,node.getDepth());
 		} else if (node.getType() == NodeType.TERM && (lastdepth < node.getDepth())){
 				interruptedchain = false;
 				lastdepth = Math.max(lastdepth,node.getDepth()); 
-				anchors.clear();
-				anchors.add(node.getLabel());
+				anchor.clear();
+				anchor.add(node.getLabel());
 		} else if ((node.getType() == NodeType.SUBST 
 				|| node.getType() == NodeType.LFOOT 
-				|| node.getType() == NodeType.RFOOT) && anchors.size() > 0){
+				|| node.getType() == NodeType.RFOOT) && anchor.size() > 0){
 			interruptedchain = true;
 		}
 		for(IRTreeNode child : node.getChildren()){

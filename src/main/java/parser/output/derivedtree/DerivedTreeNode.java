@@ -3,10 +3,10 @@
  */
 package parser.output.derivedtree;
 
-import grammar.tiggrammar.ElementaryTree;
-import grammar.tiggrammar.Entry;
-import grammar.tiggrammar.Layer;
-import grammar.tiggrammar.NodeType;
+import grammar.treeinsertion.ElementaryTree;
+import grammar.treeinsertion.Entry;
+import grammar.treeinsertion.Layer;
+import grammar.treeinsertion.NodeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

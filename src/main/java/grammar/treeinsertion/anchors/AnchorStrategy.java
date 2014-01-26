@@ -1,9 +1,9 @@
 /**
  * 
  */
-package grammar.tiggrammar.anchors;
+package grammar.treeinsertion.anchors;
 
-import grammar.tiggrammar.intermediate.IRTreeNode;
+import grammar.treeinsertion.intermediate.IRTreeNode;
 
 import java.util.List;
 
@@ -12,10 +12,11 @@ import java.util.List;
  * @author Fabian Gallenkamp
  */
 public interface AnchorStrategy {
+	
 	/**
 	 * 
 	 * @param root
 	 * @return
 	 */
-	public List<String> getLexicalAnchors(IRTreeNode root);
+	public List<String> getLexicalAnchor(IRTreeNode root);
 }
