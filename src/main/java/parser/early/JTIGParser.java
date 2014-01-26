@@ -84,9 +84,9 @@ public class JTIGParser {
 			throws InvalidPropertiesFormatException, IOException,
 			URISyntaxException {
 		// load default
-		URL url = JTIGParser.class.getResource("default.properties");
-		InputStream is = null;
-		is = new FileInputStream(url.toURI().getPath());
+		//System.out.println(getClass().getResource(".").getPath());
+		InputStream is = getClass().getResourceAsStream("/default.properties");
+		
 		JTIGParser.parserproperties.loadFromXML(is);
 		
 		// create child property-file if desired
@@ -290,7 +290,8 @@ public class JTIGParser {
 				System.out.println(run.toString());
 			}
 		} catch (Exception e) {
-			System.err.println("Exception. "+ e.getMessage());
+			e.printStackTrace();
+			System.err.println("Exception. "+ e.getMessage() );
 		}
 	}
 
