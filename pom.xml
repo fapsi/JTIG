@@ -23,6 +23,17 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<repositories>
+		<repository>
+			<id>tokenizer</id>
+			<name>MorphadornerRepository</name>
+			<url>file://${project.basedir}/lib/</url>
+			<snapshots>
+            	<enabled>true</enabled>
+            	<updatePolicy>always</updatePolicy>
+          	</snapshots>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -33,7 +44,7 @@
 		<dependency>
 			<groupId>edu.northwestern.at</groupId>
 			<artifactId>Morphadorner</artifactId>
-			<version>2.0</version>
+			<version>2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.tinyjee.jgraphx</groupId>
