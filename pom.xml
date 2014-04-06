@@ -27,7 +27,7 @@
 		<repository>
 			<id>tokenizer</id>
 			<name>MorphadornerRepository</name>
-			<url>file://${project.basedir}/lib/</url>
+			<url>file://${project.basedir}/lib/tokenizer/</url>
 			<snapshots>
             	<enabled>true</enabled>
             	<updatePolicy>always</updatePolicy>
