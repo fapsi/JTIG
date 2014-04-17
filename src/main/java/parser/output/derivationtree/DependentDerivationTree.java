@@ -42,7 +42,7 @@ public class DependentDerivationTree extends DerivationTree {
 				Collections.sort(act.getValue(),new Comparator<DerivationEdge>() {
 					@Override
 					public int compare(DerivationEdge o1, DerivationEdge o2) {
-						return o1.second.getLeft() - o2.second.getLeft() ;
+						return o2.second.getLeft() - o1.second.getLeft() ;
 					}
 				});
 				ListIterator<AdjunctionDerivationEdge> iter = act.getValue().listIterator();
