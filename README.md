@@ -1,5 +1,5 @@
-JTIG
-====
+JTIG - Java Tree Insertion Grammar
+============================
 
 ###Project description
 A natural language parser implemented in Java and based on the tree insertion grammar formalism, which is similar to the
