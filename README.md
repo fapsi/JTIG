@@ -6,8 +6,7 @@ A natural language parser implemented in Java and based on the tree insertion gr
 tree adjoining grammar formalism ([TAG](http://en.wikipedia.org/wiki/Tree-adjoining_grammar)).
 
 ###License (BSD)
-Copyright (c) 2013-2014, Dr. Günter Neumann, DFKI
-All rights reserved.
+Copyright (c) 2013-2014, Dr. Gï¿½nter Neumann, All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
