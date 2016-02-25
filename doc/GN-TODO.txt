@@ -1,129 +1,17 @@
-(c) Copyright 2014 Günter Neumann. All Rights Reserved. 2014-04-16
+(c) Copyright 2016 Günter Neumann. All Rights Reserved.
 
-tesing JTIG, April, 2014
+To-do:
 
-call it from 
-/Users/gune00/dfki/JTIG/testJtig
+define simple test method for running single sentence with selected dictionary.
+- cf.: parser.core.ParserTests.testLexicon_234_pt2().run
 
-with GUI:
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -prop resources/parser.properties 
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/valid/Xia.xml 
+eventually defines as read-eval-print-loop
 
-without GUI:
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -lexicon testGrams/valid/Xia.xml -input_sentence „i can not give limited production to you by then“
--> returns result in folder: data/runs/
+First, check how to speed up parsing.
+- basically, how to make sure the compute n-best readings only
+- linear parsing
 
-Testing the grammars:
+Integration of GNTagger
 
-
-Grammar:
-test-xia.lisp:
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/valid/Xia.xml 
-
-i can not give limited production
--> does not work
-
-i can not give limited production to you by then
--> does work
-
-i can not give small car limited production to you by then
--> does work
-
-i can not give limited production to you by then , and i can not give limited production to limited production  by then .
--> does work
-
-i 've got small car small bike limited production small car limited production limited production
--> does work, gives 4 readings
-
-
-Grammar:
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/valid/German_conll_5000.xml 
-
-ROOT Die Strafverfolger in Hannover sehen das anders .
--> does work
-
-ROOT `` Es gibt kein Gesetz , das dies zuließe , '' erklärt die AgV-Juristin .
--> does not work
-
-ROOT 68 Verwaltungsgebäude kamen allein 1991 hinzu neuer Rekord .
--> does not work
-
-ROOT Polizeiwagen wurden mit Molotow-Cocktails beworfen , das staatliche Einkaufszentrum geplündert , Banken und Regierungsgebäude in Brand gesteckt .
--> does work
-
-ROOT Kaum hatte das Radio die Vollstreckung der Todesurteile bekanntgegeben , ging der Sturm im Westen des Landes los .
--> does work; with espilon
-
-ROOT Den Politikern auf der anderen Seite wäre der Weg verbaut
--> does work; but wrong word order in parse tree
--> geht nun
-
-ROOT Der stellvertretende OECD-Generalsekretär Salvatore Zecchini merkt jedoch an , daß die Bemühungen zuletzt an Schwung verloren hätten .
--> does work
-
-ROOT Bis auf wenige Stunden Schlaf arbeiten diese Frauen rund um die Uhr , weil sie zu Hause Mann und Kinder versorgen .
--> does not work
-
-ROOT Problematisch ist jedoch nach Darstellung von Business Week der Umstand , daß ICN Galenika ein Opfer des Kriegs im ehemaligen Jugoslawien geworden ist .
--> does work
-
-ROOT Die Regierung von Angola erhält von der Europäischen Gemeinschaft rund vier Millionen Mark zur Vorbereitung der für Ende 1992 geplanten freien Wahlen .
--> does not work (although Lisp does)
-
-ROOT Im Zuge der von ihm geplanten Wirtschaftsreform will er zahlreiche Unternehmen , die unter Borja verstaatlicht wurden , reprivatisieren und ausländische Investoren in das südamerikanische Land holen
--> does work; 4 readings (Lisp has 8)
--> Teilstring "in das südamerikanische Land holen" falsch als "in das Land südamerikanische holen"
--> geht nun
-
-
-About JTIG-Parser:
-
-Toplevel class: parser.early.JTIGParser.main(String[]):
-- loads properties
-- tokenises sentence with MorphAdorner
-- reads grammar
-- parses tokenized sentence
-
-Reading a grammar: from XML or Lisp
-- automatically creates internalized etree structure
-- and creates a Lexicon class which keeps a list of elementaryTrees and a index using the anchors
-	- cascaded hashmap for storing MWL
- 
-Main parser class: parser.early.JTIGParser.parseSentence(String, Token[]):
-- es wird der Parser ParseRun() initialisiert
-	- phase-1: lexical lookup in order to get sentence relevant trees
-	- parser.lookup.Lookup.findlongestmatches(Token[], Lexicon):
-		to handle MWL - could be improved by NEMEXA
-	- parser.lookup.ActivatedLexicon: stores selected elementary trees
-		- etrees are already in internalized form
-		- list of layers: cfg plus Gorn number
-		- grammar.treeinsertion.ElementaryTree
-	
-- then call ParseRun.Call
-	- performs phase-2
-	- init chart and agenda
-	- call main loop until agenda is empty (or first answer is found)
-	- processes forest to compute
-		- independent derivation tree
-		- dependent derivation
-		- parse tree
-	
-	
-
-Next issues:
-
-
-Agenda:
-parser.early.components.agenda: enthält ItemComparator, welche die Agenda sortiert.
-
-
-Grammatik-Extraktion:
-Erzeuge Testgrammatiken ohne Interpunktion und so, um größere Grammatiken testen zu können.
-Daher: Grammatikextraktion auch in java reimplementieren
-Bedeutet: conll2penn & extraction oder direkt dependenz-artige LTIGs ?
-
-How to prune lexical lookup ?
-
-Wie Supertagging und almost parsing realisieren ?
+Then, extract/load grammars
 
