@@ -18,11 +18,6 @@ Testing the grammars:
 
 
 Grammar:
-234-pt2.xml
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/234-pt2.xml 
-
-its U.S. sales to remain steady at about 1,200 cars in 1990
-->	does work
 
 english-conll-5000.xml
 java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/english-conll-5000.xml (-prop resources/parser.properties) 
