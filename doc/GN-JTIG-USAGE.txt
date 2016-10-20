@@ -18,6 +18,27 @@ Testing the grammars:
 
 
 Grammar:
+234-pt2.xml
+java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/234-pt2.xml 
+
+its U.S. sales to remain steady at about 1,200 cars in 1990
+->	does work
+
+english-conll-5000.xml
+java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/english-conll-5000.xml
+
+ROOT Companies would be compelled to publish in annual proxy statements the names of insiders who fail to file reports on time . 
+-> two readings
+
+ROOT The proposed rules also would be tougher on the insiders still required to file reports , he said .
+-> ten readings
+
+ROOT But Robert Gabele , president of Invest / Net , a North Miami , Fla. , company that packages and sells the insider-trading data , said the proposal is worded so vaguely that key officials may fail to file the reports . 
+-> FAILS
+
+ROOT Both funds are expected to begin operation around March 1 , subject to Securities and Exchange Commission approval .
+-> 55 readings
+
 test-xia.lisp:
 java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/valid/Xia.xml 
 

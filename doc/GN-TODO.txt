@@ -7,7 +7,7 @@ define simple test method for running single sentence with selected dictionary.
 
 Output dependency trees in conll format
 
-eventually defines as read-eval-print-loop
+eventually define as read-eval-print-loop
 
 First, check how to speed up parsing.
 - check current performance

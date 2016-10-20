@@ -1,0 +1,9 @@
+Feb, 2016, GN
+
+Dependency grammar to LTIG:
+
+- a dependency tree corresponds to a LTIG derivation, where
+	- in case of single word anchors, each word corresponds to a the lexical anchor of a (hidden) LTIG tree
+	- in case of MWL anchors a subtree of words corresponds to a single label of a lexical anchor
+		- we have a further restriction viz. that the words a chains of words
+	- and each edge corresponds to the (hidden) LTIG operation that has been applied
