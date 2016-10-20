@@ -25,7 +25,8 @@ its U.S. sales to remain steady at about 1,200 cars in 1990
 ->	does work
 
 english-conll-5000.xml
-java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/english-conll-5000.xml
+java -jar JTIG-0.0.3-jar-with-dependencies.jar -gui -lexicon testGrams/english-conll-5000.xml (-prop resources/parser.properties) 
+
 
 ROOT Companies would be compelled to publish in annual proxy statements the names of insiders who fail to file reports on time . 
 -> two readings
