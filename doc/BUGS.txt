@@ -1,0 +1,44 @@
+November, 2016:
+
+For grammar .../JTIG/example.xml
+
+parsing of sentence
+
+" KLEINE KLEINE KLEINE  TIEFE MANN SIEHT SCHNELL"
+
+computes correct independent and dependent derivation trees, but wrong parse tree.
+
+Unclear where the problem is:
+- wrong ordering of parse tree
+- problem with embedded complex adjunction trees, cf. tree for TIEFE
+
+<tree id="5" prob="0.25" freq="1">
+		<node cat="NP" type="nonterm">
+			<node cat="ADJ" type="nonterm">
+				<node type="term" label="TIEFE">
+				</node>
+			</node>
+			<node cat="NP" type="nonterm">
+				<node type="lfoot" cat="NP">
+				</node>
+			</node>
+		</node>
+	</tree>
+	
+Does such a tree makes sense ?
+
+Is this better?
+
+<tree id="5" prob="0.25" freq="1">
+		<node cat="NP" type="nonterm">
+			<node cat="ADJ" type="nonterm">
+				<node type="term" label="TIEFE">
+				</node>
+			</node>
+			<node type="lfoot" cat="NP">
+			</node>
+		</node>
+	</tree>
+
+But also ordering problem, so it seems to be a problem when constructing the parse tree, especially when 
+inserting the adjunction trees.
