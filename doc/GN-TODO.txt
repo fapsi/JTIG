@@ -5,13 +5,15 @@ To-do:
 define simple test method for running single sentence with selected dictionary.
 - cf.: parser.core.ParserTests.testLexicon_234_pt2().run
 
+- adapt this to file
+
 Output dependency trees in conll format
 
 eventually define as read-eval-print-loop
 
 First, check how to speed up parsing.
 - check current performance
-- basically, how to make sure to the compute n-best readings only
+- basically, how to make sure to compute n-best readings only
 - linear parsing
 
 Integration of GNTagger

@@ -51,7 +51,7 @@ public class ParserTests {
 
 	@Test
 	public void testLexicon_234_pt2() {
-		URL url_lexicon = ParserTests.class.getResource("./lexicon/234-pt2.xml");
+		URL url_lexicon = ParserTests.class.getResource("./input/234-pt2.xml");
 		URL url_input_file = ParserTests.class.getResource("./input/input_234_pt2");
 		try {
 			JTIGParser.setProperty("grammar.lexicon.path", url_lexicon.toURI().getPath());
