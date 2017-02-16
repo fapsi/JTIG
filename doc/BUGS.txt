@@ -42,3 +42,21 @@ Is this better?
 
 But also ordering problem, so it seems to be a problem when constructing the parse tree, especially when 
 inserting the adjunction trees.
+
+
+February, 2017:
+
+- 	Termination problems when running /JTIG/src/test/java/parser/core/TestRead.java
+	when parsing up to forrest
+	Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.util.HashSet.<init>(HashSet.java:103)
+	at parser.early.components.Item.<init>(Item.java:48)
+	at parser.early.components.DefaultItemFactory.createItemInstance(DefaultItemFactory.java:39)
+	at parser.early.inferencerules.PredictSubstitution.apply(PredictSubstitution.java:35)
+	at parser.early.run.ParseRun.call(ParseRun.java:195)
+	at parser.early.JTIGParser.parseSentence(JTIGParser.java:129)
+	at parser.core.TestRead.testLexicon_234_pt2(TestRead.java:34)
+	at parser.core.TestRead.main(TestRead.java:78)
+	
+
+
