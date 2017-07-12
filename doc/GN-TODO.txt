@@ -1,11 +1,11 @@
-(c) Copyright 2016 Günter Neumann. All Rights Reserved.
+(c) Copyright 201 Günter Neumann. All Rights Reserved.
 
 To-do:
 
 define simple test method for running single sentence with selected dictionary.
-- cf.: parser.core.ParserTests.testLexicon_234_pt2().run
+- cf.: parser.core.ParserTests.parser.core.TestCorpus
 
-- adapt this to file
+- traverses a file of sentences and calls parser with given lexicon
 
 Output dependency trees in conll format
 
@@ -16,6 +16,10 @@ First, check how to speed up parsing.
 - basically, how to make sure to compute n-best readings only
 - linear parsing
 
+Output only lexical level for super tagging parsing
+
 Integration of GNTagger
 
 Then, extract/load grammars
+
+Apply Deep learning

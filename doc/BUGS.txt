@@ -44,7 +44,8 @@ But also ordering problem, so it seems to be a problem when constructing the par
 inserting the adjunction trees.
 
 
-February, 2017:
+July, 2017:
+Sentence 1358
 
 - 	Termination problems when running /JTIG/src/test/java/parser/core/TestRead.java
 	when parsing up to forrest
