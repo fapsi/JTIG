@@ -1,0 +1,18 @@
+LTIG DL parser
+
+if nodes are word embedding vectors, then, can we learn LTIG trees in a similar way as I do grammar extraction ?
+
+
+Neural LTIG Parser:
+
+Use JTIG to parse sentences and to get derived trees
+These trees record in which order inference rules have been applied
+In case of multiple parses, use original tree bank to get best parse tree
+in this way JTIG can be used to generate treebanks which are annotated with LTIG derivations
+
+Use them to create linearized forms of LTIG derivations in form of 
+sequence of words and derivations between them
+were the words are pointers to the elementary LTIG
+
+Question: Can I use this to get annotated data also for ngram parsers as well ?
+
