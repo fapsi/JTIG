@@ -1,0 +1,10 @@
+July 2107
+
+LTIG grammar extraction implementieren:
+
+dependency treebanks to constituent trees
+constituent trees extraction
+
+or
+
+directly create LTIGs from dependency treebank
