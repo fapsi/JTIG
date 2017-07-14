@@ -4,22 +4,37 @@ To-do:
 
 define simple test method for running single sentence with selected dictionary.
 - cf.: parser.core.ParserTests.parser.core.TestCorpus
-
 - traverses a file of sentences and calls parser with given lexicon
+-> DONE
 
-Output dependency trees in conll format
-
-eventually define as read-eval-print-loop
-
-First, check how to speed up parsing.
+check how to speed up parsing.
 - check current performance
 - basically, how to make sure to compute n-best readings only
 - linear parsing
+
+Grammatik-Extraktion
+	Erzeuge Testgrammatiken ohne Interpunktion und so, um größere Grammatiken testen zu können.
+	Daher: Grammatikextraktion auch in java reimplementieren
+	Bedeutet: 
+		conll2penn & extraction oder direkt dependenz-artige LTIGs ?
+	Integration von Uniform Dependency Grammars
+	POS-Tagger
 
 Output only lexical level for super tagging parsing
 
 Integration of GNTagger
 
+Integrate tokenizers from GNTagger
+
 Then, extract/load grammars
 
+Output dependency trees in conll format
+
 Apply Deep learning
+
+
+
+
+How to prune lexical lookup ?
+
+Wie Supertagging und almost parsing realisieren ?
