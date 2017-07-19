@@ -24,24 +24,48 @@ run it on all 39.832 sentences from conll corpus
 
 using parsing level forest
 
-skip all sentences with > 40 tokens
 
-NOTE: since grammar is lexicalized and only processed by subset of corpus, we do not expect high coverage
+NOTE: 
+Since grammar is lexicalized and only processed for first 5000 sentences of
+PTB, we do not expect high coverage.
 
-Processing completed:
+From sentence 5164: 
+- basically no results
+- clear because grammar only for first 5000 sentences
+
+Running with max = 40
 
 - 40258839 msec = 11, 18hours
 - 1011 msec / sentence
 
 - 39833 sentences processed
 - 3857 > 40 tokens & skipped
+- 35976 processed
 - 31796 with forest: 0
 - 4180	parsed
 
-From sentence 5164: 
-- basically no results
-- clear because grammar only for first 5000 sentences
+Coverage:
+- processed corpus: 0,12 %
+- first 5000 sentences: 0,84 %
+
+Running with max = 50
+
+- 50435475 msec = 14,01 hours
+- 1266 msec / sentence
+
+- 39831 entences processed (two skipped because of outofmemory problem)
+- 993 > 50 tokens & skipped
+- 38838 processed
+- 34424 with forest: 0
+- 4414	parsed
 
 Coverage:
-- complete corpus: 0,11 %
-- first 5000 sentences: 0,81 %
+- processed corpus: 0,11 %
+- first 5000 sentences: 0,88 %
+
+Running with max = 50 & 234-pt2.lisp grammar
+
+
+  
+  
+  

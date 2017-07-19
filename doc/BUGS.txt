@@ -58,6 +58,14 @@ Sentence 1358
 	at parser.early.JTIGParser.parseSentence(JTIGParser.java:129)
 	at parser.core.TestRead.testLexicon_234_pt2(TestRead.java:34)
 	at parser.core.TestRead.main(TestRead.java:78)
-	
+
+sentence 191:
+ROOT Raymond E. Ross , 53 years old , formerly group vice president , U.S. plastics machinery , at this machine tool , 
+plastics machinery and robots concern , was named senior vice president , industrial systems , succeeding David A. Entrekin , who resigned Monday .
+
+-> OutOfmemoryError: because of number of commas which are probably used as anchors ? -> seems so
+
+same for sentence: 480
+
 
 

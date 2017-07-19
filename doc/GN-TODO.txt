@@ -20,7 +20,10 @@ Grammatik-Extraktion
 	Integration von Uniform Dependency Grammars
 	POS-Tagger
 
-Output only lexical level for super tagging parsing
+Output only lexical level for super tagging parsing.
+
+Add non-exhaustive lexical lookup:
+parser.lookup.Lookup.findlongestmatches(Token[], Lexicon)
 
 Integration of GNTagger
 
@@ -38,3 +41,46 @@ Apply Deep learning
 How to prune lexical lookup ?
 
 Wie Supertagging und almost parsing realisieren ?
+
+
+Current work, July, 2017:
+
+How to switch off creating run directories?
+
+-> 	switch off inside parser.early.run.ParseRun.ParseRun(Lexicon, String, Token[])
+	call to 
+	createRunDirectory();
+		try {
+			createLogger();
+		} catch (IOException e) {
+			
+		}
+-> if effective, use global property
+
+log/main.log contains complete log of corpus
+
+Check:  
+
+Try out reading in Lisp-format of grammars
+-> works, if not package prefix is used & file extension is .lisp
+Tesing with 234-pt2.lisp
+
+
+
+
+<!-- the amount of unique items created, before parser stops the process -->
+  <entry key="parser.core.bounduniqueitems">10000000</entry>
+
+--> USED in parser.early.run.ParseRun.call()
+  
+  <!-- strategy for finding trees used in the parsing process -->
+  <entry key="parser.lookup.exhaustive">true</entry>
+  
+  <!-- stop loop on first terminal element, which occurs -->
+  <entry key="parser.stoponfirsttermitem">false</entry>
+  
+
+ <entry key="parser.core.amountderivations">infinity</entry>
+ 
+ --> probably used to restrict number of parse trees extracted from a forest
+ --> check: parser.output.forest.Forest.derivationAllowed()

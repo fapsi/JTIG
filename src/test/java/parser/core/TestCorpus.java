@@ -18,16 +18,13 @@ import tools.tokenizer.Token;
 public class TestCorpus {
 	private static JTIGParser parser;
 	private MorphAdornoSentenceTokenizer st;
-	private int maxSentenceLength = 40;
-
-
+	private int maxSentenceLength = 50;
 
 	public void tearDown() throws Exception {
 		System.out.println("Tear down.");
 		File dir = new File("data/runs/");
-		GeneralTools.deleteDirectory(dir);	
+		GeneralTools.deleteDirectory(dir);
 	}
-
 
 	public ParseResult callJTIGparser(String sentence, int sentId, BufferedWriter bw) throws IOException {
 		st = new MorphAdornoSentenceTokenizer();
@@ -36,8 +33,9 @@ public class TestCorpus {
 
 		if (tokens.length > this.maxSentenceLength) {
 			bw.write("sendId: " + sentId + ", " + "too long, " + tokens.length + " > " + this.maxSentenceLength + "\n");
-		}
-		else {
+		} else {
+			bw.write("sentId: " + sentId);
+			bw.flush();
 			parseResult = parser.parseSentence(sentence, tokens);
 		}
 
@@ -45,20 +43,20 @@ public class TestCorpus {
 
 	}
 
-
 	public static void main(String[] args) {
-		TestCorpus tr=  new TestCorpus();
+		TestCorpus tr = new TestCorpus();
 		try {
-			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.xml"; //LTIG grammar path
-			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-ROOT.txt"; // sentence file
-			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-stats.txt"; // output file
+//			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.lisp"; // LTIG grammar path
+//			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-ROOT.txt"; // sentence file
+//			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-stats-50.txt"; // output file
+			
+			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/234-pt2.lisp"; // LTIG grammar path
+			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.txt"; // sentence file
+			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/234-pt2-stat.txt"; // output file
 
-			BufferedReader br = new BufferedReader(
-					new InputStreamReader(
-							new FileInputStream(textFile), "UTF8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(textFile), "UTF8"));
 			BufferedWriter bw = new BufferedWriter(
-					new OutputStreamWriter(
-							new FileOutputStream(targetFileName), "UTF8"));
+					new OutputStreamWriter(new FileOutputStream(targetFileName), "UTF8"));
 
 			parser = new JTIGParser("");
 			JTIGParser.setProperty("grammar.lexicon.path", grammar);
@@ -78,48 +76,45 @@ public class TestCorpus {
 			bw.write("Start processing corpus: " + textFile + "\n");
 
 			System.out.println("Parsing level: " + JTIGParser.getParseLevel());
-			bw.write("Parsing level: " + JTIGParser.getParseLevel() + "\n");		
+			bw.write("Parsing level: " + JTIGParser.getParseLevel() + "\n");
 
 			System.out.println("Output every next: " + max);
-			while((line = br.readLine()) != null){
+			while ((line = br.readLine()) != null) {
 				long lineTime1 = System.currentTimeMillis();
 
-				ParseResult parseResult = tr.callJTIGparser(line, sentenceNumber, bw);
+				if (!line.startsWith("#")) {
 
-				if ((sentenceNumber % max) == 0) {
-					System.out.println(sentenceNumber + ": " + line);
-				}
+					ParseResult parseResult = tr.callJTIGparser(line, sentenceNumber, bw);
 
-				long lineTime2 = System.currentTimeMillis();
+					if ((sentenceNumber % max) == 0) {
+						System.out.println(sentenceNumber + ": " + line);
+					}
 
-				if (parseResult != null) {
-					bw.write("sentId: " + sentenceNumber + 
-							", msec:" +  (lineTime2-lineTime1) 
-							+ ", length: " + parseResult.getTokens().length
-							+ ", forest: " 
-							+ parseResult.getForest().getRootDimension()
-							+ ", items: " 
-							+ parseResult.getAmountProcessedItems()
-							+ " , "
-							+ parseResult.getAmountUniqueItems() + "\n");
-				}
+					long lineTime2 = System.currentTimeMillis();
+
+					if (parseResult != null) {
+						bw.write(", msec:" + (lineTime2 - lineTime1) + ", length: " + parseResult.getTokens().length
+								+ ", forest: " + parseResult.getForest().getRootDimension() + ", items: "
+								+ parseResult.getAmountProcessedItems() + " , " + parseResult.getAmountUniqueItems()
+								+ "\n");
+					}
+				} else
+					bw.write("Sentence: " + sentenceNumber + "skipped!\n");
 
 				bw.flush();
 				sentenceNumber++;
 			}
 			long time2 = System.currentTimeMillis();
-			System.out.println("# sentences: " + sentenceNumber 
-					+ "total parse time (ms): " + new Long(time2-time1).toString());
-			bw.write("# sentences: " + sentenceNumber 
-					+ "total parse time (ms): " + new Long(time2-time1).toString() + "\n");
+			System.out.println(
+					"# sentences: " + sentenceNumber + "total parse time (ms): " + new Long(time2 - time1).toString());
+			bw.write("# sentences: " + sentenceNumber + "total parse time (ms): " + new Long(time2 - time1).toString()
+					+ "\n");
 
 			bw.close();
 			br.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 }
-
