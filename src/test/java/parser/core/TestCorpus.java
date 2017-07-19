@@ -46,13 +46,13 @@ public class TestCorpus {
 	public static void main(String[] args) {
 		TestCorpus tr = new TestCorpus();
 		try {
-//			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.lisp"; // LTIG grammar path
-//			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-ROOT.txt"; // sentence file
-//			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-stats-50.txt"; // output file
+			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.xml"; // LTIG grammar path
+			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-ROOT.txt"; // sentence file
+			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000-stats-50.txt"; // output file
 			
-			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/234-pt2.lisp"; // LTIG grammar path
-			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.txt"; // sentence file
-			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/234-pt2-stat.txt"; // output file
+//			String grammar = "/home/neumann/work/JTIG/testJtig/testGrams/234-pt2.lisp"; // LTIG grammar path
+//			String textFile = "/home/neumann/work/JTIG/testJtig/testGrams/english-conll-5000.txt"; // sentence file
+//			String targetFileName = "/home/neumann/work/JTIG/testJtig/testGrams/234-pt2-stat.txt"; // output file
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(textFile), "UTF8"));
 			BufferedWriter bw = new BufferedWriter(

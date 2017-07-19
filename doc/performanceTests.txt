@@ -38,7 +38,7 @@ Running with max = 40
 - 40258839 msec = 11, 18hours
 - 1011 msec / sentence
 
-- 39833 sentences processed
+- 39833 sentences
 - 3857 > 40 tokens & skipped
 - 35976 processed
 - 31796 with forest: 0
@@ -53,7 +53,7 @@ Running with max = 50
 - 50435475 msec = 14,01 hours
 - 1266 msec / sentence
 
-- 39831 entences processed (two skipped because of outofmemory problem)
+- 39831 sentences (two skipped because of outofmemory problem)
 - 993 > 50 tokens & skipped
 - 38838 processed
 - 34424 with forest: 0
@@ -65,7 +65,19 @@ Coverage:
 
 Running with max = 50 & 234-pt2.lisp grammar
 
+- 15905878 msec = 4,4 hours
+- 399 msec/sentence
+ 
+- 39833 sentences
+- 862 > 50 tokens & skipped
+- 38971 processed
+- 37402 with forest: 0
+- 1569 parsed
 
-  
-  
+Coverage:
+- processed corpus: 0,042 %
+- first 5000 sentences: 0,32 %
+
+
+
   
