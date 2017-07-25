@@ -77,7 +77,9 @@ public class ActivatedLexicon {
 		sb.append("Activated Lexicon:\n");
 		for (Entry<String, List<ActivatedElementaryTree>> l : this.possibletrees.entrySet()){
 			sb.append(l.getKey());
-			sb.append(":");
+			sb.append(": ");
+			sb.append(l.getValue().size());
+			sb.append("; ");
 			sb.append(l.getValue());
 			sb.append("\n");
 		}

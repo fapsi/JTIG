@@ -79,5 +79,14 @@ Coverage:
 - first 5000 sentences: 0,32 %
 
 
+When running examples from GUI, check dependencies trees, whether correct:
+
+e.g., "ROOT The new rate will be payable Feb. 15 ."
+
+get strange trees;
+
+check conditions of inference rules
+
+
 
   

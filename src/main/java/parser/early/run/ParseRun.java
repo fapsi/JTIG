@@ -276,7 +276,7 @@ public class ParseRun implements Callable<ParseResult> {
 		Lookup l = new Lookup();
 		ActivatedLexicon tmp = l.findlongestmatches(tokens, lexicon);
 		logger.info("Found " + tmp.getSize() + " trees in lexicon which can possibly match in the sentence.");
-		logger.debug(tmp.toString());
+		logger.info(tmp.toString());
 		level = ParseLevel.LOOKUP;
 		return tmp;
 	}

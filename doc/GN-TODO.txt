@@ -2,14 +2,48 @@
 
 To-do:
 
+Current work, July, 2017:
+
+How to switch off creating run directories?
+
+-> 	switch off inside parser.early.run.ParseRun.ParseRun(Lexicon, String, Token[])
+	call to 
+	createRunDirectory();
+		try {
+			createLogger();
+		} catch (IOException e) {
+			
+		}
+-> if effective, use global property
+
+log/main.log contains complete log of corpus
+
+--> DONE
+
+Try out reading in Lisp-format of grammars
+-> works, if not package prefix is used & file extension is .lisp
+Testing with 234-pt2.lisp
+--> DONE
+
 define simple test method for running single sentence with selected dictionary.
 - cf.: parser.core.ParserTests.parser.core.TestCorpus
 - traverses a file of sentences and calls parser with given lexicon
 -> DONE
 
+specified own GUI property file. run it like
+parser.early.JTIGParser -gui -prop "/home/neumann/eclipse-workspace/JTIG/src/main/resources/default.gui.properties"
+
+
 check how to speed up parsing.
 - check current performance
+
+-> DONE, see performanceTests.txt
+
+HIERIX:
+- check whether parser is ok
+
 - basically, how to make sure to compute n-best readings only
+
 - linear parsing
 
 Grammatik-Extraktion
@@ -32,6 +66,8 @@ Integrate tokenizers from GNTagger
 Then, extract/load grammars
 
 Output dependency trees in conll format
+--> should be easy: use LTIG operations as edge labels
+--> läßt sich dann auch linearisieren
 
 Apply Deep learning
 
@@ -41,31 +77,6 @@ Apply Deep learning
 How to prune lexical lookup ?
 
 Wie Supertagging und almost parsing realisieren ?
-
-
-Current work, July, 2017:
-
-How to switch off creating run directories?
-
--> 	switch off inside parser.early.run.ParseRun.ParseRun(Lexicon, String, Token[])
-	call to 
-	createRunDirectory();
-		try {
-			createLogger();
-		} catch (IOException e) {
-			
-		}
--> if effective, use global property
-
-log/main.log contains complete log of corpus
-
-Check:  
-
-Try out reading in Lisp-format of grammars
--> works, if not package prefix is used & file extension is .lisp
-Tesing with 234-pt2.lisp
-
-
 
 
 <!-- the amount of unique items created, before parser stops the process -->

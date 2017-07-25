@@ -196,7 +196,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener {
 		c.gridx = 0;
 		c.gridy = 0;
 				
-		parse_input = new JTextField("a pretty pretty boy sleeps often",80);
+		parse_input = new JTextField("ROOT The new rate will be payable Feb. 15 .",80);
 		parse_input.setMinimumSize(parse_input.getPreferredSize());
 		input_parse_panel.add(parse_input,c);
 		
