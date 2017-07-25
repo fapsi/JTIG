@@ -8,3 +8,9 @@ constituent trees extraction
 or
 
 directly create LTIGs from dependency treebank
+
+Note:
+the grammars I extracted so far seem to have low quality, because they overgenerate too much
+
+NOTE:
+I could also try to parse AMR based on dependency tree input

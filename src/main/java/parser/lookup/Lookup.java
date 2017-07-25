@@ -36,14 +36,16 @@ public class Lookup {
 				searchwords.add(tokens[p]);
 				
 				results = lexicon.find(searchwords,0);
+				// System.out.println("Span: " + i + ";" + (p+1));
 				
 				if (results != null && results.size() > 0){
-					
+
 					for (ElementaryTree result : results){
+						// System.out.println(" -> new entry: " + result.getRootSymbol());
 						slexicon.add(result.getRootSymbol(), new ActivatedElementaryTree(result, i, p+1));
 					}
 				}
-			}			
+			}
 		}
 		return slexicon;
 	}

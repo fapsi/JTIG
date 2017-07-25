@@ -40,6 +40,11 @@ check how to speed up parsing.
 -> DONE, see performanceTests.txt
 
 HIERIX:
+
+- define nonexhaustive lookup mode
+	- update parser.lookup.Lookup.findlongestmatches(Token[], Lexicon)
+	- needs to be defined such that it returns longest match substring
+
 - check whether parser is ok
 
 - basically, how to make sure to compute n-best readings only
