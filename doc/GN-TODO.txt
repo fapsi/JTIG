@@ -44,6 +44,10 @@ HIERIX:
 - define nonexhaustive lookup mode
 	- update parser.lookup.Lookup.findlongestmatches(Token[], Lexicon)
 	- needs to be defined such that it returns longest match substring
+	
+- understand how lexical lookup works
+
+- check how to prune lexical lookup
 
 - check whether parser is ok
 
@@ -75,11 +79,6 @@ Output dependency trees in conll format
 --> läßt sich dann auch linearisieren
 
 Apply Deep learning
-
-
-
-
-How to prune lexical lookup ?
 
 Wie Supertagging und almost parsing realisieren ?
 
